@@ -72,7 +72,7 @@ export async function getFilteredProducers(filters: Filters) {
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id));
 
   // Build filter logic
-  const whereConditions = [];
+  const whereConditions = [eq(producenci.isActive, true)]; // Add isActive filter by default
 
   // ✅ Region filter: match ANY
   if (regions.length > 0) {
@@ -89,9 +89,7 @@ export async function getFilteredProducers(filters: Filters) {
     whereConditions.push(inArray(producenci.id, matchingScalesIds));
   }
 
-  if (whereConditions.length > 0) {
-    query.where(and(...whereConditions));
-  }
+  query.where(and(...whereConditions));
 
   return await query;
 }
