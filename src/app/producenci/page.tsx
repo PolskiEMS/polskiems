@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import FoundProducers from '../components/FoundProducers/FoundProducers';
 import styles from './styles.module.css'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Wyniki Wyszukiwania Producentów Elektroniki",
@@ -23,12 +24,13 @@ export const metadata: Metadata = {
 
 
 const Wyszukaj = () => {
-    return ( 
-        <div className={styles.page}>
-            <h1>Wyszukani Producenci</h1>
-            <FoundProducers />
-        </div>
-     );
+  return (
+    <div className={styles.page}>
+      <h1>Wyszukani Producenci</h1>
+      <FoundProducers />
+      <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+    </div>
+  );
 }
- 
+
 export default Wyszukaj;

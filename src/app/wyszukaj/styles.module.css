@@ -1,8 +1,34 @@
 .page {
-    margin-inline: 35px;
     display: block;
+    margin-inline: 8px;
 }
 
 .page h1 {
     font-size: 2.8em;
+}
+
+.topPage {
+    margin-inline: 8px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    text-align: center;
+}
+
+.topPage p {
+    margin-top: 15px;
+    color: rgb(218, 218, 218);
+    font-size: 1.2em;
+}
+
+
+@media screen and (max-width: 830px) {
+    .topPage {
+        top: 140px;
+    }
+
+    .topPage h1 {
+        font-size: 2.4em;
+    }
 }

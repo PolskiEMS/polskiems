@@ -1,5 +1,9 @@
 .page {
     display: block;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-inline: 15px;
 }
 
 .page h1 {
@@ -10,6 +14,13 @@
     left: 0;
     right: 0;
     top: 80px;
+}
+
+.page p {
+    margin-top: 50px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    margin-bottom: 270px;
 }
 
 .chceZnalezcSie {
@@ -37,5 +48,11 @@
     .page h1 {
         top: 140px;
         font-size: 2.4em;
+    }
+
+    .page p {
+        margin-top: 135px;
+        font-size: 1em;
+        margin-bottom: 80px;
     }
 }

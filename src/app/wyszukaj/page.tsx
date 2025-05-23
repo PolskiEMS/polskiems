@@ -23,12 +23,15 @@ export const metadata: Metadata = {
 
 
 const Wyszukaj = () => {
-    return ( 
-        <div className={styles.page}>
-            <h1>Wyszukaj Producenta</h1>
-            <ProducerSearch />
-        </div>
-     );
+  return (
+    <div className={styles.page}>
+      <div className={styles.topPage}>
+        <h1>Wyszukaj Producenta</h1>
+        <p>Wybierz opcje</p>
+      </div>
+      <ProducerSearch />
+    </div>
+  );
 }
- 
+
 export default Wyszukaj;

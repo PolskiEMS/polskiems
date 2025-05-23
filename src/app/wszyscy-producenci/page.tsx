@@ -4,6 +4,7 @@ import { getAllProducers } from '../../lib/actions';
 import styles from './styles.module.css'
 import AllProducers from '../components/AllProducers/AllProducers';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Lista Wszystkich Producentów Elektroniki",
@@ -26,14 +27,15 @@ export const metadata: Metadata = {
 
 
 const Wyszukaj = async () => {
-    const producers = await getAllProducers();
-    
-    return ( 
-        <div className={styles.page}>
-            <h1>Wszycy Producenci</h1>
-            <AllProducers producers={producers}/>
-        </div>
-     );
+  const producers = await getAllProducers();
+
+  return (
+    <div className={styles.page}>
+      <h1>Wszycy Producenci</h1>
+      <AllProducers producers={producers} />
+      <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+    </div>
+  );
 }
- 
+
 export default Wyszukaj;

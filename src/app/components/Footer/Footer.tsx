@@ -8,8 +8,8 @@ const Footer = () => {
                 <Link href={'/o-nas'}>O nas</Link>
                 <Link href={'/kontakt'}>Kontakt</Link>
                 <Link href={'/regulamin'}>Regulamin</Link>
+                <Link href={'/cennik'}>Cennik</Link>
             </div>
-            <button>Chcę znaleźć się na stronie</button>
         </div>
     );
 }

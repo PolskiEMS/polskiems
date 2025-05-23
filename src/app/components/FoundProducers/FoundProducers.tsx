@@ -54,7 +54,7 @@ const SearchContent = () => {
                                             <p>{producer.opis}</p>
                                             <div className={styles.bottom}>
                                                 <h2>{producer.nazwa}</h2>
-                                                <Link href={`mailto:${producer.email}`}><FaCirclePlus /></Link>
+                                                <Link href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></Link>
                                             </div>
                                         </div>
                                     </motion.div>
@@ -66,7 +66,7 @@ const SearchContent = () => {
                         notFound && <p className={styles.notFound}>Nie znaleziono takich producentów</p>
                     }
                     {
-                        !notFound && producers.length === 0 && <div style={{ marginBottom: '800px' }} />
+                        !notFound && producers.length === 0 && <div style={{ marginBottom: '420px' }} />
                     }
                 </div> :
                     <p className={styles.notFound}>Ładowanie...</p>

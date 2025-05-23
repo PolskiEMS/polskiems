@@ -96,6 +96,7 @@ const ProducerSearch = () => {
                             }
                         }} className={styles.searchBtn}><button>Wyszukaj</button></Link>
                         <Link href={'/wszyscy-producenci'} className={styles.allProducentsBtn}><button>Wszyscy Producenci</button></Link>
+                        <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
                     </div>
                 }
             </div>
@@ -126,7 +127,6 @@ const ProducerSearch = () => {
 
     return (
         <div>
-            <p className={styles.info}>Wybierz opcje</p>
             <div className={styles.allFiltersGroup}>
                 {renderFilterGroup("Region", "regions", filtersData.regions)}
                 {renderFilterGroup("Wymagania", "requirements", filtersData.requirements)}

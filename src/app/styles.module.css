@@ -23,14 +23,15 @@
     margin-top: 100px;
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    gap: 50px;
-    margin-bottom: 500px;
+    justify-content: space-between;
     flex-wrap: wrap;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .buttons button {
-    width: 220px;
+    width: 235px;
     height: 45px;
     border: 1px solid rgba(255, 255, 255, 0.637);
     border-radius: 4px;
@@ -41,6 +42,27 @@
 
 .buttons button:hover {
     background-color: rgba(0, 0, 0, 0.384);
+}
+
+.chceZnalezcSie {
+    margin-top: 60px;
+    padding: 10px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.178);
+    width: 250px;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 4px;
+    transition: 0.06s ease-in-out;
+    cursor: pointer;
+    background-color: rgb(6, 122, 255);
+
+    margin-bottom: 175px;
+}
+
+.chceZnalezcSie:hover {
+    background-color: rgb(0, 73, 156);
 }
 
 @media screen and (max-width: 768px) {
@@ -54,12 +76,15 @@
 
     .buttons {
         margin-top: 60px;
-        gap: 30px;
+        max-width: 450px;
 
     }
 
+    .chceZnalezcSie {
+        margin-bottom: 285px;
+    }
+
     .buttons button {
-        width: 180px;
         font-size: 1em;
     }
 }
@@ -74,6 +99,11 @@
         flex-direction: column;
         gap: 20px;
         align-items: center;
+    }
+
+    .chceZnalezcSie {
+        width: 280px;
+        margin-bottom: 238px;
     }
 
     .buttons button {

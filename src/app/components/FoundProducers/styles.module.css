@@ -4,10 +4,11 @@
 
 .producerBlock {
     padding: 25px;
-    height: 420px;
+    height: 500px;
     border-radius: 24px;
     background-color: rgba(201, 154, 255, 0.384);
     backdrop-filter: blur(3px);
+    position: relative;
 }
 
 .divToMove {
@@ -24,33 +25,26 @@
 .producers p {
     color: white;
     margin-top: 25px;
+    text-align: center;
 }
 
 .producers h2 {
     font-size: 1.8em;
     font-weight: 670;
     color: rgb(34, 15, 46);
+    text-align: center;
 }
 
 .bottom {
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    align-items: start;
+    flex-direction: column;
+    align-items: center;
     margin-top: 40px;
-    gap: 10px;
     justify-content: space-between;
+    padding-bottom: 20px;
 }
 
-.bottom svg {
-    font-size: 2.5em;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.06s ease-in-out;
-}
-
-.bottom svg:hover {
-    color: rgb(184, 184, 184);
-}
 
 .producers {
     display: grid;
@@ -61,11 +55,24 @@
     padding: 20px;
 }
 
+.contactMeBtn {
+    margin-top: 30px;
+    width: 300px;
+    padding-block: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.178);
+    background-color: rgb(6, 122, 255);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.contactMeBtn:hover {
+    background-color: rgb(0, 73, 156);
+}
+
 .notFound {
-    margin-bottom: 550px;
-    font-size: 1.5em;
     text-align: center;
-    width: 100%;
+    font-size: 1.1em;
+    margin-bottom: 420px;
 }
 
 @media screen and (min-width: 1200px) {
@@ -86,8 +93,16 @@
 }
 
 @media screen and (max-width: 480px) {
+    .page {
+        margin-top: 180px;
+    }
+
     .producers {
         grid-template-columns: 1fr;
         padding: 10px;
+    }
+
+    .contactMeBtn {
+        width: 250px;
     }
 }

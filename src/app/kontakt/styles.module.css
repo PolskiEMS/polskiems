@@ -1,5 +1,9 @@
 .page {
     display: block;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-inline: 15px;
 }
 
 .page h1 {
@@ -10,6 +14,30 @@
     left: 0;
     right: 0;
     top: 80px;
+}
+
+.page h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 20px
+}
+
+.page span {
+    font-weight: 600;
+}
+
+.page p {
+    font-size: 1.2em;
+}
+
+.page div {
+    margin-top: 30px;
+}
+
+.page h3 {
+    font-size: 1.5em;
+    font-weight: 600;
 }
 
 .chceZnalezcSie {
@@ -37,5 +65,17 @@
     .page h1 {
         top: 140px;
         font-size: 2.4em;
+    }
+
+    .page h2 {
+        margin-top: 80px;
+    }
+
+    .page h3, .page h2{
+        font-size: 1.4em;
+    }
+
+    .page p {
+        font-size: 1.05em;
     }
 }
