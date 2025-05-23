@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 
 const Wyszukaj = async () => {
-    const producers = await getAllProducers()
+    const producers = await getAllProducers();
     
     return ( 
         <div className={styles.page}>
