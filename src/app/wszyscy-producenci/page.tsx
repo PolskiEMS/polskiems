@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getAllProducers } from '../../lib/actions';
 import styles from './styles.module.css'
 import AllProducers from '../components/AllProducers/AllProducers';
