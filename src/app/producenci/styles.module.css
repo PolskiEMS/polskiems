@@ -40,5 +40,6 @@
     .page h1 {
         top: 140px;
         font-size: 2.4em;
+        width: 100%;
     }
 }

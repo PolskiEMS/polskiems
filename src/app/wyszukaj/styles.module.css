@@ -31,6 +31,10 @@
         top: 140px;
     }
 
+    .topPage {
+        width: 100%;
+    }
+
     .topPage h1 {
         font-size: 2.4em;
     }
