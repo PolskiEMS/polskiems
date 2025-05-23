@@ -24,11 +24,11 @@
 
 .producers p {
     color: white;
-    margin-top: 25px;
     text-align: center;
 }
 
 .producers h2 {
+    margin-top: 25px;
     font-size: 1.8em;
     font-weight: 670;
     color: rgb(34, 15, 46);

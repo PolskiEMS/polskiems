@@ -75,16 +75,21 @@
     }
 
     .buttons {
-        margin-top: 60px;
-        max-width: 450px;
-
+        margin-top: 40px;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
     }
 
     .chceZnalezcSie {
-        margin-bottom: 285px;
+        margin-bottom: 240px;
+        width: 300px;
+        max-width: 280px;
     }
 
     .buttons button {
+        width: 300px;
+        max-width: 280px;
         font-size: 1em;
     }
 }
@@ -99,11 +104,6 @@
         flex-direction: column;
         gap: 20px;
         align-items: center;
-    }
-
-    .chceZnalezcSie {
-        width: 280px;
-        margin-bottom: 238px;
     }
 
     .buttons button {

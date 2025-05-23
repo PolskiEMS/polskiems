@@ -64,7 +64,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Link style={{ cursor: 'pointer' }} href={'/'}><Image src={'/images/logo.png'} alt="Polski EMS - znajdź swojego producenta" width={150} height={150} /></Link>
+        <div style={{width: '160px'}}>
+          <Link style={{ cursor: 'pointer', backgroundColor: '' }} href={'/'}><Image src={'/images/logo.png'} alt="Polski EMS - znajdź swojego producenta" width={150} height={150} /></Link>
+        </div>
         {children}
         <Footer />
       </body>

@@ -20,9 +20,9 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                             transition={{ duration: 1.2, delay: i == 0 || i == 1 || i == 2 ? 0.3 * i : 0.3 }}>
                             <div className={styles.divToMove}>
                                 <Image src={`/images/producers/${producer.nazwa}.jpg`} width={210} height={210} alt={`Producent ${producer.name}`} />
-                                <p>{producer.opis}</p>
+                                <h2>{producer.nazwa}</h2>
                                 <div className={styles.bottom}>
-                                    <h2>{producer.nazwa}</h2>
+                                    <p>{producer.opis}</p>
                                     <Link href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></Link>
                                 </div>
                             </div>
