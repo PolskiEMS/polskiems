@@ -31,7 +31,7 @@ const Wyszukaj = async () => {
 
   return (
     <div className={styles.page}>
-      <h1>Wszycy Producenci</h1>
+      <h1>Wszyscy Producenci</h1>
       <AllProducers producers={producers} />
       <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
     </div>
