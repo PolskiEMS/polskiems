@@ -8,9 +8,9 @@ const Regulamin = () => {
             <div>
                 <h3>§1. Informacje ogólne</h3>
                 <p>Niniejszy regulamin określa zasady korzystania ze strony internetowej polskiems.pl, prowadzonej przez: <br />
-                    Filip Potępski Jednoosobowa Działalność Gospodarcza <br />
-                    REGON: 525563337 <br />
-                    NIP: 1182263555 <br />
+                    <br />
+                    <br />
+                    <br />
                     Kontakt: info@polskiems.pl, <br />
                     tel. 734 860 876 <br />
                     Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.</p>
