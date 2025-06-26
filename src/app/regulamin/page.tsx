@@ -12,7 +12,7 @@ const Regulamin = () => {
                     <br />
                     <br />
                     Kontakt: info@polskiems.pl <br/>
-                    <br>Nr.tel. 728-924-367 <br/>
+                    <br>tel. 728 924 367 <br/>
                    <br>Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.</br>
                     <br>Obecnie cennik nie obowiązuje – informacja o opłatach ma charakter orientacyjny i nie stanowi oferty handlowej.</br>
                     <br>Zgłoszenie firmy do katalogu jest darmowe i nie wymaga żadnej opłaty.</br>
