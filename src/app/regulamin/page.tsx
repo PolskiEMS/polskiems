@@ -13,7 +13,9 @@ const Regulamin = () => {
                     <br />
                     Kontakt: info@polskiems.pl, <br />
                     tel. 734 860 876 <br />
-                    Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.</p>
+                    Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.
+                    Obecnie cennik nie obowiązuje – informacja o opłatach ma charakter orientacyjny i nie stanowi oferty handlowej.
+                    Zgłoszenie firmy do katalogu jest darmowe i nie wymaga żadnej opłaty.</p>
                 <h3>§2. Warunki korzystania z serwisu</h3>
                 <p>Strona nie wymaga rejestracji konta. Aby dodać swoją firmę do bazy, należy wypełnić formularz kontaktowy, przesłać logo firmy i opłacić fakturę proforma zgodnie z aktualnym cennikiem. W przypadku pakietu Standard użytkownik raz w miesiącu otrzymuje raport PDF z ogólnymi statystykami wyszukiwań na stronie.</p>
                 <h3>§3. Zasady wyświetlania firm</h3>
