@@ -9,10 +9,11 @@ const Regulamin = () => {
                 <h3>§1. Informacje ogólne</h3>
                 <p>Niniejszy regulamin określa zasady korzystania ze strony internetowej polskiems.pl, prowadzonej przez:
                     Michała Kowalskiego
-
-                    
+                    <br />
+                    <br />
                     <p>Kontakt: info@polskiems.pl</p>
-                    
+                    <p>tel.728 924 367</p>
+                    <br />
                     Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.
                     Obecnie cennik nie obowiązuje – informacja o opłatach ma charakter orientacyjny i nie stanowi oferty handlowej.
                     Zgłoszenie firmy do katalogu jest darmowe i nie wymaga żadnej opłaty.
