@@ -7,11 +7,11 @@ const Regulamin = () => {
             <h1>Regulamin</h1>
             <div>
                 <h3>§1. Informacje ogólne</h3>
-                <p>Niniejszy regulamin określa zasady korzystania ze strony internetowej polskiems.pl, prowadzonej przez: <br />
+                <p>Niniejszy regulamin określa zasady korzystania ze strony internetowej polskiems.pl, prowadzonej przez:
                     Michała Kowalskiego
-                    <br></br>
-                    <br><br/>
-                    <br>Kontakt: info@polskiems.pl </br>
+                    <br />
+                    <br/>
+                    Kontakt: info@polskiems.pl <br />
                     tel. +48728924367 <br />
                     <br></br>
                    <br>Serwis oferuje możliwość zakupu miejsca promocyjnego na stronie internetowej dla firm działających w branży EMS.</br>
