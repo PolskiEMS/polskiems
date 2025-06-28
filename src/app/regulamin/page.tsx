@@ -9,8 +9,8 @@ const Regulamin = () => {
                 <h3>§1. Informacje ogólne</h3>
                 <p>Niniejszy regulamin określa zasady korzystania ze strony internetowej polskiems.pl, prowadzonej przez: <br />
                     Michała Kowalskiego
-                    <br />
-                    <br />
+                    <br></br>
+                    <br><br/>
                     <br>Kontakt: info@polskiems.pl </br>
                     tel. +48728924367 <br />
                     <br></br>
