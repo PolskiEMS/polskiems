@@ -1,61 +1,58 @@
 .page {
-    display: block;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-inline: 15px;
+  max-width: 900px;            /* wężej = czytelniej */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 110px 16px 40px;    /* miejsce na nagłówek u góry */
 }
 
 .page h1 {
-    text-align: center;
-    margin-inline: 5px;
-    font-size: 2.8em;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 80px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 300px;
+  position: static;            /* USUWAMY absolute */
+  text-align: center;
+  font-size: clamp(34px, 4vw, 52px);
+  margin: 0 0 28px 0;
+  width: auto;
 }
 
 .page p {
-    margin-top: 50px;
-    line-height: 1.6;
-    font-size: 1.1em;
-    margin-bottom: 270px;
+  margin: 0 0 22px 0;          /* bez sztucznego 270px */
+  line-height: 1.85;
+  font-size: 1.05em;
+  opacity: 0.95;
+  text-align: left;
+}
+
+.page p + p {
+  margin-top: 16px;
 }
 
 .chceZnalezcSie {
-    margin-top: 60px;
-    padding: 10px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.178);
-    background-color: rgb(6, 122, 255);
-    transition: 0.06s ease-in-out;
-    width: 250px;
-    text-align: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 30px;
-
+  margin-top: 26px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgb(6, 122, 255);
+  transition: 0.12s ease-in-out;
+  width: min(320px, 100%);
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 0;
+  font-weight: 700;
 }
 
 .chceZnalezcSie:hover {
-    background-color: rgb(0, 73, 156);
+  background-color: rgb(0, 73, 156);
 }
 
 @media screen and (max-width: 768px) {
-    .page h1 {
-        top: 140px;
-        font-size: 2.4em;
-    }
+  .page {
+    padding: 140px 16px 32px;
+  }
 
-    .page p {
-        margin-top: 135px;
-        font-size: 1em;
-        margin-bottom: 80px;
-    }
+  .page p {
+    font-size: 1em;
+    line-height: 1.8;
+  }
 }
