@@ -8,11 +8,21 @@ import {
   wojewodztwa,
 } from "@/db/schema";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
-const db = drizzle(process.env.DATABASE_URL!);
+import { getDb } from "@/lib/db";
 
-export const getAllProducers = async () => await db.select().from(producenci).where(eq(producenci.isActive, true)).orderBy(asc(producenci.id));
-export const saveStatistics = async (data: string) => await db.insert(statystyki).values({wynik: data})
+export const getAllProducers = async () => {
+const db = getDb();
+  return await db
+    .select()
+    .from(producenci)
+    .where(eq(producenci.isActive, true))
+    .orderBy(asc(producenci.id));
+};
+
+export const saveStatistics = async (data: string) => {
+const db = getDb();
+  return await db.insert(statystyki).values({ wynik: data });
+};
 
 type Filters = {
   regions?: string[];
@@ -21,6 +31,7 @@ type Filters = {
 };
 
 export async function getFilteredProducers(filters: Filters) {
+  const db = getDb();
   const { regions = [], requirements = [], scales = [] } = filters;
 
   // Match ALL selected requirements
