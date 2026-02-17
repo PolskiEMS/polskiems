@@ -1,21 +1,56 @@
-import Link from 'next/link';
-import styles from './styles.module.css'
+import Link from "next/link";
+import styles from "./styles.module.css";
 
 const Onas = () => {
-    return (
-        <div className={styles.page}>
-            <h1>O nas</h1>
-            <p>
-                Nasza firma powstała z potrzeby, którą zauważyłem podczas licznych spotkań z klientami z branży EMS. Wielu z nich nie miało odpowiedniego miejsca do promowania swoich usług i produktów. 
-                <a>Postanowiłem to zmienić i stworzyć platformę, która daje równe szanse na promocję zarówno małym, jak i dużym firmom z branży EMS.</a>
-                Jestem pierwszą firmą na rynku, która kompleksowo zajmuje się tworzeniem takiego miejsca – łatwo dostępnego i skutecznego. Nasza strona to nie tylko przestrzeń do prezentacji ofert, ale przede wszystkim narzędzie, które pozwala wyrównać szanse wszystkim uczestnikom rynku.
-                Założycielem firmy jest – programista i specjalista od zarządzania, dbający o szybki i bezpośredni kontakt z klientami oraz błyskawiczną reakcję na ich potrzeby. Dzięki doświadczeniu w branży EMS dobrze rozumiemy specyfikę i wyzwania tego rynku, co pozwala nam tworzyć rozwiązania idealnie dopasowane do Waszych oczekiwań.
-                <a>Naszym celem jest nie tylko oferowanie miejsca na promocję, ale także aktywne wspieranie rozwoju Waszych firm. Dążymy do ciągłego rozbudowywania portalu oraz prowadzenia go jako platformy, która pomaga producentom skutecznie się reklamować i budować swoją markę.
-                Współpracując z nami, możecie liczyć na partnera, który bierze czynny udział w rozwoju Waszej działalności i dba o to, byście mieli realną przewagę na rynku.</a>
+  return (
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>O nas</h1>
+
+        <p className={styles.lead}>
+          PolskiEMS powstało z potrzeby, którą zauważyłem podczas wielu rozmów z firmami z branży EMS.
+          Wiele z nich nie miało prostego, skutecznego miejsca do pokazania swoich usług i dotarcia do nowych klientów.
+        </p>
+
+        <h2 className={styles.h2}>Co robimy</h2>
+        <p className={styles.p}>
+          Tworzymy katalog i stronę ogłoszeniową dla firm EMS — miejsce, w którym zarówno mniejsze, jak i większe firmy
+          mogą zaprezentować ofertę w przejrzysty sposób, być łatwo znalezione i zdobywać zapytania.
+        </p>
+
+        <h2 className={styles.h2}>Dlaczego my</h2>
+        <p className={styles.p}>
+          PolskiEMS to nie tylko prezentacja oferty, ale narzędzie, które pomaga wyrównać szanse na rynku.
+          Stawiamy na prostotę, szybkość działania i realną użyteczność — bez zbędnych formalności.
+        </p>
+
+        <ul className={styles.list}>
+          <li>przejrzyste wizytówki firm i szybki kontakt</li>
+          <li>wyszukiwanie po województwie, usługach i zakresie produkcji</li>
+          <li>rozwój portalu w oparciu o potrzeby branży</li>
+        </ul>
+
+        <h2 className={styles.h2}>Kto za tym stoi</h2>
+        <p className={styles.p}>
+          Za projektem stoi programista i specjalista od zarządzania, nastawiony na bezpośredni kontakt i szybką reakcję.
+          Dzięki doświadczeniu w branży EMS lepiej rozumiemy realne wyzwania rynku i tworzymy rozwiązania dopasowane do oczekiwań firm.
+        </p>
+
+        <div className={styles.ctaBox}>
+          <div>
+            <p className={styles.ctaTitle}>Chcesz dodać swoją firmę?</p>
+            <p className={styles.ctaDesc}>
+              Zgłoszenie zajmuje chwilę — możesz przesłać dane przez formularz.
             </p>
-            <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+          </div>
+
+          <Link href="/formularz_zgloszeniowy_firmy.docx" className={styles.ctaBtn}>
+            Chcę znaleźć się na stronie
+          </Link>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default Onas;
