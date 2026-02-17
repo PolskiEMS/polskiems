@@ -25,6 +25,60 @@
   margin-top: 16px;
 }
 
+.h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-top: 60px;   /* ⬅ większy odstęp nad sekcją */
+    margin-bottom: 20px;
+}
+
+.p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.list {
+    margin: 30px 0 60px 0;  /* ⬅ większy odstęp pod listą */
+    padding-left: 20px;
+}
+
+.list li {
+    margin-bottom: 10px;
+}
+
+.ctaBox {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.ctaTitle {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.ctaDesc {
+    margin-bottom: 25px;
+    font-size: 1.05rem;
+}
+
+.ctaBtn {
+    display: inline-block;
+    background: #067aff;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.ctaBtn:hover {
+    background: #00499c;
+    transform: translateY(-2px);
+}
+
 .chceZnalezcSie {
   margin-top: 26px;
   padding: 12px 14px;
