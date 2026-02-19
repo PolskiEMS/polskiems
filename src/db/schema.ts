@@ -24,6 +24,22 @@ export const produkcja = mysqlTable("produkcja", {
   zakres: varchar("zakres", { length: 50 }).unique().notNull(),
 });
 
+export const companyEvents = mysqlTable("company_events", {
+  id: int("id").primaryKey().autoincrement(),
+  companyId: int("company_id").notNull(),
+  eventType: mysqlEnum("event_type", [
+    "view",
+    "phone_click",
+    "email_click",
+    "website_click",
+    "doc_download",
+  ]).notNull(),
+  referrer: varchar("referrer", { length: 255 }),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+  createdAt: datetime("created_at", { mode: "string" }).defaultNow().notNull(),
+});
+
 export const producenci = mysqlTable("producenci", {
   id: int().primaryKey().autoincrement(),
   nazwa: varchar("nazwa", { length: 255 }).notNull(),
