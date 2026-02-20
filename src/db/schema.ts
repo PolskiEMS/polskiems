@@ -5,6 +5,7 @@ import {
   boolean,
   datetime,
   int,
+  mysqlEnum,
 } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 
@@ -31,10 +32,11 @@ export const producenci = mysqlTable("producenci", {
   wojewodztwoId: int("wojewodztwo_id").references(() => wojewodztwa.id),
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
+  www: varchar("www", { length: 255 }),
   isActive: boolean("isActive").default(false),
-  createdAt: datetime("created_at")
+  createdAt: datetime("created_at", { mode: "string" })
     .notNull()
-    .default(sql`now()`),
+    .default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const producenciEmsDzialania = mysqlTable("producenci_ems_dzialania", {
@@ -60,5 +62,30 @@ export const producenciEmsProdukcja = mysqlTable("producenci_ems_produkcja", {
 export const statystyki = mysqlTable("statystyki", {
   id: int().primaryKey().autoincrement(),
   wynik: varchar("wynik", { length: 255 }).notNull(),
-  createdAt: datetime("created_at").default(sql`now()`),
+  createdAt: datetime("created_at", { mode: "string" })
+  .default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const companyEvents = mysqlTable("company_events", {
+  id: int("id").primaryKey().autoincrement(),
+
+  companyId: int("company_id")
+    .notNull()
+    .references(() => producenci.id),
+
+  eventType: mysqlEnum("event_type", [
+    "view",
+    "phone_click",
+    "email_click",
+    "website_click",
+    "doc_download",
+  ]).notNull(),
+
+  referrer: varchar("referrer", { length: 255 }),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+
+  createdAt: datetime("created_at", { mode: "string" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
 });

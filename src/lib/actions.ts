@@ -76,6 +76,7 @@ export async function getFilteredProducers(filters: Filters) {
       opis: producenci.opis,
       telefon: producenci.telefon,
       email: producenci.email,
+      www: producenci.www,
       isActive: producenci.isActive,
       wojewodztwo: wojewodztwa.nazwa,
     })
