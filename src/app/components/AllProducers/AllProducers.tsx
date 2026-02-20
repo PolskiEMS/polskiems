@@ -30,24 +30,6 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                                 Skontaktuj się
                                             </button>
                                         </a>
-                                    
-                                        {producer.www && (
-                                            <a
-                                            href={
-                                                producer.www.startsWith("http")
-                                                ? producer.www
-                                                : `https://${producer.www}`
-                                            }
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            >
-                                            <button className={styles.contactMeBtn}>
-                                                Strona firmy
-                                            </button>
-                                            </a>
-                                        )}
-                                    </div>
-    
                                 </div>
 
                                             {producer.www && (
