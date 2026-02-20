@@ -37,7 +37,7 @@ export const companyEvents = mysqlTable("company_events", {
   referrer: varchar("referrer", { length: 255 }),
   utmSource: varchar("utm_source", { length: 100 }),
   utmCampaign: varchar("utm_campaign", { length: 100 }),
-  createdAt: datetime("created_at", { mode: "string" }).defaultNow().notNull(),
+  createdAt: datetime("created_at", { mode: "string" }).default("current_timestamp"),
 });
 
 export const producenci = mysqlTable("producenci", {
