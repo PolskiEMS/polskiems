@@ -1,11 +1,11 @@
 import {
   mysqlTable,
   varchar,
-  text,
-  boolean,
   datetime,
   int,
+  mysqlEnum,
 } from "drizzle-orm/mysql-core";
+
 import { sql } from "drizzle-orm";
 
 export const wojewodztwa = mysqlTable("wojewodztwa", {
