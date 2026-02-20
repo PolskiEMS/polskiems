@@ -23,7 +23,39 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                 <h2>{producer.nazwa}</h2>
                                 <div className={styles.bottom}>
                                     <p>{producer.opis}</p>
-                                    <Link href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></Link>
+                                    <div className={styles.btnRow}>
+                                        <a href={`mailto:${producer.email}`}>
+                                            <button className={styles.contactMeBtn}>
+                                                Skontaktuj się
+                                            </button>
+                                        </a>
+                                    
+                                        {producer.www && (
+                                            <a
+                                                href={producer.www.startsWith("http") 
+                                                    ? producer.www 
+                                                    : `https://${producer.www}`
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                onClick={() =>
+                                                    fetch("/api/companyEvent", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({
+                                                            companyId: producer.id,
+                                                            eventType: "website_click",
+                                                        }),
+                                                    })
+                                                }
+                                            >
+                                                <button className={styles.websiteBtn}>
+                                                    Strona firmy
+                                                </button>
+                                            </a>
+                                        )}
+                                    </div>
+    
                                 </div>
                             </div>
                         </motion.div>
