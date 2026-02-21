@@ -2,6 +2,8 @@ import {
   mysqlTable,
   varchar,
   datetime,
+  text,
+  boolean,
   int,
   mysqlEnum,
 } from "drizzle-orm/mysql-core";
