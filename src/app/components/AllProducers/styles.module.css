@@ -13,13 +13,8 @@
     display: flex;
 }
 
-.cardInner {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 0;
-}
+.divToMove {
+    transform: translateY(-100px);
 
 .producers img {
     border-radius: 50%;
