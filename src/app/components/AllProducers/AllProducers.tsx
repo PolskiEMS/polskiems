@@ -41,12 +41,7 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                     </a>
 
                                     {producer.www && (
-                                        <a
-                                            href={
-                                                producer.www.startsWith("http")
-                                                    ? producer.www
-                                                    : `https://${producer.www}`
-                                            }
+                                        <a href={ producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}
                                             target="_blank"
                                             rel="noreferrer"
                                         >
