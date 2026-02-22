@@ -20,7 +20,7 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                             delay: i == 0 || i == 1 || i == 2 ? 0.3 * i : 0.3
                         }}
                     >
-                        <div className={styles.cardInner}>
+                        <div className={styles.divToMove}>
                             <Image
                                 src={`/images/producers/${producer.nazwa}.jpg`}
                                 width={210}
