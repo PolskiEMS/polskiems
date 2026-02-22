@@ -15,6 +15,9 @@
 
 .divToMove {
     transform: translateY(-100px);
+    width: 100%;
+  display: flex;
+  flex-direction: column;
 
 .producers img {
     border-radius: 50%;
@@ -60,6 +63,7 @@
 .contactMeBtn {
     margin-top: 30px;
     width: 300px;
+    padding: 10px 14px;
     padding-block: 8px;
     border: 1px solid rgba(255, 255, 255, 0.178);
     background-color: rgb(6, 122, 255);
