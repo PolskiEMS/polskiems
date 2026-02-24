@@ -48,6 +48,7 @@
 
 .producers {
     display: grid;
+    align-items: start;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     column-gap: 50px;
     row-gap: 180px;
