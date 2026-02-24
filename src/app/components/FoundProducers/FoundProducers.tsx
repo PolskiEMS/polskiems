@@ -58,7 +58,10 @@ const SearchContent = () => {
                                             <h2>{producer.nazwa}</h2>
                                             <div className={styles.bottom}>
                                                 <p>{producer.opis}</p>
-                                                <Link href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></Link>
+                                                <div className={style.btnRow}>
+                                                <a href={`mailto:${producer.email}`}>
+                                                    <button className={styles.contactMeBtn}>Skontaktuj się</button>
+                                                    <a/>
                                                 
                                                 {producer.www && producer.www.trim() !== "" && (
                                                 <a
@@ -69,6 +72,7 @@ const SearchContent = () => {
                                                   <button className={styles.contactMeBtn}>Strona firmy</button>
                                                 </a>
                                               )}
+                                                </div>
                                             </div>
                                         </div>
                                     </motion.div>
