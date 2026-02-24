@@ -58,7 +58,16 @@ const SearchContent = () => {
                                             <h2>{producer.nazwa}</h2>
                                             <div className={styles.bottom}>
                                                 <p>{producer.opis}</p>
-                                                <Link href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></Link>
+                                                <div className={styles.btnRow}></div>
+                                                <a href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></a>
+                                                {producer.www && (
+                                                    <a href={ producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                    >
+                                                        <button className={styles.contactMeBtn}>Strona firmy</button>
+                                                    </a>
+                                                )}
                                             </div>
                                         </div>
                                     </motion.div>
