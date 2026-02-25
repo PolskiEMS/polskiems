@@ -50,7 +50,6 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                     )}
                                 </div>
                             </div>
-
                         </div>
                     </motion.div>
                 ))}

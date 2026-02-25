@@ -57,7 +57,8 @@ const SearchContent = () => {
                                             <Image src={`/images/producers/${producer.nazwa}.jpg`} width={210} height={210} alt={`Producent ${producer.nazwa}`} />
                                             <h2>{producer.nazwa}</h2>
                                             <div className={styles.bottom}>
-                                                <p>{producer.opis}</p>
+                                                <p>{producer.opis}</p> 
+                                                
                                                 <div className={styles.btnRow}></div>
                                                 <a href={`mailto:${producer.email}`}><button className={styles.contactMeBtn}>Skontaktuj się</button></a>
                                                 {producer.www && (
