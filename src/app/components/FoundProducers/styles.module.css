@@ -4,7 +4,6 @@
 
 .producerBlock {
     padding: 25px;
-    height: 500px;
     border-radius: 24px;
     background-color: rgba(201, 154, 255, 0.384);
     backdrop-filter: blur(3px);
@@ -64,6 +63,7 @@
 .contactMeBtn {
     margin-top: 30px;
     width: 300px;
+    padding: 10px 14px;;
     padding-block: 8px;
     border: 1px solid rgba(255, 255, 255, 0.178);
     background-color: rgb(6, 122, 255);
