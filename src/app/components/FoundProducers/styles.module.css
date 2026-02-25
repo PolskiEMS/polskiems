@@ -8,6 +8,7 @@
     background-color: rgba(201, 154, 255, 0.384);
     backdrop-filter: blur(3px);
     position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .divToMove {
