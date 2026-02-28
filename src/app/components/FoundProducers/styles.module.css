@@ -8,11 +8,16 @@
     background-color: rgba(201, 154, 255, 0.384);
     backdrop-filter: blur(3px);
     position: relative;
+    min-height: 500px;
+    height: auto;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .divToMove {
     transform: translateY(-100px);
+    display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .producers img {
