@@ -18,7 +18,9 @@
     margin-right: auto;
     width: 300px;
 }
-
+.page p {
+    text-align: center;
+}
 .container {
     margin-top: 50px;
     display: flex;
