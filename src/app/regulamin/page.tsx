@@ -5,14 +5,12 @@ const Regulamin = () => {
     return (
         <div className={styles.page}>
             <h1>Regulamin</h1>
-            <div>
-               <section>
+        <section>
         <h3>§1. Informacje ogólne</h3>
         <p>
           Niniejszy regulamin określa zasady korzystania ze strony internetowej
           polskiems.pl, prowadzonej przez Michała Kowalskiego.
         </p>
-
         <p>
           <strong>Kontakt:</strong><br />
           e-mail: info@polskiems.pl<br />
@@ -101,7 +99,9 @@ const Regulamin = () => {
           przepisy prawa polskiego.
         </p>
       </section>
-            <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+            <Link href={'formularz_zgloszeniowy_firmy.docx'}>
+                <button className={styles.chceZnalezcSie}>
+                Chcę znaleźć się na stronie</button></Link>
         </div>
     );
 }
