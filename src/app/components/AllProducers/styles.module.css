@@ -47,7 +47,7 @@
     align-items: center;
     margin-top: 40px;
     padding-bottom: 20px;
-    gap: 18px;
+    gap: 10px;
 }
 
 
@@ -110,8 +110,10 @@
         grid-template-columns: repeat(1, 1fr);
         padding: 15px;
         row-gap: 110px;
-        /* gap: 15px; */
     }
+    .buttons {
+    gap: 8px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -127,4 +129,7 @@
     .contactMeBtn {
         width: 250px;
     }
+    .buttons {
+    gap: 8px;
+  }
 }
