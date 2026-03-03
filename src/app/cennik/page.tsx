@@ -16,6 +16,7 @@ const cennik = () => {
     return (
         <div className={styles.page}>
             <h1>Cennik</h1>
+            <p>*Ten cennik jest wyłącznie poglądowy i nie stanowi oferty handlowej*</p>
             <div className={styles.container}>
                 <div className="overflow-x-auto bg-gray-900 text-white rounded-lg shadow-md">
                     <table className="min-w-full text-sm text-left">
