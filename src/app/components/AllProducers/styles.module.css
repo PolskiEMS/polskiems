@@ -126,6 +126,12 @@
         padding: 10px;
     }
 
+    .producerBlock {
+    min-height: unset;
+    height: auto;
+    padding-bottom: 28px;
+  }
+
     .contactMeBtn {
         width: 250px;
     }
