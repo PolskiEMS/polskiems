@@ -1,11 +1,16 @@
-import { getFilteredProducers } from "@/lib/actions";
 import { NextRequest, NextResponse } from "next/server";
+import { saveCompanyEvent } from "@/lib/actions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST (req: NextRequest, ) {
-    const filters = await req.json()
-    const filteredProducers = await getFilteredProducers(filters)
-    return NextResponse.json(filteredProducers)
+export async function POST(req: NextRequest) {
+  try {
+    const payload = await req.json();
+    const result = await saveCompanyEvent(payload, req);
+    return NextResponse.json(result);
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
 }
