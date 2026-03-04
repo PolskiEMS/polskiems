@@ -6,6 +6,7 @@ import {
   produkcja,
   statystyki,
   wojewodztwa,
+  companyEvents,
 } from "@/db/schema";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
@@ -105,3 +106,48 @@ export async function getFilteredProducers(filters: Filters) {
 
   return await query;
 }
+
+const ALLOWED_EVENTS = new Set([
+  "view",
+  "phone_click",
+  "email_click",
+  "website_click",
+  "doc_download",
+]);
+
+type CompanyEventPayload = {
+  company_id: number | string;
+  event_type: string;
+  referrer?: string | null;
+  utm_source?: string | null;
+  utm_campaign?: string | null;
+};
+
+export const saveCompanyEvent = async (payload: CompanyEventPayload) => {
+  const db = getDb();
+
+  const companyId = Number(payload.company_id);
+  const eventType = payload.event_type;
+
+  if (!Number.isFinite(companyId) || companyId <= 0) {
+    return { ok: false, error: "Invalid company_id" as const };
+  }
+
+  if (!ALLOWED_EVENTS.has(eventType)) {
+    return { ok: false, error: "Invalid event_type" as const };
+  }
+
+  const referrer = (payload.referrer ?? null)?.toString().slice(0, 255) ?? null;
+  const utmSource = (payload.utm_source ?? null)?.toString().slice(0, 100) ?? null;
+  const utmCampaign = (payload.utm_campaign ?? null)?.toString().slice(0, 100) ?? null;
+
+  await db.insert(companyEvents).values({
+    companyId,
+    eventType: eventType as any,
+    referrer,
+    utmSource,
+    utmCampaign,
+  });
+
+  return { ok: true as const };
+};
