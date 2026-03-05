@@ -85,8 +85,7 @@ const ProducerSearch = () => {
                 {
                     category === 'scales' &&
                     <div
-                        className={styles.buttons}
-                        onClick={saveStatistics}>
+                        className={styles.buttons}>
                         <Link href={{
                             pathname: '/producenci',
                             query: {
