@@ -5,6 +5,7 @@ const Regulamin = () => {
     return (
         <div className={styles.page}>
             <h1 className={styles.title}>Regulamin</h1>
+            
             <div className={styles.content}>
         <section>
         <h3>§1. Informacje ogólne</h3>
@@ -102,10 +103,11 @@ const Regulamin = () => {
       </section>
             <Link href={'formularz_zgloszeniowy_firmy.docx'}>
                 <button className={styles.chceZnalezcSie}>
-                Chcę znaleźć się na stronie</button></Link>
-          </div>
-      </div>
-    );
+                Chcę znaleźć się na stronie</button>
+                </Link>
+        </div>
+    </div>
+  );
 }
 
 export default Regulamin;
