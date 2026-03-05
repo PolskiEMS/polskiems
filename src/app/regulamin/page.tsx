@@ -4,7 +4,8 @@ import styles from './styles.module.css'
 const Regulamin = () => {
     return (
         <div className={styles.page}>
-            <h1>Regulamin</h1>
+            <h1 className={styles.title}>Regulamin</h1>
+            <div className={styles.content}>
         <section>
         <h3>§1. Informacje ogólne</h3>
         <p>
@@ -102,7 +103,8 @@ const Regulamin = () => {
             <Link href={'formularz_zgloszeniowy_firmy.docx'}>
                 <button className={styles.chceZnalezcSie}>
                 Chcę znaleźć się na stronie</button></Link>
-        </div>
+          </div>
+      </div>
     );
 }
 

@@ -3,7 +3,15 @@
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-    padding-inline: 15px;
+    padding: 40px 15px 30px;
+}
+
+.title {
+  text-align: center;
+  margin: 0 0 26px;
+  font-size: 2.8em;
+  position: static;
+  width: auto;
 }
 
 .page h1 {
@@ -55,17 +63,18 @@
 }
 
 @media screen and (max-width: 768px) {
-    .page h1 {
-        top: 140px;
-        font-size: 2.4em;
+
+    .page {
+        padding: 24px 15px 24px;
     }
 
-    .page div {
-        margin-top: 100px;
+    .title {
+        front-size: 2.2em;
+        margin-bottom: 18px;
     }
 
     .page h3 {
-        font-size: 1.4em;
+        font-size: 1.35em;
     }
 
     .page p {
