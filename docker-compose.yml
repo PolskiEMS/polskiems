@@ -1,0 +1,11 @@
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: polskiems
+      MYSQL_USER: polskiems
+      MYSQL_PASSWORD: v&8u76b@it*-BfwO
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3306:3306"
