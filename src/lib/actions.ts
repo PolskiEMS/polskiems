@@ -85,7 +85,7 @@ export async function getFilteredProducers(filters: Filters) {
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id));
 
   // Build filter logic
-  const whereConditions = [eq(producenci.isActive, true)]; // Add isActive filter by default
+  const whereConditions = [sql`${producenci.isActive} = 1`];
 
   // ✅ Region filter: match ANY
   if (regions.length > 0) {
