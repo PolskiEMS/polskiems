@@ -16,7 +16,7 @@ const db = getDb();
   return await db
     .select()
     .from(producenci)
-    .where(eq(producenci.isActive, true))
+    .where(sql`${producenci.isActive} = 1`)
     .orderBy(asc(producenci.id));
 };
 
