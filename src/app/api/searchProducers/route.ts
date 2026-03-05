@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const payload = await req.json();
-    const result = await saveCompanyEvent(payload, req);
+    const result = await saveCompanyEvent(payload);
     return NextResponse.json(result);
   } catch (e) {
     console.error(e);
