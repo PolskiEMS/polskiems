@@ -35,7 +35,7 @@ export async function getcompanyStats(days = 30) {
     )
     .where(sql`${producenci.isActive} = 1`)
     .groupBy(producenci.id, producenci.nazwa)
-    .orderBy(desc(sql`views`));
+    .orderBy(desc(sql`view`));
 }
 
 export const getAllProducers = async () => {
