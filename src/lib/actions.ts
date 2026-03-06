@@ -18,13 +18,41 @@ export async function getcompanyStats(days = 30) {
   const since =
     days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
 
+    const viewsExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+  const websiteClicksExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+  const emailClicksExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+
+  const websiteCtrExpr = sql<number>`
+    COALESCE(
+      ROUND(
+        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
+        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        2
+      ),
+      0
+    )
+  `.as("website_ctr_pct");
+
+  const emailCtrExpr = sql<number>`
+    COALESCE(
+      ROUND(
+        100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
+        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        2
+      ),
+      0
+    )
+  `.as("email_ctr_pct");
+
   return await db
     .select({
       companyId: producenci.id,
       firma: producenci.nazwa,
-      views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
-      websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
-      emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
+      views: viewsExpr,
+      websiteClicks: websiteClicksExpr,
+      emailClicks: emailClicksExpr,
+      websiteCtrPct: websiteCtrExpr,
+      emailCtrPct: emailCtrExpr,
     })
     .from(producenci)
     .leftJoin(
@@ -35,7 +63,7 @@ export async function getcompanyStats(days = 30) {
     )
     .where(sql`${producenci.isActive} = 1`)
     .groupBy(producenci.id, producenci.nazwa)
-    .orderBy(desc(sql`view`));
+    .orderBy(desc(viewsExpr));
 }
 
 export const getAllProducers = async () => {
