@@ -10,6 +10,7 @@ import {
 
 import { sql } from "drizzle-orm";
 
+
 export const wojewodztwa = mysqlTable("wojewodztwa", {
   id: int().primaryKey().autoincrement(),
   nazwa: varchar("nazwa", { length: 100 }).unique().notNull(),
