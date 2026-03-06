@@ -11,49 +11,7 @@ import {
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 
-export async function getCompanyStats(days = 30) {
-  const db = getDb();
-
-  const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
-
-  return await db
-    .select({
-      companyId: producenci.id,
-      firma: producenci.nazwa,
-
-      views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
-      websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
-      emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
-
-      websiteCtrPct: sql<number>`
-        ROUND(
-          100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
-          / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
-          2
-        )
-      `,
-      emailCtrPct: sql<number>`
-        ROUND(
-          100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
-          / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
-          2
-        )
-      `,
-    })
-    .from(producenci)
-    .leftJoin(
-      companyEvents,
-      since
-        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
-        : sql`${companyEvents.companyId} = ${producenci.id}`
-    )
-    .where(sql`${producenci.isActive} = 1`)
-    .groupBy(producenci.id, producenci.nazwa)
-    .orderBy(desc(sql`views`));
-}
-
-export async function getCompanyStats(days = 30) {
+export async function getcompanyStats(days = 30) {
   const db = getDb();
 
   // warunek czasowy (MySQL)
