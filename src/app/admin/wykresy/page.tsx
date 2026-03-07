@@ -15,7 +15,8 @@ export default async function AdminChartsPage({
 }: {
   searchParams: { days?: string };
 }) {
-  const days = Number(searchParams?.days ?? 30);
+  const params = await searchParams;
+  const days = Number(params?.days ?? 30);
 
   const data = (await getChartsData(days)) as {
     viewsChart: ChartRow[];
