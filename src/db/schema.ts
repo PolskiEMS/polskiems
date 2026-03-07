@@ -7,9 +7,7 @@ import {
   int,
   mysqlEnum,
 } from "drizzle-orm/mysql-core";
-
 import { sql } from "drizzle-orm";
-
 
 export const wojewodztwa = mysqlTable("wojewodztwa", {
   id: int().primaryKey().autoincrement(),
@@ -89,5 +87,12 @@ export const companyEvents = mysqlTable("company_events", {
 
   createdAt: datetime("created_at", { mode: "string" })
     .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});
+
+  export const pageViews = mysqlTable("page_views", {
+  id: int("id").primaryKey().autoincrement(),
+  page: varchar("page", { length: 100 }).notNull(),
+  createdAt: datetime("created_at", { mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`),
 });

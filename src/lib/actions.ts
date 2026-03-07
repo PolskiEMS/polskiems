@@ -7,67 +7,84 @@ import {
   statystyki,
   wojewodztwa,
   companyEvents,
+  pageViews,
 } from "@/db/schema";
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 
-export async function getcompanyStats(days = 30) {
+export async function getDashboardStats(days = 30) {
   const db = getDb();
 
-  // warunek czasowy (MySQL)
   const since =
     days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
 
-    const viewsExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
-  const websiteClicksExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
-  const emailClicksExpr = sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+  const [activeCompaniesResult] = await db.execute(sql`
+    SELECT COUNT(*) AS count
+    FROM producenci
+    WHERE isActive = 1
+  `);
 
-  const websiteCtrExpr = sql<number>`
-    COALESCE(
-      ROUND(
-        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
-        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
-        2
-      ),
-      0
-    )
-  `.as("website_ctr_pct");
+  const [pageViewsResult] = await db.execute(sql`
+    SELECT COUNT(*) AS count
+    FROM page_views
+    WHERE page = 'home'
+      AND page_views.created_at >= NOW() - INTERVAL ${days} DAY
+  `);
 
-  const emailCtrExpr = sql<number>`
-    COALESCE(
-      ROUND(
-        100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
-        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
-        2
-      ),
-      0
-    )
-  `.as("email_ctr_pct");
+  const [websiteClicksResult] = await db.execute(sql`
+    SELECT COUNT(*) AS count
+    FROM company_events
+    WHERE event_type = 'website_click'
+      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
+  `);
 
-  return await db
-    .select({
-      companyId: producenci.id,
-      firma: producenci.nazwa,
-      views: viewsExpr,
-      websiteClicks: websiteClicksExpr,
-      emailClicks: emailClicksExpr,
-      websiteCtrPct: websiteCtrExpr,
-      emailCtrPct: emailCtrExpr,
-    })
-    .from(producenci)
-    .leftJoin(
-      companyEvents,
-      since
-        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
-        : sql`${companyEvents.companyId} = ${producenci.id}`
-    )
-    .where(sql`${producenci.isActive} = 1`)
-    .groupBy(producenci.id, producenci.nazwa)
-    .orderBy(desc(viewsExpr));
+  const [emailClicksResult] = await db.execute(sql`
+    SELECT COUNT(*) AS count
+    FROM company_events
+    WHERE event_type = 'email_click'
+      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
+  `);
+
+  const topCompanies = await db.execute(sql`
+    SELECT
+      producenci.id AS companyId,
+      producenci.nazwa AS firma,
+      COUNT(*) AS views
+    FROM company_events
+    JOIN producenci
+      ON producenci.id = company_events.company_id
+    WHERE company_events.event_type = 'view'
+      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
+    GROUP BY producenci.id, producenci.nazwa
+    ORDER BY views DESC
+    LIMIT 5
+  `);
+
+  const recentEvents = await db.execute(sql`
+    SELECT
+      company_events.id,
+      producenci.nazwa AS firma,
+      company_events.event_type AS eventType,
+      company_events.created_at AS createdAt
+    FROM company_events
+    JOIN producenci
+      ON producenci.id = company_events.company_id
+    ORDER BY company_events.created_at DESC
+    LIMIT 10
+  `);
+
+  return {
+    activeCompanies: Number((activeCompaniesResult as any)?.count ?? 0),
+    pageViews: Number((pageViewsResult as any)?.count ?? 0),
+    websiteClicks: Number((websiteClicksResult as any)?.count ?? 0),
+    emailClicks: Number((emailClicksResult as any)?.count ?? 0),
+    topCompanies,
+    recentEvents,
+  };
 }
 
 export const getAllProducers = async () => {
-const db = getDb();
+  const db = getDb();
   return await db
     .select()
     .from(producenci)
@@ -76,7 +93,7 @@ const db = getDb();
 };
 
 export const saveStatistics = async (data: string) => {
-const db = getDb();
+  const db = getDb();
   return await db.insert(statystyki).values({ wynik: data });
 };
 
@@ -90,7 +107,6 @@ export async function getFilteredProducers(filters: Filters) {
   const db = getDb();
   const { regions = [], requirements = [], scales = [] } = filters;
 
-  // Match ALL selected requirements
   let matchingRequirementsIds: number[] = [];
   if (requirements.length > 0) {
     const reqResult = await db
@@ -104,10 +120,9 @@ export async function getFilteredProducers(filters: Filters) {
       );
 
     matchingRequirementsIds = reqResult.map((r) => r.companyId);
-    if (matchingRequirementsIds.length === 0) return []; // nothing matches
+    if (matchingRequirementsIds.length === 0) return [];
   }
 
-  // Match ALL selected production scales
   let matchingScalesIds: number[] = [];
   if (scales.length > 0) {
     const scaleResult = await db
@@ -121,10 +136,9 @@ export async function getFilteredProducers(filters: Filters) {
       );
 
     matchingScalesIds = scaleResult.map((r) => r.companyId);
-    if (matchingScalesIds.length === 0) return []; // nothing matches
+    if (matchingScalesIds.length === 0) return [];
   }
 
-  // Main producer query
   const query = db
     .select({
       id: producenci.id,
@@ -139,20 +153,16 @@ export async function getFilteredProducers(filters: Filters) {
     .from(producenci)
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id));
 
-  // Build filter logic
   const whereConditions = [sql`${producenci.isActive} = 1`];
 
-  // ✅ Region filter: match ANY
   if (regions.length > 0) {
     whereConditions.push(inArray(wojewodztwa.nazwa, regions));
   }
 
-  // ✅ Requirements: match ALL
   if (requirements.length > 0) {
     whereConditions.push(inArray(producenci.id, matchingRequirementsIds));
   }
 
-  // ✅ Scales: match ALL
   if (scales.length > 0) {
     whereConditions.push(inArray(producenci.id, matchingScalesIds));
   }

@@ -1,9 +1,12 @@
 import styles from './styles.module.css'
 import Link from "next/link";
+import TrackHomeView from "@/app/components/TrackHomeView/TrackHomeView";
 
 export default function Home() {
   return (
     <div className={styles.page}>
+      <TrackHomeView />
+
       <h1>Polski <br /> EMS</h1>
       <h2>Znajdź swojego producenta</h2>
       <div className={styles.buttons}>
