@@ -12,14 +12,12 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                 {producers.map((producer, i) => (
                     <motion.div
                         className={styles.producerBlock}
-                        key={i}
+                        key={producer.id ?? i}
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{
-                            duration: 1.2,
-                            delay: i == 0 || i == 1 || i == 2 ? 0.3 * i : 0.3
-                        }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        onViewportEnter={() => trackCompanyEvent(producer.id, "view")}
+                        transition={{duration: 1.2, delay: i == 0 || i == 1 || i == 2 ? 0.3 * i : 0.3}}
                     >
                         <div className={styles.divToMove}>
                             <Image

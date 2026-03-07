@@ -71,7 +71,8 @@ const SearchContent = () => {
                   key={producer.id ?? i}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  onViewportEnter={() => trackCompanyEvent(producer.id, "view")}
                   transition={{ duration: 1.2, delay: i <= 2 ? 0.3 * i : 0.3 }}
                 >
                   <div className={styles.divToMove}>

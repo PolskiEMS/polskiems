@@ -1,4 +1,11 @@
+const trackedViews = new Set<number>();
+
 export const trackCompanyEvent = (companyId: number, eventType: string) => {
+  if (eventType === "view") {
+    if (trackedViews.has(companyId)) return;
+    trackedViews.add(companyId);
+  }
+  
   const payload = JSON.stringify({
     company_id: companyId,
     event_type: eventType,
