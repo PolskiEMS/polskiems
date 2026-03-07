@@ -1,0 +1,133 @@
+.page {
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 220px 180px;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  color: white;
+  font-weight: 600;
+}
+
+.select {
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  padding: 0 12px;
+}
+
+.select option {
+  color: black;
+}
+
+.button {
+  height: 46px;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reportCard,
+.empty {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.35);
+  border-radius: 14px;
+  padding: 22px;
+  color: white;
+  backdrop-filter: blur(6px);
+}
+
+.reportTitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.kpi {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.kpiLabel {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.kpiValue {
+  font-size: 1.5rem;
+}
+
+.backRow {
+  margin-top: 22px;
+}
+
+.backLink {
+  color: white;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+}
+
+@media (max-width: 1000px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}

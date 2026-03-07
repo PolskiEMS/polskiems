@@ -383,3 +383,63 @@ export async function getChartsData(days = 30) {
     emailClicksChart: [...normalized].sort((a, b) => b.emailClicks - a.emailClicks).slice(0, 10),
   };
 }
+
+export async function getReportCompanies() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+    })
+    .from(producenci)
+    .where(sql`${producenci.isActive} = 1`)
+    .orderBy(asc(producenci.nazwa));
+}
+
+export async function getCompanyReport(companyId: number, days = 30) {
+  const db = getDb();
+
+  const since =
+    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+
+  const rows = await db
+    .select({
+      companyId: producenci.id,
+      firma: producenci.nazwa,
+      views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
+      websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
+      emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
+      websiteCtrPct: sql<number>`
+        COALESCE(
+          ROUND(
+            100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
+            / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+            2
+          ),
+          0
+        )
+      `,
+      emailCtrPct: sql<number>`
+        COALESCE(
+          ROUND(
+            100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
+            / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+            2
+          ),
+          0
+        )
+      `,
+    })
+    .from(producenci)
+    .leftJoin(
+      companyEvents,
+      since
+        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
+        : sql`${companyEvents.companyId} = ${producenci.id}`
+    )
+    .where(sql`${producenci.id} = ${companyId}`)
+    .groupBy(producenci.id, producenci.nazwa);
+
+  return rows[0] ?? null;
+}
