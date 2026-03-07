@@ -1,0 +1,141 @@
+.page {
+  min-height: 100vh;
+  padding: 36px 20px 60px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 35px;
+}
+
+.adminMenu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.adminBox {
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: 0.2s ease;
+  backdrop-filter: blur(6px);
+}
+
+.adminBox:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  padding: 20px;
+  color: white;
+  backdrop-filter: blur(6px);
+}
+
+.cardTitle {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.topList {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.topListItem {
+  margin-bottom: 8px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.table th {
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .adminMenu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .adminBox {
+    min-height: 80px;
+    font-size: 1.1rem;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .cardTitle {
+    font-size: 1.2rem;
+  }
+
+  .table th,
+  .table td {
+    font-size: 0.95rem;
+    padding: 8px 4px;
+  }
+}
