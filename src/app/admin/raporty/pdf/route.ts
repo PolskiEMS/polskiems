@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
     }
 
     const report = await getCompanyReport(companyId, days);
+    console.log("PDF REPORT:", report);
 
     if (!report) {
       return new Response("Report not found", { status: 404 });
