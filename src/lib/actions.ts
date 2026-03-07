@@ -15,8 +15,8 @@ import { getDb } from "@/lib/db";
 export async function getDashboardStats(days = 30) {
   const db = getDb();
 
-  const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+const since =
+  days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
 
   const [activeCompaniesResult] = await db.execute(sql`
     SELECT COUNT(*) AS count
@@ -81,6 +81,65 @@ export async function getDashboardStats(days = 30) {
     topCompanies,
     recentEvents,
   };
+}
+
+export async function getCompanyStats(days = 30) {
+  const db = getDb();
+
+  const since =
+    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+
+  const viewsExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+
+  const websiteClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+
+  const emailClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+
+  const websiteCtrExpr = sql<number>`
+    COALESCE(
+      ROUND(
+        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
+        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        2
+      ),
+      0
+    )
+  `.as("website_ctr_pct");
+
+  const emailCtrExpr = sql<number>`
+    COALESCE(
+      ROUND(
+        100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
+        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        2
+      ),
+      0
+    )
+  `.as("email_ctr_pct");
+
+  return await db
+    .select({
+      companyId: producenci.id,
+      firma: producenci.nazwa,
+      views: viewsExpr,
+      websiteClicks: websiteClicksExpr,
+      emailClicks: emailClicksExpr,
+      websiteCtrPct: websiteCtrExpr,
+      emailCtrPct: emailCtrExpr,
+    })
+    .from(producenci)
+    .leftJoin(
+      companyEvents,
+      since
+        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
+        : sql`${companyEvents.companyId} = ${producenci.id}`
+    )
+    .where(sql`${producenci.isActive} = 1`)
+    .groupBy(producenci.id, producenci.nazwa)
+    .orderBy(desc(viewsExpr));
 }
 
 export const getAllProducers = async () => {
@@ -216,3 +275,120 @@ export const saveCompanyEvent = async (payload: CompanyEventPayload) => {
 
   return { ok: true as const };
 };
+
+export async function getCompanyRanking(days = 30) {
+  const db = getDb();
+
+  const since =
+    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+
+  const viewsExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+
+  const websiteClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+
+  const emailClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+
+  const websiteCtrExpr = sql<number>`
+    COALESCE(
+      ROUND(
+        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
+        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        2
+      ),
+      0
+    )
+  `.as("website_ctr_pct");
+
+  const rows = await db
+    .select({
+      companyId: producenci.id,
+      firma: producenci.nazwa,
+      views: viewsExpr,
+      websiteClicks: websiteClicksExpr,
+      emailClicks: emailClicksExpr,
+      websiteCtrPct: websiteCtrExpr,
+    })
+    .from(producenci)
+    .leftJoin(
+      companyEvents,
+      since
+        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
+        : sql`${companyEvents.companyId} = ${producenci.id}`
+    )
+    .where(sql`${producenci.isActive} = 1`)
+    .groupBy(producenci.id, producenci.nazwa);
+
+  const normalized = rows.map((row) => ({
+    ...row,
+    views: Number(row.views ?? 0),
+    websiteClicks: Number(row.websiteClicks ?? 0),
+    emailClicks: Number(row.emailClicks ?? 0),
+    websiteCtrPct: Number(row.websiteCtrPct ?? 0),
+  }));
+
+  return {
+    topViews: [...normalized]
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 10),
+
+    topWebsiteClicks: [...normalized]
+      .sort((a, b) => b.websiteClicks - a.websiteClicks)
+      .slice(0, 10),
+
+    topWebsiteCtr: [...normalized]
+      .filter((row) => row.views > 0)
+      .sort((a, b) => b.websiteCtrPct - a.websiteCtrPct)
+      .slice(0, 10),
+  };
+}
+
+export async function getChartsData(days = 30) {
+  const db = getDb();
+
+  const since =
+    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+
+  const viewsExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+
+  const websiteClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+
+  const emailClicksExpr =
+    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+
+  const rows = await db
+    .select({
+      companyId: producenci.id,
+      firma: producenci.nazwa,
+      views: viewsExpr,
+      websiteClicks: websiteClicksExpr,
+      emailClicks: emailClicksExpr,
+    })
+    .from(producenci)
+    .leftJoin(
+      companyEvents,
+      since
+        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
+        : sql`${companyEvents.companyId} = ${producenci.id}`
+    )
+    .where(sql`${producenci.isActive} = 1`)
+    .groupBy(producenci.id, producenci.nazwa);
+
+  const normalized = rows.map((row) => ({
+    companyId: row.companyId,
+    firma: row.firma,
+    views: Number(row.views ?? 0),
+    websiteClicks: Number(row.websiteClicks ?? 0),
+    emailClicks: Number(row.emailClicks ?? 0),
+  }));
+
+  return {
+    viewsChart: [...normalized].sort((a, b) => b.views - a.views).slice(0, 10),
+    websiteClicksChart: [...normalized].sort((a, b) => b.websiteClicks - a.websiteClicks).slice(0, 10),
+    emailClicksChart: [...normalized].sort((a, b) => b.emailClicks - a.emailClicks).slice(0, 10),
+  };
+}

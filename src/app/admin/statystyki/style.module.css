@@ -1,0 +1,46 @@
+.page {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 2.6rem;
+  margin-bottom: 30px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  overflow: hidden;
+  color: white;
+}
+
+.table th {
+  text-align: left;
+  padding: 14px;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(255,255,255,0.3);
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.table tr:hover {
+  background: rgba(255,255,255,0.08);
+}
