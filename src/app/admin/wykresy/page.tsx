@@ -94,12 +94,16 @@ function ChartCard({
               </div>
 
               <div className={styles.barTrack}>
+                {item.value > 0 && (
                 <div
                   className={styles.barFill}
-                  style={{
-                    "--bar-width": `${(item.value / maxValue) * 100}%`,
-                  } as React.CSSProperties}
+                  style={
+                    {
+                      "--bar-width": `${(item.value / maxValue) * 100}%`,
+                    } as React.CSSProperties
+                  }
                 />
+              )}
               </div>
             </div>
           ))}
