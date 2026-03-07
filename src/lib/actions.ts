@@ -15,69 +15,60 @@ import { getDb } from "@/lib/db";
 export async function getDashboardStats(days = 30) {
   const db = getDb();
 
-const since =
-  days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+  const activeCompaniesRows = await db.select({
+    count: sql<number>`COUNT(*)`,
+  })
+  .from(producenci)
+  .where(sql`${producenci.isActive} = 1`);
 
-  const [activeCompaniesResult] = await db.execute(sql`
-    SELECT COUNT(*) AS count
-    FROM producenci
-    WHERE isActive = 1
-  `);
+  const pageViewsRows = await db.select({
+    count: sql<number>`COUNT(*)`,
+  })
+  .from(pageViews)
+  .where(sql`${pageViews.page} = 'home' AND ${pageViews.createdAt} >= NOW() - INTERVAL ${days} DAY`);
 
-  const [pageViewsResult] = await db.execute(sql`
-    SELECT COUNT(*) AS count
-    FROM page_views
-    WHERE page = 'home'
-      AND page_views.created_at >= NOW() - INTERVAL ${days} DAY
-  `);
+  const websiteClicksRows = await db.select({
+    count: sql<number>`COUNT(*)`,
+  })
+  .from(companyEvents)
+  .where(sql`${companyEvents.eventType} = 'website_click' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`);
 
-  const [websiteClicksResult] = await db.execute(sql`
-    SELECT COUNT(*) AS count
-    FROM company_events
-    WHERE event_type = 'website_click'
-      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
-  `);
+  const emailClicksRows = await db.select({
+    count: sql<number>`COUNT(*)`,
+  })
+  .from(companyEvents)
+  .where(sql`${companyEvents.eventType} = 'email_click' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`);
 
-  const [emailClicksResult] = await db.execute(sql`
-    SELECT COUNT(*) AS count
-    FROM company_events
-    WHERE event_type = 'email_click'
-      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
-  `);
+  const topCompanies = await db
+    .select({
+      companyId: producenci.id,
+      firma: producenci.nazwa,
+      views: sql<number>`COUNT(*)`,
+    })
+    .from(companyEvents)
+    .innerJoin(producenci, eq(producenci.id, companyEvents.companyId))
+    .where(sql`${companyEvents.eventType} = 'view' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`)
+    .groupBy(producenci.id, producenci.nazwa)
+    .orderBy(desc(sql`COUNT(*)`))
+    .limit(5);
 
-  const topCompanies = await db.execute(sql`
-    SELECT
-      producenci.id AS companyId,
-      producenci.nazwa AS firma,
-      COUNT(*) AS views
-    FROM company_events
-    JOIN producenci
-      ON producenci.id = company_events.company_id
-    WHERE company_events.event_type = 'view'
-      AND company_events.created_at >= NOW() - INTERVAL ${days} DAY
-    GROUP BY producenci.id, producenci.nazwa
-    ORDER BY views DESC
-    LIMIT 5
-  `);
-
-  const recentEvents = await db.execute(sql`
-    SELECT
-      company_events.id,
-      producenci.nazwa AS firma,
-      company_events.event_type AS eventType,
-      company_events.created_at AS createdAt
-    FROM company_events
-    JOIN producenci
-      ON producenci.id = company_events.company_id
-    ORDER BY company_events.created_at DESC
-    LIMIT 10
-  `);
+  const recentEvents = await db
+    .select({
+      id: companyEvents.id,
+      firma: producenci.nazwa,
+      eventType: companyEvents.eventType,
+      createdAt: companyEvents.createdAt,
+    })
+    .from(companyEvents)
+    .innerJoin(producenci, eq(producenci.id, companyEvents.companyId))
+    .orderBy(desc(companyEvents.createdAt))
+    .limit(10);
 
   return {
-    activeCompanies: Number((activeCompaniesResult as any)?.count ?? 0),
-    pageViews: Number((pageViewsResult as any)?.count ?? 0),
-    websiteClicks: Number((websiteClicksResult as any)?.count ?? 0),
-    emailClicks: Number((emailClicksResult as any)?.count ?? 0),
+    activeCompanies: Number(activeCompaniesRows[0]?.count ?? 0),
+    pageViews: Number(pageViewsRows[0]?.count ?? 0),
+    websiteClicks: Number(websiteClicksRows[0]?.count ?? 0),
+    emailClicks: Number(emailClicksRows[0]?.count ?? 0),
     topCompanies,
     recentEvents,
   };

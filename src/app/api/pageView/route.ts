@@ -2,20 +2,18 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { pageViews } from "@/db/schema";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export async function POST(req: Request) {
+  const db = getDb();
 
-export async function POST() {
-  try {
-    const db = getDb();
+  const body = await req.json().catch(() => ({}));
 
-    await db.insert(pageViews).values({
-      page: "home",
-    });
+  const page = body.page ?? "home";
+  const referrer = req.headers.get("referer") ?? null;
 
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("pageView error:", err);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+  await db.insert(pageViews).values({
+    page,
+    referrer,
+  });
+
+  return NextResponse.json({ ok: true });
 }
