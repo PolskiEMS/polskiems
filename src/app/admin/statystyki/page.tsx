@@ -1,13 +1,30 @@
+import Link from "next/link";
 import { getCompanyStats } from "@/lib/actions";
 import styles from "./style.module.css";
 
-export default async function AdminStatsPage() {
-  const companies = await getCompanyStats(30);
+export const dynamic = "force-dynamic";
+
+export default async function AdminStatsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ days?: string }>;
+}) {
+  const params = await searchParams;
+  const days = Number(params?.days ?? 30);
+
+  const companies = await getCompanyStats(days);
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Statystyki firm (30 dni)</h1>
+        <h1 className={styles.title}>Statystyki firm ({days} dni)</h1>
+
+        <div className={styles.rangeSelector}>
+          <Link href="/admin/statystyki?days=7">7 dni</Link>
+          <Link href="/admin/statystyki?days=30">30 dni</Link>
+          <Link href="/admin/statystyki?days=90">90 dni</Link>
+          <Link href="/admin/statystyki?days=365">365 dni</Link>
+        </div>
 
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
