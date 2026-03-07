@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
+import { trackCompanyEvent } from "@/lib/trackCompanyEvent";
 
 const SearchContent = () => {
   const [producers, setProducers] = useState<any[]>([])
@@ -52,7 +53,6 @@ const SearchContent = () => {
 
   useEffect(() => {
     getProducers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [regions.join('|'), requirements.join('|'), scales.join('|')]);
 
   useEffect(() => {
@@ -90,14 +90,7 @@ const SearchContent = () => {
                       {producer.email && (
                         <a href={`mailto:${producer.email}`}
                         onClick={() =>
-                        fetch("/api/saveStatistics", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            company_id: producer.id,
-                            event_type: "email_click"
-                            })
-                          })
+                        trackCompanyEvent(producer.id, "email_click")
                         }
                         >
                           <button className={styles.contactMeBtn}>Skontaktuj się</button>
@@ -109,16 +102,7 @@ const SearchContent = () => {
                           href={producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}
                           target="_blank"
                           rel="noreferrer"
-                          onClick={() =>
-                          fetch("/api/saveStatistics", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              company_id: producer.id,
-                              event_type: "website_click"
-                            })
-                          })
-                        }
+                          onClick={() => trackCompanyEvent(producer.id, "website_click")}
                         >
                           <button className={styles.contactMeBtn}>Strona firmy</button>
                         </a>
