@@ -98,6 +98,26 @@
   font-size: 1.5rem;
 }
 
+.actionsRow {
+  margin-top: 24px;
+}
+
+.pdfButton {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.12);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.pdfButton:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 .backRow {
   margin-top: 22px;
 }

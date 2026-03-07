@@ -92,6 +92,15 @@ export default async function AdminReportsPage({
                 <strong className={styles.kpiValue}>{report.emailCtrPct}%</strong>
               </div>
             </div>
+
+            <div className={styles.actionsRow}>
+              <a
+                href={`/admin/raporty/pdf?companyId=${companyId}&days=${days}`}
+                className={styles.pdfButton}
+              >
+                Pobierz PDF
+              </a>
+            </div>
           </div>
         ) : (
           <div className={styles.empty}>
