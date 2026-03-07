@@ -34,7 +34,18 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                 <p>{producer.opis}</p>
 
                                 <div className={styles.btnRow}>
-                                    <a href={`mailto:${producer.email}`}>
+                                    <a href={`mailto:${producer.email}`}
+                                        onClick={() =>
+                                        fetch("/api/saveStatistics", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({
+                                                company_id: producer.id,
+                                                event_type: "email_click"
+                                            })
+                                        })
+                                    }
+                                    >
                                         <button className={styles.contactMeBtn}>
                                             Skontaktuj się
                                         </button>
@@ -44,6 +55,16 @@ const AllProducers = ({ producers }: { producers: any[] }) => {
                                         <a href={ producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}
                                             target="_blank"
                                             rel="noreferrer"
+                                            onClick={() =>
+                                            fetch("/api/saveStatistics", {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({
+                                                    company_id: producer.id,
+                                                    event_type: "website_click"
+                                                })
+                                            })
+                                        }
                                         >
                                             <button className={styles.contactMeBtn}>Strona firmy</button>
                                         </a>

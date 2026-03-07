@@ -88,7 +88,18 @@ const SearchContent = () => {
                       <div className={styles.btnRow}></div>
 
                       {producer.email && (
-                        <a href={`mailto:${producer.email}`}>
+                        <a href={`mailto:${producer.email}`}
+                        onClick={() =>
+                        fetch("/api/saveStatistics", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            company_id: producer.id,
+                            event_type: "email_click"
+                            })
+                          })
+                        }
+                        >
                           <button className={styles.contactMeBtn}>Skontaktuj się</button>
                         </a>
                       )}
@@ -98,6 +109,16 @@ const SearchContent = () => {
                           href={producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}
                           target="_blank"
                           rel="noreferrer"
+                          onClick={() =>
+                          fetch("/api/saveStatistics", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              company_id: producer.id,
+                              event_type: "website_click"
+                            })
+                          })
+                        }
                         >
                           <button className={styles.contactMeBtn}>Strona firmy</button>
                         </a>
