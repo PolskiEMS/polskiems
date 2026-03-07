@@ -13,20 +13,21 @@ function safeNumber(value: unknown) {
 }
 
 export async function GET(req: NextRequest) {
-  const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
-  const days = Number(req.nextUrl.searchParams.get("days") ?? 30);
+  try {
+    const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
+    const days = Number(req.nextUrl.searchParams.get("days") ?? 30);
 
-  if (!Number.isFinite(companyId) || companyId <= 0) {
-    return new Response("Invalid companyId", { status: 400 });
-  }
+    if (!Number.isFinite(companyId) || companyId <= 0) {
+      return new Response("Invalid companyId", { status: 400 });
+    }
 
-  const report = await getCompanyReport(companyId, days);
+    const report = await getCompanyReport(companyId, days);
 
-  if (!report) {
-    return new Response("Report not found", { status: 404 });
-  }
+    if (!report) {
+      return new Response("Report not found", { status: 404 });
+    }
 
-  const doc = new PDFDocument({
+    const doc = new PDFDocument({
     size: "A4",
     margin: 50,
   });
@@ -250,15 +251,19 @@ export async function GET(req: NextRequest) {
   const pdfBuffer = await endPromise;
 
   const safeName = String(report.firma ?? "firma")
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\-ąćęłńóśźż]/gi, "");
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\-ąćęłńóśźż]/gi, "");
 
-  return new Response(new Uint8Array(pdfBuffer), {
-  status: 200,
-  headers: {
-    "Content-Type": "application/pdf",
-    "Content-Disposition": `attachment; filename="raport-${safeName}-${days}dni.pdf"`,
-    },
-});
-}
+      return new Response(pdfBuffer as unknown as BodyInit, {
+        status: 200,
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="raport-${safeName}-${days}dni.pdf"`,
+        },
+      });
+    } catch (error) {
+      console.error("PDF route error:", error);
+      return new Response("PDF generation failed", { status: 500 });
+    }
+  }
