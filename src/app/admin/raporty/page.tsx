@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { getCompanyReport, getReportCompanies } from "@/lib/actions";
 import styles from "./style.module.css";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
