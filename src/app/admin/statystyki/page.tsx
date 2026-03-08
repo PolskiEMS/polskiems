@@ -62,4 +62,3 @@ export default async function AdminStatsPage({
       </div>
     </div>
   );
-}
