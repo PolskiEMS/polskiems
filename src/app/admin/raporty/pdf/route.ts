@@ -1,6 +1,8 @@
 import PDFDocument from "pdfkit";
 import { NextRequest } from "next/server";
 import { getCompanyReport } from "@/lib/actions";
+import fs from "fs";
+import path from "path";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
