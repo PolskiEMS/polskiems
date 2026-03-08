@@ -1,5 +1,5 @@
 import { getCompanyRanking } from "@/lib/actions";
-import Link from "/next/link";
+import Link from "next/link";
 import styles from "./style.module.css";
 
 export default async function AdminRankingPage() {
