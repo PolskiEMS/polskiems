@@ -105,6 +105,11 @@ function ChartCard({
                 />
               )}
               </div>
+              <div className={styles.backRow}>
+                <Link href="/admin" className={styles.backLink}>
+                  ← Powrót do panelu
+                </Link>
+              </div>
             </div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import { getCompanyRanking } from "@/lib/actions";
 import Link from "next/link";
 import styles from "./style.module.css";
+import Link from "next/link";
 
 export default async function AdminRankingPage() {
   const data = await getCompanyRanking(30);
@@ -45,6 +46,11 @@ export default async function AdminRankingPage() {
                 </li>
               ))}
             </ol>
+            <div className={styles.backRow}>
+              <Link href="/admin" className={styles.backLink}>
+                ← Powrót do panelu
+              </Link>
+            </div>
           </div>
           <div className={styles.backRow}>
         <Link href="/admin" className={styles.backLink}>

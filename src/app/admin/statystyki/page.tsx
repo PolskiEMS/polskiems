@@ -54,11 +54,18 @@ export default async function AdminStatsPage({
           </table>
         </div>
         <div className={styles.backRow}>
+<<<<<<< HEAD
         <div className={styles.backRow}>
       <Link href="/admin" className={styles.backLink}>
        ← Powrót do panelu
      </Link>
      </div>
+=======
+          <Link href="/admin" className={styles.backLink}>
+            ← Powrót do panelu
+          </Link>
+        </div>
+>>>>>>> f889806 (admin)
       </div>
     </div>
   );
