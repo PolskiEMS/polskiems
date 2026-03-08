@@ -1,7 +1,6 @@
 import { getCompanyRanking } from "@/lib/actions";
 import Link from "next/link";
 import styles from "./style.module.css";
-import Link from "next/link";
 
 export default async function AdminRankingPage() {
   const data = await getCompanyRanking(30);
