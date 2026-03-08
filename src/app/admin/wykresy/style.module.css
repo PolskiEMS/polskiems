@@ -30,6 +30,26 @@
   background: rgba(255,255,255,0.2);
 }
 
+.backRow {
+  margin-top: 24px;
+}
+
+.backLink {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.backLink:hover {
+  background: rgba(255,255,255,0.18);
+}
+
 .title {
   text-align: center;
   color: white;
