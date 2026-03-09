@@ -30,18 +30,13 @@ export async function GET(req: NextRequest) {
       size: "A4",
       margin: 50,
     });
-
-    const fontRegular = path.join(
-      process.cwd(),
-      "public/fonts/Roboto-Regular.ttf"
-    );
-    const fontBold = path.join(
-      process.cwd(),
-      "public/fonts/Roboto-Bold.ttf"
-    );
-
+    const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
+    const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
+    
     doc.registerFont("Regular", fontRegular);
     doc.registerFont("Bold", fontBold);
+    
+    // ustaw domyślny font
     doc.font("Regular");
 
     const chunks: Buffer[] = [];
