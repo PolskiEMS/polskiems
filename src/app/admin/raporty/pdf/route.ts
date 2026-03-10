@@ -35,17 +35,11 @@ export async function GET(req: NextRequest) {
 const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
 const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
 
-console.log("fontRegular:", fontRegular);
-console.log("fontBold:", fontBold);
-console.log("fontRegular exists:", fs.existsSync(fontRegular));
-console.log("fontBold exists:", fs.existsSync(fontBold));
+doc.registerFont("Helvetica", fontRegular);
+doc.registerFont("Helvetica-Bold", fontBold);
 
-doc.registerFont("Regular", fontRegular);
-doc.registerFont("Bold", fontBold);
-doc.font("Regular");
-    
-    // ustaw domyślny font
-    doc.font("Regular");
+// ustaw domyślny font
+doc.font("Helvetica");
 
     const chunks: Buffer[] = [];
 
