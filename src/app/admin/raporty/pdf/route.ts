@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
       const logoPath = path.join(process.cwd(), "public/images/logo.png");
       
-      doc.image(logoPath, 70, 50, {
+      doc.image(logoPath, 70, 63, {
         fit: [100, 100],
       });
       
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
         .fillColor("#111827")
         .font("Roboto-Bold")
         .fontSize(16)
-        .text(String(report.firma ?? "Firma"), 200, 92, {
+        .text(String(report.firma ?? "Firma"), 200, 100, {
           width: 340,
           align: "left",
         });
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
         .fillColor("#6b7280")
         .font("Roboto")
         .fontSize(11)
-        .text(`Zakres raportu: ostatnie ${days} dni`, 200, 115);
+        .text(`Zakres raportu: ostatnie ${days} dni`, 200, 122);
 
       let currentY = 175;
 
