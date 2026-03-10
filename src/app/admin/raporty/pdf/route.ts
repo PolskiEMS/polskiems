@@ -61,8 +61,6 @@ export async function GET(req: NextRequest) {
       
       doc.image(logoPath, 60, 52, {
         fit: [90, 55],
-        align: "left",
-        valign: "center",
       });
       
       doc
