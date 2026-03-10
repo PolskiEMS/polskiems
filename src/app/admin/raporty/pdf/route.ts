@@ -33,10 +33,6 @@ export async function GET(req: NextRequest) {
 
     const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
     const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
-    
-    const logoPath = path.join(process.cwd(), "public/logo.png");
-
-    doc.image(logoPath, 50, 50, { width: 120 });
 
     doc.registerFont("Roboto", fontRegular);
     doc.registerFont("Roboto-Bold", fontBold);
@@ -61,6 +57,10 @@ export async function GET(req: NextRequest) {
 
       doc.roundedRect(40, 35, pageWidth - 80, 110, 18).fill("#f5f3ff");
 
+      const logoPath = path.join(process.cwd(), "public/image/logo.png");
+
+      doc.image(logoPath, 60, 55, {width: 120,});
+
       doc
         .fillColor("#4c1d95")
         .font("Roboto-Bold")
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
         .fillColor("#111827")
         .font("Roboto-Bold")
         .fontSize(16)
-        .text(String(report.firma ?? "Firma"), 60, 88, {
+        .text(String(report.firma ?? "Firma"), 200, 88, {
           width: 340,
           align: "left",
         });
@@ -219,18 +219,17 @@ export async function GET(req: NextRequest) {
         });
 
       doc
-        .fillColor("#9ca3af")
-        .font("Roboto")
-        .fontSize(9)
-        .text(
-          `Wygenerowano: ${new Date().toLocaleString("pl-PL")} | PolskiEMS`,
-          50,
-          790,
-          {
-            width: contentWidth,
-            align: "center",
-          }
-        );
+         .fillColor("#9ca3af")
+         .font("Roboto")
+         .fontSize(9)
+     .text(
+        `Raport wygenerowany automatycznie | PolskiEMS.pl | ${new Date().toLocaleDateString("pl-PL")}`,
+       50, 790,
+      {
+        width: contentWidth,
+        align: "center",
+      }
+    );
 
       doc.end();
     });
