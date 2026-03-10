@@ -30,6 +30,9 @@ export async function GET(req: NextRequest) {
       size: "A4",
       margin: 50,
     });
+    console.log("fontRegular exists:", fs.existsSync(fontRegular));
+    console.log("fontBold exists:", fs.existsSync(fontBold));
+    
     const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
     const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
     
