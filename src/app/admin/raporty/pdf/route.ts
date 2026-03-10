@@ -57,39 +57,37 @@ export async function GET(req: NextRequest) {
 
       doc.roundedRect(40, 35, pageWidth - 80, 110, 18).fill("#f5f3ff");
 
-      doc.roundedRect(40, 35, pageWidth - 80, 110, 18).fill("#f5f3ff");
-
       const logoPath = path.join(process.cwd(), "public/images/logo.png");
-
+      
       doc.image(logoPath, 60, 52, {
         fit: [90, 55],
         align: "left",
         valign: "center",
       });
-
+      
       doc
         .fillColor("#4c1d95")
         .font("Roboto-Bold")
         .fontSize(24)
-       .text("Raport PolskiEMS", 170, 58, {
-        width: 320,
-        align: "left",
-       });
-
-      doc
-       .fillColor("#111827")
-       .font("Roboto-Bold")
-       .fontSize(16)
-       .text(String(report.firma ?? "Firma"), 170, 92, {
-        width: 340,
-        align: "left",
+        .text("Raport PolskiEMS", 170, 58, {
+          width: 320,
+          align: "left",
         });
-
+      
       doc
-       .fillColor("#6b7280")
-       .font("Roboto")
-       .fontSize(11)
-       .text(`Zakres raportu: ostatnie ${days} dni`, 170, 116 );
+        .fillColor("#111827")
+        .font("Roboto-Bold")
+        .fontSize(16)
+        .text(String(report.firma ?? "Firma"), 170, 92, {
+          width: 340,
+          align: "left",
+        });
+      
+      doc
+        .fillColor("#6b7280")
+        .font("Roboto")
+        .fontSize(11)
+        .text(`Zakres raportu: ostatnie ${days} dni`, 170, 116);
 
       let currentY = 175;
 
