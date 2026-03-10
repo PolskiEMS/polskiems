@@ -1,5 +1,5 @@
-import { getCompanyRanking } from "@/lib/actions";
 import Link from "next/link";
+import { getCompanyRanking } from "@/lib/actions";
 import styles from "./style.module.css";
 
 export default async function AdminRankingPage() {
@@ -45,17 +45,13 @@ export default async function AdminRankingPage() {
                 </li>
               ))}
             </ol>
-            <div className={styles.backRow}>
-              <Link href="/admin" className={styles.backLink}>
-                ← Powrót do panelu
-              </Link>
-            </div>
           </div>
-          <div className={styles.backRow}>
-        <Link href="/admin" className={styles.backLink}>
-      ← Powrót do panelu
-     </Link>
-  </div>
+        </div>
+
+        <div className={styles.backRow}>
+          <Link href="/admin" className={styles.backLink}>
+            ← Powrót do panelu
+          </Link>
         </div>
       </div>
     </div>
