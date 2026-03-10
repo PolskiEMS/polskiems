@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
       doc.roundedRect(40, 35, pageWidth - 80, 110, 18).fill("#f5f3ff");
 
-      const logoPath = path.join(process.cwd(), "public/image/logo.png");
+      const logoPath = path.join(process.cwd(), "public/images/logo.png");
 
       doc.image(logoPath, 60, 55, {width: 120,});
 
