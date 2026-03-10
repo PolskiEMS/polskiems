@@ -89,8 +89,7 @@ export async function GET(req: NextRequest) {
        .fillColor("#6b7280")
        .font("Roboto")
        .fontSize(11)
-       .text(`Zakres raportu: ostatnie ${days} dni`, 170, 116
-        60, 112);
+       .text(`Zakres raportu: ostatnie ${days} dni`, 170, 116 );
 
       let currentY = 175;
 
