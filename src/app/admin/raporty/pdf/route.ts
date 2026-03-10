@@ -59,8 +59,8 @@ export async function GET(req: NextRequest) {
 
       const logoPath = path.join(process.cwd(), "public/images/logo.png");
       
-      doc.image(logoPath, 60, 58, {
-        fit: [180, 90],
+      doc.image(logoPath, 70, 60, {
+        fit: [80, 80],
       });
       
       doc
