@@ -1,5 +1,6 @@
 import PDFDocument from "pdfkit";
 import path from "path";
+import fs from "fs";
 import { NextRequest } from "next/server";
 import { getCompanyReport } from "@/lib/actions";
 
@@ -27,17 +28,21 @@ export async function GET(req: NextRequest) {
     }
 
     const doc = new PDFDocument({
-      size: "A4",
-      margin: 50,
-    });
-    console.log("fontRegular exists:", fs.existsSync(fontRegular));
-    console.log("fontBold exists:", fs.existsSync(fontBold));
-    
-    const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
-    const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
-    
-    doc.registerFont("Regular", fontRegular);
-    doc.registerFont("Bold", fontBold);
+  size: "A4",
+  margin: 50,
+});
+
+const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
+const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
+
+console.log("fontRegular:", fontRegular);
+console.log("fontBold:", fontBold);
+console.log("fontRegular exists:", fs.existsSync(fontRegular));
+console.log("fontBold exists:", fs.existsSync(fontBold));
+
+doc.registerFont("Regular", fontRegular);
+doc.registerFont("Bold", fontBold);
+doc.font("Regular");
     
     // ustaw domyślny font
     doc.font("Regular");
