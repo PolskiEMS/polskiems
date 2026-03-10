@@ -90,8 +90,7 @@ export async function GET(req: NextRequest) {
        .font("Roboto")
        .fontSize(11)
        .text(`Zakres raportu: ostatnie ${days} dni`, 170, 116
-        60, 112,
-          );
+        60, 112);
 
       let currentY = 175;
 
