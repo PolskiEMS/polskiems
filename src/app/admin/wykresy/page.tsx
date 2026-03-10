@@ -1,6 +1,7 @@
 import { getChartsData } from "@/lib/actions";
 import styles from "./style.module.css";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 export type ChartRow = {
   companyId: number;
@@ -13,10 +14,9 @@ export type ChartRow = {
 export default async function AdminChartsPage({
   searchParams,
 }: {
-  searchParams: { days?: string };
+  searchParams?: { days?: string };
 }) {
-  const params = await searchParams;
-  const days = Number(params?.days ?? 30);
+  const days = Number(searchParams?.days ?? 30);
 
   const data = (await getChartsData(days)) as {
     viewsChart: ChartRow[];
@@ -30,16 +30,16 @@ export default async function AdminChartsPage({
         <h1 className={styles.title}>Wykresy ({days} dni)</h1>
 
         <div className={styles.rangeSelector}>
-        <Link href="/admin/wykresy?days=7">7 dni</Link>
-        <Link href="/admin/wykresy?days=30">30 dni</Link>
-        <Link href="/admin/wykresy?days=90">90 dni</Link>
-        <Link href="/admin/wykresy?days=365">365 dni</Link>
+          <Link href="/admin/wykresy?days=7">7 dni</Link>
+          <Link href="/admin/wykresy?days=30">30 dni</Link>
+          <Link href="/admin/wykresy?days=90">90 dni</Link>
+          <Link href="/admin/wykresy?days=365">365 dni</Link>
         </div>
 
         <div className={styles.grid}>
           <ChartCard
             title="Top 10 wyświetleń"
-            items={data.viewsChart.map((item: ChartRow) => ({
+            items={data.viewsChart.map((item) => ({
               companyId: item.companyId,
               firma: item.firma,
               value: item.views,
@@ -48,23 +48,29 @@ export default async function AdminChartsPage({
 
           <ChartCard
             title="Top 10 klików WWW"
-            items={data.websiteClicksChart.map((item: ChartRow) => ({
+            items={data.websiteClicksChart.map((item) => ({
               companyId: item.companyId,
               firma: item.firma,
               value: item.websiteClicks,
             }))}
           />
 
-          <div className={`${styles.card} ${styles.fullWidth}`}>
+          <div className={styles.fullWidth}>
             <ChartCard
               title="Top 10 klików Email"
-              items={data.emailClicksChart.map((item: ChartRow) => ({
+              items={data.emailClicksChart.map((item) => ({
                 companyId: item.companyId,
                 firma: item.firma,
                 value: item.emailClicks,
               }))}
             />
           </div>
+        </div>
+
+        <div className={styles.backRow}>
+          <Link href="/admin" className={styles.backLink}>
+            ← Powrót do panelu
+          </Link>
         </div>
       </div>
     </div>
@@ -78,7 +84,7 @@ function ChartCard({
   title: string;
   items: { companyId: number; firma: string; value: number }[];
 }) {
-  const maxValue = Math.max(...items.map((item) => item.value), 1);
+  const maxValue = Math.max(1, ...items.map((item) => item.value));
 
   return (
     <div className={styles.card}>
@@ -95,20 +101,15 @@ function ChartCard({
 
               <div className={styles.barTrack}>
                 {item.value > 0 && (
-                <div
-                  className={styles.barFill}
-                  style={
-                    {
-                      "--bar-width": `${(item.value / maxValue) * 100}%`,
-                    } as React.CSSProperties
-                  }
-                />
-              )}
-              </div>
-              <div className={styles.backRow}>
-                <Link href="/admin" className={styles.backLink}>
-                  ← Powrót do panelu
-                </Link>
+                  <div
+                    className={styles.barFill}
+                    style={
+                      {
+                        "--bar-width": `${(item.value / maxValue) * 100}%`,
+                      } as CSSProperties
+                    }
+                  />
+                )}
               </div>
             </div>
           ))}
