@@ -33,6 +33,10 @@ export async function GET(req: NextRequest) {
 
     const fontRegular = path.join(process.cwd(), "public/fonts/Roboto-Regular.ttf");
     const fontBold = path.join(process.cwd(), "public/fonts/Roboto-Bold.ttf");
+    
+    const logoPath = path.join(process.cwd(), "public/logo.png");
+
+    doc.image(logoPath, 50, 50, { width: 120 });
 
     doc.registerFont("Roboto", fontRegular);
     doc.registerFont("Roboto-Bold", fontBold);
