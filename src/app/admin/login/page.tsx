@@ -1,48 +1,63 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import styles from "./style.module.css";
 
-export default function AdminLogin() {
-  const router = useRouter();
+export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
     const res = await fetch("/api/admin/login", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ username, password }),
+      credentials: "include",
     });
 
     if (res.ok) {
-      router.push("/admin");
-    } else {
-      alert("Błędny login lub hasło");
+      window.location.href = "/admin";
+      return;
     }
+
+    setError("Błędny login lub hasło");
   };
 
   return (
-    <div style={{ padding: "40px", textAlign: "center" }}>
-      <h1>Logowanie do panelu</h1>
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Logowanie do panelu</h1>
 
-      <input
-        placeholder="Login"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+        <form onSubmit={handleLogin} className={styles.form}>
+          <input
+            type="text"
+            placeholder="Login"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className={styles.input}
+          />
 
-      <br />
+          <input
+            type="password"
+            placeholder="Hasło"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.input}
+          />
 
-      <input
-        type="password"
-        placeholder="Hasło"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          {error && <p className={styles.error}>{error}</p>}
 
-      <br />
-
-      <button onClick={handleLogin}>Zaloguj</button>
+          <button type="submit" className={styles.button}>
+            Zaloguj
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

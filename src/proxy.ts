@@ -2,12 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const isAdminPage = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginPage = request.nextUrl.pathname.startsWith("/admin/login");
+  const pathname = request.nextUrl.pathname;
+
+  const isAdmin = pathname.startsWith("/admin");
+  const isLogin = pathname.startsWith("/admin/login");
 
   const session = request.cookies.get("admin-session");
 
-  if (isAdminPage && !isLoginPage && !session) {
+  if (isAdmin && !isLogin && !session) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
