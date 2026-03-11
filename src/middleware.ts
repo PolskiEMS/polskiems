@@ -19,4 +19,8 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ success: false }, { status: 401 });
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 629b69b (Admin login + middleware security)
