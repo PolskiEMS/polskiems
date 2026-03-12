@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     await db.insert(companyEvents).values({
       companyId,
       eventType: eventType as any, // enum w Drizzle
-      referrer
+      referrer,
       utmSource,
       utmCampaign,
       // createdAt zostaje z default CURRENT_TIMESTAMP
