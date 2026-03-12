@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDashboardStats } from "@/lib/actions";
 import styles from "./style.module.css";
+import LogoutButton from "@/app/components/admin/LogoutButton";
 
 export default async function AdminDashboardPage() {
   const data = await getDashboardStats(30);
@@ -96,6 +97,7 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       </div>
+      <LogoutButton />
     </div>
   );
 }
