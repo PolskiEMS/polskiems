@@ -6,6 +6,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
 }
 
 .title {
@@ -101,9 +102,21 @@
   font-weight: 700;
 }
 
+.logoutTop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
+}
+
 @media (max-width: 900px) {
   .adminMenu {
     grid-template-columns: repeat(2, 1fr);
+
+    .logoutTop {
+      top: -6px;
+      right: 0%;
+    }
   }
 
   .dashboardGrid {
