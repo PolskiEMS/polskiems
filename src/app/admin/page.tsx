@@ -103,6 +103,7 @@ export default async function AdminDashboardPage() {
 
   window.location.href = "/admin/login";
 };
+      <button onClick={handleLogout}>Wyloguj</button>
     </div>
   );
 }
