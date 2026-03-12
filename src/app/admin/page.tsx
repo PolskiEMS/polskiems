@@ -10,9 +10,9 @@ export default async function AdminDashboardPage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <h1 className={styles.title}>Panel Admina</h1>
-        
-        <LogoutButton />
-
+        <div className={styles.logoutWrap}>
+           <LogoutButton />
+        </div>
         <div className={styles.adminMenu}>
           <Link href="/admin/statystyki" className={styles.adminBox}>
             Statystyki
