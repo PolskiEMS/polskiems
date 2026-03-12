@@ -8,7 +8,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.logoutWrap}>
+      <div className={styles.logoutTop}>
            <LogoutButton />
         </div>
       <div className={styles.container}>
