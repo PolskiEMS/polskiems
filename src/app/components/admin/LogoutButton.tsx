@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "admin/LogoutButton.module.css";
+import styles from "./LogoutButton.module.css";
 
 export default function LogoutButton() {
   const handleLogout = async () => {
