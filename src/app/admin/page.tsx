@@ -96,6 +96,13 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       </div>
+      const handleLogout = async () => {
+  await fetch("/api/admin/logout", {
+    method: "POST",
+  });
+
+  window.location.href = "/admin/login";
+};
     </div>
   );
 }
