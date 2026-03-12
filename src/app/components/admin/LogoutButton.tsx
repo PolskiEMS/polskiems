@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./LogoutButton.module.css";
+
 export default function LogoutButton() {
   const handleLogout = async () => {
       await fetch("/api/admin/logout", {
@@ -10,7 +12,7 @@ export default function LogoutButton() {
                       };
 
                         return (
-                            <button onClick={handleLogout}>
+                            <button className={styles.logout} onClick={handleLogout}>
                                   Wyloguj
                                       </button>
                                         );
