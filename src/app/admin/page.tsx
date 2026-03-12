@@ -8,10 +8,12 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.container}>
+
       <div className={styles.logoutTop}>
            <LogoutButton />
-        </div>
-      <div className={styles.container}>
+      </div>
+
         <h1 className={styles.title}>Panel Admina</h1>
         
         <div className={styles.adminMenu}>
