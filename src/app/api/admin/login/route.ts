@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
 
     const validUser = username === process.env.ADMIN_USERNAME;
-    const validPassword = await bcrypt.compare(
-      password,
-      process.env.ADMIN_PASSWORD_HASH || ""
-    );
+    const validPassword = password === process.env.ADMIN_PASSWORD;
 
     if (!validUser || !validPassword) {
       return NextResponse.json({ success: false }, { status: 401 });
