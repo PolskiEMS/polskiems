@@ -1,110 +1,79 @@
 import Link from "next/link";
-import { getCompanyById, getAllRegion, updateCompanyAction } from "@/lib/actions";
+import { getAdminCompanies } from "@/lib/actions";
+import styles from "./style.module.css";
 
-export default async function EditCompanyPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const company = await getCompanyById(Number(id));
-  const regions = await getAllRegion();
-
-  if (!company) {
-    return <div style={{ padding: "20px" }}>Nie znaleziono firmy.</div>;
-  }
+export default async function AdminCompaniesPage() {
+  const companies = await getAdminCompanies();
 
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto", padding: "20px" }}>
-      <h1>Edytuj firmę</h1>
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Firmy</h1>
+        <Link href="/admin/firmy/nowa" className={styles.addBtn}>
+          Dodaj firmę
+        </Link>
+      </div>
 
-      <form action={updateCompanyAction} style={{ display: "grid", gap: "14px", marginTop: "20px" }}>
-        <input type="hidden" name="id" value={company.id} />
-
-        <div>
-          <label>Nazwa firmy</label>
-          <input
-            type="text"
-            name="nazwa"
-            defaultValue={company.nazwa || ""}
-            required
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          />
+      <div className={styles.listBox}>
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Email</th>
+                <th>WWW</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {companies.map((c) => (
+                <tr key={c.id}>
+                  <td>{c.id}</td>
+                  <td>{c.nazwa}</td>
+                  <td>{c.email || "-"}</td>
+                  <td>{c.www || "-"}</td>
+                  <td className={c.isActive ? styles.statusActive : styles.statusInactive}>
+                    {c.isActive ? "Aktywna" : "Nieaktywna"}
+                  </td>
+                  <td>
+                    <Link href={`/admin/firmy/${c.id}`} className={styles.editBtn}>
+                      Edytuj
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        <div>
-          <label>Województwo</label>
-          <select
-            name="wojewodztwoId"
-            defaultValue={company.wojewodztwoId ? String(company.wojewodztwoId) : ""}
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          >
-            <option value="">Wybierz województwo</option>
-            {regions.map((region) => (
-              <option key={region.id} value={region.id}>
-                {region.nazwa}
-              </option>
-            ))}
-          </select>
+        <div className={styles.cards}>
+          {companies.map((c) => (
+            <div key={c.id} className={styles.card}>
+              <div className={styles.cardTitle}>{c.nazwa}</div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>ID:</span> {c.id}
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Email:</span> {c.email || "-"}
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>WWW:</span> {c.www || "-"}
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Status:</span>{" "}
+                <span className={c.isActive ? styles.statusActive : styles.statusInactive}>
+                  {c.isActive ? "Aktywna" : "Nieaktywna"}
+                </span>
+              </div>
+              <Link href={`/admin/firmy/${c.id}`} className={styles.editBtn}>
+                Edytuj
+              </Link>
+            </div>
+          ))}
         </div>
-
-        <div>
-          <label>Opis</label>
-          <textarea
-            name="opis"
-            rows={5}
-            defaultValue={company.opis || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          />
-        </div>
-
-        <div>
-          <label>Telefon</label>
-          <input
-            type="text"
-            name="telefon"
-            defaultValue={company.telefon || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          />
-        </div>
-
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            defaultValue={company.email || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          />
-        </div>
-
-        <div>
-          <label>WWW</label>
-          <input
-            type="text"
-            name="www"
-            defaultValue={company.www || ""}
-            style={{ width: "100%", padding: "10px", marginTop: "6px" }}
-          />
-        </div>
-
-        <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <input
-            type="checkbox"
-            name="isActive"
-            defaultChecked={!!company.isActive}
-          />
-          Aktywna
-        </label>
-
-        <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
-          <button type="submit">Zapisz zmiany</button>
-
-          <Link href="/admin/firmy">
-            <button type="button">Anuluj</button>
-          </Link>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
