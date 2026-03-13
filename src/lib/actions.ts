@@ -1,3 +1,4 @@
+import {redirect} from "next/navigation";
 import {
   dzialaniaEms,
   producenci,
@@ -442,4 +443,148 @@ export async function getCompanyReport(companyId: number, days = 30) {
     .groupBy(producenci.id, producenci.nazwa);
 
   return rows[0] ?? null;
+}
+
+export async function getAdminCompanies() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      email: producenci.email,
+      www: producenci.www,
+      isActive: producenci.isActive,
+    })
+    .from(producenci)
+    .orderBy(asc(producenci.nazwa));
+}
+
+export async function getCompanyById(id: number) {
+  const db = getDb();
+
+  const rows = await db
+    .select()
+    .from(producenci)
+    .where(eq(producenci.id, id));
+
+  return rows[0] ?? null;
+}
+
+export async function createCompany(data: {
+  nazwa: string
+  opis?: string
+  telefon?: string
+  email?: string
+  www?: string
+}) {
+  const db = getDb();
+
+  await db.insert(producenci).values({
+    nazwa: data.nazwa,
+    opis: data.opis ?? null,
+    telefon: data.telefon ?? null,
+    email: data.email ?? null,
+    www: data.www ?? null,
+    isActive: false
+  });
+}
+
+export async function updateCompany(
+  id: number,
+  data: {
+    nazwa: string
+    opis?: string
+    telefon?: string
+    email?: string
+    www?: string
+    isActive?: boolean
+  }
+) {
+  const db = getDb();
+
+  await db
+    .update(producenci)
+    .set({
+      nazwa: data.nazwa,
+      opis: data.opis ?? null,
+      telefon: data.telefon ?? null,
+      email: data.email ?? null,
+      www: data.www ?? null,
+      isActive: data.isActive ?? false
+    })
+    .where(eq(producenci.id, id));
+}
+
+export async function createCompanyAction(formData: FormData) {
+  const db = getDb();
+
+  const nazwa = String(formData.get("nazwa") || "");
+  const opis = String(formData.get("opis") || "");
+  const telefon = String(formData.get("telefon") || "");
+  const email = String(formData.get("email") || "");
+  const www = String(formData.get("www") || "");
+  const wojewodztwoIdRaw = formData.get("wojewodztwoId");
+  const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+
+  if (!nazwa.trim()) {
+    throw new Error("Nazwa firmy jest wymagana");
+  }
+
+  await db.insert(producenci).values({
+    nazwa: nazwa.trim(),
+    opis: opis.trim() || null,
+    telefon: telefon.trim() || null,
+    email: email.trim() || null,
+    www: www.trim() || null,
+    wojewodztwoId,
+    isActive: false,
+  });
+
+  redirect("/admin/firmy");
+}
+
+export async function updateCompanyAction(formData: FormData) {
+  const db = getDb();
+
+  const id = Number(formData.get("id"));
+  const nazwa = String(formData.get("nazwa") || "");
+  const opis = String(formData.get("opis") || "");
+  const telefon = String(formData.get("telefon") || "");
+  const email = String(formData.get("email") || "");
+  const www = String(formData.get("www") || "");
+  const isActive = formData.get("isActive") === "on";
+  const wojewodztwoIdRaw = formData.get("wojewodztwoId");
+  const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+
+  if (!id || !nazwa.trim()) {
+    throw new Error("Brak danych firmy");
+  }
+
+  await db
+    .update(producenci)
+    .set({
+      nazwa: nazwa.trim(),
+      opis: opis.trim() || null,
+      telefon: telefon.trim() || null,
+      email: email.trim() || null,
+      www: www.trim() || null,
+      wojewodztwoId,
+      isActive,
+    })
+    .where(eq(producenci.id, id));
+
+  redirect("/admin/firmy");
+}
+
+export async function getAllRegion() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: wojewodztwa.id,
+      nazwa: wojewodztwa.nazwa,
+    })
+    .from(wojewodztwa)
+    .orderBy(asc(wojewodztwa.nazwa));
 }

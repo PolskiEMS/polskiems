@@ -32,7 +32,12 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/raporty" className={styles.adminBox}>
             Raporty
           </Link>
-        </div>
+
+          <Link href="/admin/firmy" className={styles.card}>
+          Firmy
+          </Link>
+
+        </div>       
 
         <div className={styles.dashboardGrid}>
           <div className={styles.card}>
