@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAdminCompanies } from "@/lib/actions";
-import styles from "./style.module.css";
+import styles from "../style.module.css";
 
 export default async function AdminCompaniesPage() {
   const companies = await getAdminCompanies();
