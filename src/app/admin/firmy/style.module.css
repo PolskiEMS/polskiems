@@ -19,8 +19,7 @@
   margin: 0;
 }
 
-.addBtn,
-.backBtn {
+.addBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,8 +33,7 @@
   transition: 0.2s ease;
 }
 
-.addBtn:hover,
-.backBtn:hover {
+.addBtn:hover {
   background: rgba(255, 255, 255, 0.22);
   transform: translateY(-1px);
 }
@@ -130,12 +128,6 @@
   opacity: 0.9;
 }
 
-.formTop {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 18px;
-}
-
 .formBox {
   max-width: 760px;
   margin: 0 auto;
@@ -152,18 +144,9 @@
   margin-top: 18px;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-}
-
 .field label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.fieldCheckbox label {
   font-weight: 700;
 }
 
@@ -224,12 +207,6 @@
   color: white;
 }
 
-.bottomBack {
-  display: flex;
-  justify-content: center;
-  margin-top: 28px;
-}
-
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
@@ -251,8 +228,4 @@
   .formBox {
     padding: 18px;
   }
-
-  .bottomBack {
-    margin-top: 22px;
-  }
-}
+      }
