@@ -8,6 +8,11 @@ export default async function AdminCompaniesPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
+        <div className={styles.formTop}>
+        <Link href="/admin/firmy" className={styles.backBtn}>
+          Powrót do Firmy
+        </Link>
+      </div>
         <h1 className={styles.title}>Firmy</h1>
         <Link href="/admin/firmy/nowa" className={styles.addBtn}>
           Dodaj firmę

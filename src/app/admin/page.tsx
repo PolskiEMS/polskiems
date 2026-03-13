@@ -33,7 +33,7 @@ export default async function AdminDashboardPage() {
             Raporty
           </Link>
 
-          <Link href="/admin/firmy" className={styles.card}>
+          <Link href="/admin/firmy" className={styles.adminBox}>
           Firmy
           </Link>
 

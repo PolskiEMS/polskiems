@@ -112,11 +112,6 @@
 @media (max-width: 900px) {
   .adminMenu {
     grid-template-columns: repeat(2, 1fr);
-
-    .logoutTop {
-      top: -6px;
-      right: 0%;
-    }
   }
 
   .dashboardGrid {
@@ -129,8 +124,16 @@
 }
 
 @media (max-width: 600px) {
+  .logoutTop {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+
   .title {
     font-size: 2.2rem;
+    margin-bottom: 24px;
   }
 
   .adminBox {
