@@ -517,6 +517,7 @@ export async function updateCompany(
 }
 
 export async function createCompanyAction(formData: FormData) {
+  "use server";
   const db = getDb();
 
   const nazwa = String(formData.get("nazwa") || "");
@@ -545,6 +546,7 @@ export async function createCompanyAction(formData: FormData) {
 }
 
 export async function updateCompanyAction(formData: FormData) {
+  "use server";
   const db = getDb();
 
   const id = Number(formData.get("id"));
