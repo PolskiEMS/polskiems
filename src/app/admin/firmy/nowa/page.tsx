@@ -7,7 +7,7 @@ export default async function NewCompanyPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.addBtnBox}>
+      <div className={styles.formTop}>
         <Link href="/admin/firmy" className={styles.backBtn}>
           Powrót do Firmy
         </Link>
