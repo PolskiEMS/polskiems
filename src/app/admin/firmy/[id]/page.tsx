@@ -14,7 +14,7 @@ export default async function EditCompanyPage({ params }: Props) {
   if (!company) {
     return (
       <div className={styles.page}>
-        <div className={styles.formBox}>
+        <div className={styles.addBtnBox}>
         <Link href="/admin/firmy" className={styles.backBtn}>
           Powrót do Firmy
         </Link>
