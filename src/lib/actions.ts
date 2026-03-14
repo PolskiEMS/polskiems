@@ -408,6 +408,9 @@ export async function getCompanyReport(companyId: number, days = 30) {
     .select({
       companyId: producenci.id,
       firma: producenci.nazwa,
+      www: producenci.www,
+      email: producenci.email,
+      telefon: producenci.telefon,
       views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
       websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
       emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
@@ -440,7 +443,13 @@ export async function getCompanyReport(companyId: number, days = 30) {
         : sql`${companyEvents.companyId} = ${producenci.id}`
     )
     .where(sql`${producenci.id} = ${companyId}`)
-    .groupBy(producenci.id, producenci.nazwa);
+    .groupBy(
+      producenci.id,
+      producenci.nazwa,
+      producenci.www,
+      producenci.email,
+      producenci.telefon
+    );
 
   return rows[0] ?? null;
 }
