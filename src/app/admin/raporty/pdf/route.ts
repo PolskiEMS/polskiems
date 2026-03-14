@@ -11,6 +11,14 @@ function safeNumber(value: unknown) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function formatDate(date: Date) {
+  return date.toLocaleDateString("pl-PL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
 export async function GET(req: NextRequest) {
   try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
@@ -39,7 +47,6 @@ export async function GET(req: NextRequest) {
     doc.font("Roboto");
 
     const chunks: Buffer[] = [];
-
     doc.on("data", (chunk: Buffer) => chunks.push(chunk));
 
     const pdfBuffer: Buffer = await new Promise<Buffer>((resolve, reject) => {
@@ -55,39 +62,69 @@ export async function GET(req: NextRequest) {
       const pageWidth = doc.page.width;
       const contentWidth = pageWidth - 100;
 
-      doc.roundedRect(40, 35, pageWidth - 80, 110, 18).fill("#f5f3ff");
+      const now = new Date();
+      const start = new Date();
+      start.setDate(now.getDate() - days);
+      const reportRangeLabel = `${formatDate(start)} – ${formatDate(now)}`;
+
+      const companyName = String(report.firma ?? "Firma");
+      const companyWebsite = report.www ? String(report.www) : null;
+      const companyEmail = report.email ? String(report.email) : null;
+      const companyPhone = report.telefon ? String(report.telefon) : null;
+
+      doc.roundedRect(40, 35, pageWidth - 80, 140, 18).fill("#f5f3ff");
 
       const logoPath = path.join(process.cwd(), "public/images/logo.png");
-      
-      doc.image(logoPath, 70, 50, {
+
+      doc.image(logoPath, 70, 55, {
         fit: [100, 100],
       });
-      
+
       doc
         .fillColor("#4c1d95")
         .font("Roboto-Bold")
         .fontSize(24)
-        .text("Raport PolskiEMS", 200, 70, {
+        .text("Raport PolskiEMS", 200, 60, {
           width: 320,
           align: "left",
         });
-      
+
       doc
         .fillColor("#111827")
         .font("Roboto-Bold")
         .fontSize(16)
-        .text(String(report.firma ?? "Firma"), 200, 100, {
+        .text(companyName, 200, 92, {
           width: 340,
           align: "left",
         });
-      
+
       doc
         .fillColor("#6b7280")
         .font("Roboto")
         .fontSize(11)
-        .text(`Zakres raportu: ostatnie ${days} dni`, 200, 122);
+        .text(`Zakres raportu: ${reportRangeLabel}`, 200, 114);
 
-      let currentY = 175;
+      let infoY = 132;
+
+      const addCompanyLine = (label: string, value?: string | null) => {
+        if (!value) return;
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(`${label}: ${value}`, 200, infoY, {
+            width: 330,
+            align: "left",
+          });
+        infoY += 16;
+      };
+
+      addCompanyLine("Firma", companyName);
+      addCompanyLine("WWW", companyWebsite);
+      addCompanyLine("Email", companyEmail);
+      addCompanyLine("Telefon", companyPhone);
+
+      let currentY = 205;
 
       doc
         .fillColor("#111827")
@@ -111,11 +148,11 @@ export async function GET(req: NextRequest) {
       currentY += 34;
 
       const cards = [
-        { label: "Wyświetlenia", value: String(views) },
-        { label: "Klik WWW", value: String(websiteClicks) },
-        { label: "Klik Email", value: String(emailClicks) },
-        { label: "CTR WWW", value: `${websiteCtrPct}%` },
-        { label: "CTR Email", value: `${emailCtrPct}%` },
+        { label: "👁 Wyświetlenia", value: String(views) },
+        { label: "🌐 Klik WWW", value: String(websiteClicks) },
+        { label: "✉ Klik Email", value: String(emailClicks) },
+        { label: "📈 CTR WWW", value: `${websiteCtrPct}%` },
+        { label: "📩 CTR Email", value: `${emailCtrPct}%` },
       ];
 
       const cardWidth = 155;
@@ -205,11 +242,11 @@ export async function GET(req: NextRequest) {
       currentY += 24;
 
       const interpretation =
-        websiteCtrPct >= 10
-          ? "Profil firmy generuje dobre zainteresowanie i wysoki współczynnik przejścia na stronę WWW."
-          : websiteCtrPct > 0
-          ? "Profil firmy generuje ruch, ale jest przestrzeń do poprawy opisu, logo lub widoczności."
-          : "Profil firmy ma wyświetlenia, ale nie generuje jeszcze przejść na stronę WWW. Warto poprawić prezentację firmy.";
+        websiteCtrPct >= 10 || emailCtrPct >= 10
+          ? "Profil firmy generuje dobre zainteresowanie i wysoki współczynnik przejścia do danych kontaktowych lub strony WWW."
+          : websiteCtrPct > 0 || emailCtrPct > 0
+          ? "Profil firmy generuje ruch, ale jest przestrzeń do poprawy opisu, logo lub widoczności danych kontaktowych."
+          : "Profil firmy ma wyświetlenia, ale nie generuje jeszcze przejść do strony WWW ani kontaktu. Warto poprawić prezentację profilu firmy.";
 
       doc
         .fillColor("#4b5563")
@@ -220,18 +257,52 @@ export async function GET(req: NextRequest) {
           align: "left",
         });
 
-      doc
-         .fillColor("#9ca3af")
-         .font("Roboto")
-         .fontSize(9)
-     .text(
-        `Raport wygenerowany automatycznie | PolskiEMS.pl | ${new Date().toLocaleDateString("pl-PL")}`,
-       50, 790,
-      {
-        width: contentWidth,
-        align: "center",
+      currentY += 70;
+
+      let recommendation =
+        "Profil firmy jest poprawnie uzupełniony i warto utrzymywać aktualność danych.";
+
+      if (!companyWebsite || !companyEmail) {
+        recommendation =
+          "Warto uzupełnić profil firmy o kompletne dane kontaktowe i stronę WWW. Pełniejszy profil zwiększa wiarygodność i szansę na kontakt od klientów.";
+      } else if (views > 0 && websiteClicks === 0 && emailClicks === 0) {
+        recommendation =
+          "Profil firmy generuje wyświetlenia, ale niski poziom kliknięć sugeruje potrzebę poprawy opisu, oferty lub atrakcyjności prezentacji firmy w katalogu.";
+      } else if (websiteCtrPct >= 10 || emailCtrPct >= 10) {
+        recommendation =
+          "Profil firmy generuje dobre zainteresowanie. Warto utrzymać aktualne dane i rozważyć dodatkowe wyróżnienie profilu w katalogu.";
       }
-    );
+
+      doc
+        .fillColor("#111827")
+        .font("Roboto-Bold")
+        .fontSize(15)
+        .text("Rekomendacja", 50, currentY);
+
+      currentY += 24;
+
+      doc
+        .fillColor("#4b5563")
+        .font("Roboto")
+        .fontSize(10.5)
+        .text(recommendation, 50, currentY, {
+          width: contentWidth,
+          align: "left",
+        });
+
+      doc
+        .fillColor("#9ca3af")
+        .font("Roboto")
+        .fontSize(9)
+        .text(
+          `Raport wygenerowany automatycznie | PolskiEMS.pl | ${formatDate(now)}`,
+          50,
+          790,
+          {
+            width: contentWidth,
+            align: "center",
+          }
+        );
 
       doc.end();
     });
