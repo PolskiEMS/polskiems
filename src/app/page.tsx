@@ -4,9 +4,8 @@ import TrackHomeView from "@/app/components/TrackHomeView";
 
 export default function Home() {
   return (
+    <TrackHomeView />
     <div className={styles.page}>
-      <TrackHomeView />
-
       <h1>Polski <br /> EMS</h1>
       <h2>Znajdź swojego producenta</h2>
       <div className={styles.buttons}>
