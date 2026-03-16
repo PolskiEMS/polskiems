@@ -1,6 +1,6 @@
 import styles from './styles.module.css'
 import Link from "next/link";
-import TrackHomeView from "@/app/components/TrackHomeView/TrackHomeView";
+import TrackHomeView from "@/app/components/TrackHomeView";
 
 export default function Home() {
   return (
