@@ -2,7 +2,16 @@ import Link from "next/link";
 import { getAdminCompanies } from "@/lib/actions";
 import styles from "./style.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminCompaniesPage() {
+   searchParams,
+}: {
+  searchParams: Promise<{ success?: string }>;
+}) {
+  const params = await searchParams;
+  const success = params?.success === "1";
+  
   const companies = await getAdminCompanies();
 
   return (
