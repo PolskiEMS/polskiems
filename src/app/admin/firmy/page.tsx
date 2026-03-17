@@ -16,6 +16,11 @@ export default async function AdminCompaniesPage() {
 
   return (
     <div className={styles.page}>
+       {success && (
+        <div className={styles.successBox}>
+          Firma została pomyślnie dodana.
+        </div>
+      )}
       <div className={styles.header}>
         <h1 className={styles.title}>Firmy</h1>
         <Link href="/admin/firmy/nowa" className={styles.addBtn}>
