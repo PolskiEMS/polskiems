@@ -548,7 +548,7 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId,
-    isActive: false,
+    isActive: boolran("isActive").default(false);
   });
 
   redirect("/admin/firmy");
@@ -599,3 +599,5 @@ export async function getAllRegion() {
     .from(wojewodztwa)
     .orderBy(asc(wojewodztwa.nazwa));
 }
+
+redirect("/admin/firmy?success=1");
