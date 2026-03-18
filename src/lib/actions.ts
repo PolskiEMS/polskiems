@@ -547,11 +547,11 @@ export async function createCompanyAction(formData: FormData) {
     telefon: telefon.trim() || null,
     email: email.trim() || null,
     www: www.trim() || null,
-    wojewodztwoId,
-    isActive: boolran("isActive").default(false);
+    wojewodztwoId: wojewodztwoId ? Number(wojewodztwoId) : null,
+    isActive: true;
   });
 
-  redirect("/admin/firmy");
+  redirect("/admin/firmy?success=1");
 }
 
 export async function updateCompanyAction(formData: FormData) {
@@ -599,5 +599,3 @@ export async function getAllRegion() {
     .from(wojewodztwa)
     .orderBy(asc(wojewodztwa.nazwa));
 }
-
-redirect("/admin/firmy?success=1");
