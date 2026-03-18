@@ -548,7 +548,7 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId: wojewodztwoId ? Number(wojewodztwoId) : null,
-    isActive: true;
+    isActive: true,
   });
 
   redirect("/admin/firmy?success=1");
