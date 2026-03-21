@@ -547,11 +547,11 @@ export async function createCompanyAction(formData: FormData) {
     telefon: telefon.trim() || null,
     email: email.trim() || null,
     www: www.trim() || null,
-    wojewodztwoId,
-    isActive: false,
+    wojewodztwoId: wojewodztwoId ? Number(wojewodztwoId) : null,
+    isActive: true,
   });
 
-  redirect("/admin/firmy");
+  redirect("/admin/firmy?success=1");
 }
 
 export async function updateCompanyAction(formData: FormData) {

@@ -33,6 +33,7 @@ export const producenci = mysqlTable("producenci", {
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
   www: varchar("www", { length: 255 }),
+  featured: boolean("featured").default(false),
   isActive: boolean("isActive").default(false),
   createdAt: datetime("created_at", { mode: "string" })
     .notNull()

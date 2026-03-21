@@ -3,6 +3,8 @@ import { getDashboardStats } from "@/lib/actions";
 import styles from "./style.module.css";
 import LogoutButton from "@/app/components/admin/LogoutButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardPage() {
   const data = await getDashboardStats(30);
 
