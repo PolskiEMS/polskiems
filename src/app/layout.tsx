@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     "EMS Polska",
     "montaż SMD",
     "PCB montaż",
+    "produkcja PCB",
+    "montaż SMT",
+    "katolog producentów elektroniki",
+    "wyszukiwarka producentów",
     "produkcja elektroniki",
     "outsourcing produkcji",
     "baza producentów PCB",
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wyszukiwarka Producentów Elektroniki | Twoja Baza EMS",
     description: "Znajdź idealnego partnera do produkcji elektroniki w Polsce. Intuicyjna wyszukiwarka producentów PCB i EMS.",
-    // url: "https://twoja-strona.pl",
+    url: "https://polskiems.pl",
     siteName: "Wyszukiwarka Producentów",
     images: [
       {

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wyszukiwarka Producentów Elektroniki",
     description: "Znajdź producenta elektroniki według lokalizacji, wymagań i skali produkcji.",
-    url: "https://twoja-strona.pl/wyszukaj",
+    url: "https://polskiems.pl/wyszukaj",
     siteName: "Wyszukiwarka Producentów",
     locale: "pl_PL",
     type: "website"
