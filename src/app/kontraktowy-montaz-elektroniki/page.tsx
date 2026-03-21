@@ -58,22 +58,6 @@ export default function KontraktowyMontazElektronikiPage() {
         partnera do prototypów, małych serii i produkcji seryjnej.
       </p>
 
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginTop: "34px" }}>
-        <Link
-          href="/wyszukaj"
-          style={{
-            padding: "12px 20px",
-            border: "1px solid rgba(255,255,255,0.45)",
-            borderRadius: "10px",
-            color: "white",
-            textDecoration: "none",
-            background: "rgba(255,255,255,0.08)",
-            fontWeight: 700,
-          }}
-        >
-          Przejdź do wyszukiwarki
-        </Link>
-
         <div className={styles.ctaRow}>
           <Link href="/wyszukaj">
             <button className={styles.primaryBtn}>Wyszukaj producenta</button>
@@ -82,7 +66,6 @@ export default function KontraktowyMontazElektronikiPage() {
             <button className={styles.secondaryBtn}>Wszyscy producenci</button>
           </Link>
         </div>
-      </div>
     </main>
   );
 }
