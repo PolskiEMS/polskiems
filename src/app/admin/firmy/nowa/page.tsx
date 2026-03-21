@@ -53,6 +53,13 @@ export default async function NewCompanyPage() {
             </select>
           </div>
 
+          <div className={styles.field}>
+            <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <input type="checkbox" name="featured" />
+              Wyróżniony producent
+            </label>
+          </div>
+
           <div className={styles.actions}>
             <button type="submit" className={styles.saveBtn}>
               Zapisz

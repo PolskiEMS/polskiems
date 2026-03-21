@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import styles from "../seo-page.module.css";
 
 export const metadata: Metadata = {
   title: "Kontraktowy montaż elektroniki | PolskiEMS",
@@ -73,20 +74,14 @@ export default function KontraktowyMontazElektronikiPage() {
           Przejdź do wyszukiwarki
         </Link>
 
-        <Link
-          href="/wszyscy-producenci"
-          style={{
-            padding: "12px 20px",
-            border: "1px solid rgba(255,255,255,0.45)",
-            borderRadius: "10px",
-            color: "white",
-            textDecoration: "none",
-            background: "rgba(255,255,255,0.08)",
-            fontWeight: 700,
-          }}
-        >
-          Zobacz wszystkich producentów
-        </Link>
+        <div className={styles.ctaRow}>
+          <Link href="/wyszukaj">
+            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          </Link>
+          <Link href="/wszyscy-producenci">
+            <button className={styles.secondaryBtn}>Wszyscy producenci</button>
+          </Link>
+        </div>
       </div>
     </main>
   );

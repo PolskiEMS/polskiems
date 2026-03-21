@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import styles from "../seo-page.module.css";
 
 export const metadata: Metadata = {
   title: "Montaż elektroniki w Polsce | PolskiEMS",
@@ -58,37 +59,14 @@ export default function MontazElektronikiPolskaPage() {
         konkretnej firmy i profilu realizowanych zamówień.
       </p>
 
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginTop: "34px" }}>
-        <Link
-          href="/wyszukaj"
-          style={{
-            padding: "12px 20px",
-            border: "1px solid rgba(255,255,255,0.45)",
-            borderRadius: "10px",
-            color: "white",
-            textDecoration: "none",
-            background: "rgba(255,255,255,0.08)",
-            fontWeight: 700,
-          }}
-        >
-          Przejdź do wyszukiwarki
-        </Link>
-
-        <Link
-          href="/wszyscy-producenci"
-          style={{
-            padding: "12px 20px",
-            border: "1px solid rgba(255,255,255,0.45)",
-            borderRadius: "10px",
-            color: "white",
-            textDecoration: "none",
-            background: "rgba(255,255,255,0.08)",
-            fontWeight: 700,
-          }}
-        >
-          Zobacz wszystkich producentów
-        </Link>
-      </div>
+      <div className={styles.ctaRow}>
+          <Link href="/wyszukaj">
+            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          </Link>
+          <Link href="/wszyscy-producenci">
+            <button className={styles.secondaryBtn}>Wszyscy producenci</button>
+          </Link>
+        </div>
     </main>
   );
 }

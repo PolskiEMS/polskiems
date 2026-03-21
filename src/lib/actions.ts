@@ -140,7 +140,7 @@ export const getAllProducers = async () => {
     .select()
     .from(producenci)
     .where(sql`${producenci.isActive} = 1`)
-    .orderBy(asc(producenci.id));
+    .orderBy(desc(producenci.featured), asc(producenci.id));
 };
 
 export const saveStatistics = async (data: string) => {
@@ -199,6 +199,7 @@ export async function getFilteredProducers(filters: Filters) {
       email: producenci.email,
       www: producenci.www,
       isActive: producenci.isActive,
+      featured: producenci.featured,
       wojewodztwo: wojewodztwa.nazwa,
     })
     .from(producenci)
@@ -464,6 +465,7 @@ export async function getAdminCompanies() {
       email: producenci.email,
       www: producenci.www,
       isActive: producenci.isActive,
+      featured: producenci.featured,
     })
     .from(producenci)
     .orderBy(asc(producenci.nazwa));
@@ -536,6 +538,7 @@ export async function createCompanyAction(formData: FormData) {
   const www = String(formData.get("www") || "");
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+  const featured = formData.get("featured") === "on";
 
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
@@ -548,6 +551,7 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId: wojewodztwoId ? Number(wojewodztwoId) : null,
+    featured,
     isActive: true,
   });
 
@@ -567,6 +571,7 @@ export async function updateCompanyAction(formData: FormData) {
   const isActive = formData.get("isActive") === "on";
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+  const featured = formData.get("featured") === "on";
 
   if (!id || !nazwa.trim()) {
     throw new Error("Brak danych firmy");
@@ -581,6 +586,7 @@ export async function updateCompanyAction(formData: FormData) {
       email: email.trim() || null,
       www: www.trim() || null,
       wojewodztwoId,
+      featured,
       isActive,
     })
     .where(eq(producenci.id, id));

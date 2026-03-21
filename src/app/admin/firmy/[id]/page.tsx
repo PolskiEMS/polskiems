@@ -114,6 +114,17 @@ export default async function EditCompanyPage({ params }: Props) {
           </div>
 
           <div className={styles.field}>
+            <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <input
+                type="checkbox"
+                name="featured"
+                defaultChecked={!!company.featured}
+              />
+              Wyróżniony producent
+            </label>
+          </div>
+
+          <div className={styles.field}>
             <label>
               <input
                 type="checkbox"
