@@ -154,6 +154,17 @@ type Filters = {
   scales?: string[];
 };
 
+export async function getFeaturedProducers(limit = 6) {
+  const db = getDb();
+
+  return await db
+    .select()
+    .from(producenci)
+    .where(and(eq(producenci.isActive, true), eq(producenci.featured, true)))
+    .orderBy(asc(producenci.id))
+    .limit(limit);
+}
+
 export async function getFilteredProducers(filters: Filters) {
   const db = getDb();
   const { regions = [], requirements = [], scales = [] } = filters;
@@ -220,6 +231,7 @@ export async function getFilteredProducers(filters: Filters) {
   }
 
   query.where(and(...whereConditions));
+  query.orderBy(desc(producenci.featured), asc(producenci.id));
 
   return await query;
 }

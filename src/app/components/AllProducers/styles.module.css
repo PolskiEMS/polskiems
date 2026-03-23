@@ -98,6 +98,29 @@
   background:rgba(255,255,255,0.3);
 }
 
+.featuredBlock {
+  border: 2px solid rgba(255, 215, 0, 0.75);
+  box-shadow:
+    0 0 0 2px rgba(255, 215, 0, 0.18),
+    0 12px 28px rgba(0, 0, 0, 0.16);
+  position: relative;
+}
+
+.featuredBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  margin: 14px auto 4px;
+  width: fit-content;
+  box-shadow: 0 8px 18px rgba(124, 58, 237, 0.25);
+}
+
 @media screen and (min-width: 1200px) {
     .producers {
         grid-template-columns: repeat(3, 1fr);
