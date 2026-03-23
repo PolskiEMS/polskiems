@@ -67,7 +67,9 @@ const SearchContent = () => {
             <div className={styles.producers}>
               {producers.map((producer, i) => (
                 <motion.div
-                  className={styles.producerBlock}
+                  className={`${styles.producerBlock} 
+                    ${producer.featured ? styles.featuredBlock : ""
+                  }`}
                   key={producer.id ?? i}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -82,6 +84,11 @@ const SearchContent = () => {
                       height={210}
                       alt={`Producent ${producer.nazwa}`}
                     />
+
+                    {producer.featured && (
+                      <div className={styles.featuredBadge}>Polecany Producent</div>
+                    )}
+
                     <h2>{producer.nazwa}</h2>
                     <div className={styles.bottom}>
                       <p>{producer.opis}</p>
