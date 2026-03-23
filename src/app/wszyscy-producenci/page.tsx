@@ -30,7 +30,6 @@ const Wyszukaj = async () => {
   return (
     <div className={styles.page}>
       <h1>Wszyscy Producenci</h1>
-      <p>Pełna lista producentów elektroniki w Polsce. Przeglądaj firmy EMS i dostawców usług montażu PCB bez filtrowania.</p>
       <AllProducers producers={producers} />
       <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
     </div>
