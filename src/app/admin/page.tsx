@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDashboardStats } from "@/lib/actions";
+import { getPageViewsStats } from "@/lib/actions";
 import styles from "./style.module.css";
 import LogoutButton from "@/app/components/admin/LogoutButton";
 
@@ -7,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const data = await getDashboardStats(30);
+  const pageViewsStats = await getPageViewsStats(30);
 
   return (
     <div className={styles.page}>
@@ -49,10 +51,12 @@ export default async function AdminDashboardPage() {
               <strong>Aktywne firmy:</strong> {data.activeCompanies}
             </p>
 
-            <p>
-              <strong>Wyświetlenia strony PolskiEMS (30 dni):</strong>{" "}
-              {data.pageViews}
-            </p>
+            <div>
+              <h3>Wyświetlenia strony PolskiEMS (30 dni)</h3>
+              <p>Home Page: {pageViewsStats.home}</p>
+              <p>Wszyscy Producenci: {pageViewsStats["all-producers"]}</p>
+              <p>Wyszukiwanie Producentów: {pageViewsStats.search}</p>
+            </div>
 
             <p>
               <strong>Klik WWW (30 dni):</strong> {data.websiteClicks}

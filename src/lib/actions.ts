@@ -75,6 +75,30 @@ export async function getDashboardStats(days = 30) {
   };
 }
 
+export async function getPageViewsStats(days = 30) {
+  const db = getDb();
+
+  const since =
+    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+
+  const rows = await db
+    .select({
+    page: pageViews.page,
+    count: sql<number>`COUNT(*)`,
+      })
+       .from(pageViews)
+        .where(since ? sql`${pageViews.createdAt} >= ${since}`: undefined)
+        .groupBy(pageViews.page);
+
+  const result = {home: 0, "all-producers": 0, search: 0,};
+    for (const row of rows) {
+    if (row.page in result) {
+      result[row.page as keyof typeof result] = Number(row.count);
+    }
+  }
+  return result;
+}
+
 export async function getCompanyStats(days = 30) {
   const db = getDb();
 
