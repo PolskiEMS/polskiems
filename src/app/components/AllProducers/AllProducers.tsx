@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import styles from './styles.module.css'
 import { motion } from "motion/react"
-import { trackCompanyEvent } from "@/lib/trackCompanyEvent";
+import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
 
 const AllProducers = ({ producers }: { producers: any[] }) => {
 

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import ProducerSearch from '../components/ProducerSearch/ProducerSearch';
 import styles from './styles.module.css'
+import PageViewTracker from '../components/PageViewTracker';
 
 export const metadata: Metadata = {
   title: "Wyszukiwarka Producentów Elektroniki w Polsce",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 const Wyszukaj = () => {
   return (
     <div className={styles.page}>
+      <PageViewTracker page="search" />
       <div className={styles.topPage}>
         <h1>Wyszukaj Producenta</h1>
         <p>Wybierz opcje</p>

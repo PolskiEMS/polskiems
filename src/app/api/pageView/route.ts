@@ -1,27 +1,35 @@
-import { NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
-import { pageViews } from "@/db/schema";
+"use client";
 
-export async function POST(req: Request) {
-  try {
-    const db = getDb();
-    const body = await req.json().catch(() => ({}));
-  const page =
-      typeof body.page === "string" && body.page.trim()
-        ? body.page.trim()
-        : "home";
-  
-    const referrer = req.headers.get("referer") ?? null;
+import { useEffect } from "react";
 
-    await db.insert(pageViews).values({
-      page,
-      referrer,
-    });
+const VIEW_INTERVAL_MS = 30 * 60 * 1000; // 30 minut
+const STORAGE_KEY = "polskiems_home_last_view";
 
-    return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error("Error recording page view:", error);
-    return NextResponse.json({ ok: false, error: "Failed to record page view" }, { status: 500 });
-  }
+export default function TrackHomeView() {
+  useEffect(() => {
+    try {
+      const now = Date.now();
+      const lastView = Number(localStorage.getItem(STORAGE_KEY) || "0");
 
+      if (now - lastView < VIEW_INTERVAL_MS) {
+        return;
+      }
+
+      fetch("/api/pageView", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ page: "home" }),
+      })
+        .then(() => {
+          localStorage.setItem(STORAGE_KEY, String(now));
+        })
+        .catch(() => {});
+    } catch {
+      // nic nie rób
+    }
+  }, []);
+
+  return null;
 }

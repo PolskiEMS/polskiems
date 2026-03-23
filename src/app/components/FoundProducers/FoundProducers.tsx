@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import styles from './styles.module.css'
 import { motion } from "motion/react"
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { trackCompanyEvent } from "@/lib/trackCompanyEvent";

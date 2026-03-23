@@ -93,10 +93,9 @@ export const companyEvents = mysqlTable("company_events", {
 
   export const pageViews = mysqlTable("page_views", {
   id: int().primaryKey().autoincrement(),
-
   page: varchar("page", { length: 100 }).notNull(),
-
   referrer: varchar("referrer", { length: 255 }),
+  visitorId: varchar("visitor_id", { length: 100 }),
 
   createdAt: datetime("created_at", { mode: "string" })
     .notNull()
