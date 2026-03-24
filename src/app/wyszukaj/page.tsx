@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 const Wyszukaj = () => {
   return (
     <div className={styles.page}>
-      <PageViewTracker page="wyszukaj" />
+      <PageViewTracker page="search" />
       <div className={styles.topPage}>
         <h1>Wyszukaj Producenta</h1>
         <p>Wybierz opcje</p>
