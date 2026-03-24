@@ -4,6 +4,7 @@ import {
   getAllRegion,
   getAllDzialaniaEms,
   getAllProdukcjaScales,
+  getCompanyRelations
 } from "@/lib/actions";
 import styles from "../style.module.css";
 
@@ -11,6 +12,7 @@ export default async function NewCompanyPage() {
   const region = await getAllRegion();
   const dzialania = await getAllDzialaniaEms();
   const produkcja = await getAllProdukcjaScales();
+  const relations = await getCompanyRelations(0);
 
   return (
     <div className={styles.page}>
@@ -59,7 +61,6 @@ export default async function NewCompanyPage() {
               ))}
             </select>
           </div>
-          
           <div className={styles.field}>
             <label>Działania / wymagania</label>
             <div className={styles.checkboxGroup}>
