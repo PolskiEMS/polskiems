@@ -30,7 +30,7 @@ const Wyszukaj = async () => {
   const producers = await getAllProducers();
   return (
     <div className={styles.page}>
-      <PageViewTracker page="all_producers" />
+      <PageViewTracker page="all_producer" />
       <h1>Wszyscy Producenci</h1>
       <AllProducers producers={producers} />
       <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
