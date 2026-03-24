@@ -44,11 +44,19 @@ export default function PageViewTracker({ page }: { page: string }) {
           visitorId,
         }),
       })
-        .then(() => {
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("pageView request failed");
+          }
+
           localStorage.setItem(throttleKey, String(now));
         })
-        .catch(() => {});
-    } catch {}
+        .catch((error) => {
+          console.error("Page view tracking failed:", error);
+        });
+    } catch (error) {
+      console.error("Page view tracker error:", error);
+    }
   }, [page]);
 
   return null;
