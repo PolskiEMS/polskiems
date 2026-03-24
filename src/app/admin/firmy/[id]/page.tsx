@@ -124,6 +124,23 @@ export default async function EditCompanyPage({ params }: Props) {
           </div>
 
           <div className={styles.field}>
+            <label>Działania / wymagania</label>
+            <div className={styles.checkboxGroup}>
+              {dzialania.map((item) => (
+                <label key={item.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    name="dzialaniaIds"
+                    value={item.id}
+                    defaultChecked={relations.dzialaniaIds.includes(item.id)}
+                  />
+                  {item.nazwa}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.field}>
             <label>Produkcja / skala produkcji</label>
             <div className={styles.checkboxGroup}>
               {produkcjaScales.map((item) => (
