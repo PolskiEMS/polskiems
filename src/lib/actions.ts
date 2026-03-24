@@ -161,6 +161,53 @@ export async function getCompanyStats(days = 30) {
     .orderBy(desc(viewsExpr));
 }
 
+export async function getAllDzialaniaEms() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: dzialaniaEms.id,
+      nazwa: dzialaniaEms.nazwa,
+    })
+    .from(dzialaniaEms)
+    .orderBy(asc(dzialaniaEms.nazwa));
+}
+
+export async function getAllProdukcjaScales() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: produkcja.id,
+      zakres: produkcja.zakres,
+    })
+    .from(produkcja)
+    .orderBy(asc(produkcja.zakres));
+}
+
+export async function getCompanyRelations(companyId: number) {
+  const db = getDb();
+
+  const dzialania = await db
+    .select({
+      dzialanieId: producenciEmsDzialania.dzialanieId,
+    })
+    .from(producenciEmsDzialania)
+    .where(eq(producenciEmsDzialania.companyId, companyId));
+
+  const produkcjaRows = await db
+    .select({
+      produkcjaId: producenciEmsProdukcja.produkcjaId,
+    })
+    .from(producenciEmsProdukcja)
+    .where(eq(producenciEmsProdukcja.companyId, companyId));
+
+  return {
+    dzialaniaIds: dzialania.map((x) => x.dzialanieId),
+    produkcjaIds: produkcjaRows.map((x) => x.produkcjaId),
+  };
+}
+
 export const getAllProducers = async () => {
   const db = getDb();
   return await db
@@ -568,6 +615,7 @@ export async function updateCompany(
 
 export async function createCompanyAction(formData: FormData) {
   "use server";
+
   const db = getDb();
 
   const nazwa = String(formData.get("nazwa") || "");
@@ -579,20 +627,50 @@ export async function createCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
   const featured = formData.get("featured") === "on";
 
+  const dzialaniaIds = formData
+    .getAll("dzialaniaIds")
+    .map((v) => Number(v))
+    .filter((v) => Number.isFinite(v));
+
+  const produkcjaIds = formData
+    .getAll("produkcjaIds")
+    .map((v) => Number(v))
+    .filter((v) => Number.isFinite(v));
+
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
   }
 
-  await db.insert(producenci).values({
+  const result = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
     opis: opis.trim() || null,
     telefon: telefon.trim() || null,
     email: email.trim() || null,
     www: www.trim() || null,
-    wojewodztwoId: wojewodztwoId ? Number(wojewodztwoId) : null,
+    wojewodztwoId,
     featured,
     isActive: true,
   });
+
+  const companyId = Number((result as any).insertId);
+
+  if (dzialaniaIds.length > 0) {
+    await db.insert(producenciEmsDzialania).values(
+      dzialaniaIds.map((dzialanieId) => ({
+        companyId,
+        dzialanieId,
+      }))
+    );
+  }
+
+  if (produkcjaIds.length > 0) {
+    await db.insert(producenciEmsProdukcja).values(
+      produkcjaIds.map((produkcjaId) => ({
+        companyId,
+        produkcjaId,
+      }))
+    );
+  }
 
   redirect("/admin/firmy?success=1");
 }
@@ -612,9 +690,47 @@ export async function updateCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
   const featured = formData.get("featured") === "on";
 
+  const dzialaniaId = formData
+  .getAll("dzialaniaId")
+  .map((v) => Number(v))
+  .filter((v) => Number.isFinite(v));
+
+  const produkcjaId = formData
+  .getAll("produkcjaId")
+  .map((v) => Number(v))
+  .filter((v) => Number.isFinite(v));
+
+   await db
+    .delete(producenciEmsDzialania).where(
+    eq(producenciEmsDzialania.companyId, id)
+  );
+
+  await db    
+    .delete(producenciEmsProdukcja).where(
+    eq(producenciEmsProdukcja.companyId, id)
+  );
+
   if (!id || !nazwa.trim()) {
     throw new Error("Brak danych firmy");
   }
+
+  if (dzialaniaId.length > 0) {
+    await db.insert(producenciEmsDzialania).values(
+      dzialaniaId.map((dzialanieId) => ({
+        companyId: id,
+        dzialanieId,
+    }))
+  );
+}
+
+  if (produkcjaId.length > 0) {
+    await db.insert(producenciEmsProdukcja).values(
+      produkcjaId.map((produkcjaId) => ({
+        companyId: id,
+        produkcjaId,
+    }))
+  );
+}
 
   await db
     .update(producenci)

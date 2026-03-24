@@ -128,7 +128,7 @@ const ProducerSearch = () => {
         <div>
             <div className={styles.allFiltersGroup}>
                 {renderFilterGroup("Region", "regions", filtersData.regions)}
-                {renderFilterGroup("Wymagania", "requirements", filtersData.requirements)}
+                {renderFilterGroup("Usługi EMS", "requirements", filtersData.requirements)}
                 {renderFilterGroup("Skala produkcji", "scales", filtersData.scales)}
             </div>
         </div >

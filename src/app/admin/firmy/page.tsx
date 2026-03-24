@@ -108,7 +108,7 @@ export default async function AdminCompaniesPage({
       </div>
 
       <div className={styles.bottomBack}>
-        <Link href="/admin" className={styles.backBtn}>
+        <Link href="/admin" className={styles.editBtn}>
           Powrót do panelu
         </Link>
       </div>

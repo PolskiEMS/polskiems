@@ -1,6 +1,13 @@
 import Link from "next/link";
-import { getAllRegion, getCompanyById, updateCompanyAction } from "@/lib/actions";
 import styles from "../style.module.css";
+import {
+  getCompanyById,
+  getAllRegion,
+  updateCompanyAction,
+  getAllDzialaniaEms,
+  getAllProdukcjaScales,
+  getCompanyRelations,
+} from "@/lib/actions";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -9,13 +16,16 @@ type Props = {
 export default async function EditCompanyPage({ params }: Props) {
   const { id } = await params;
   const company = await getCompanyById(Number(id));
-  const regions = await getAllRegion();
+  const region = await getAllRegion();
+  const dzialania = await getAllDzialaniaEms();
+  const produkcjaScales = await getAllProdukcjaScales();
+  const relations = await getCompanyRelations(Number(id));
 
   if (!company) {
     return (
       <div className={styles.page}>
         <div className={styles.formTop}>
-        <Link href="/admin/firmy" className={styles.backBtn}>
+        <Link href="/admin/firmy" className={styles.editBtn}>
           Powrót do Firmy
         </Link>
       </div>
@@ -105,12 +115,29 @@ export default async function EditCompanyPage({ params }: Props) {
               className={styles.select}
             >
               <option value="">Wybierz województwo</option>
-              {regions.map((region) => (
+              {region.map((region) => (
                 <option key={region.id} value={region.id}>
                   {region.nazwa}
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className={styles.field}>
+            <label>Produkcja / skala produkcji</label>
+            <div className={styles.checkboxGroup}>
+              {produkcjaScales.map((item) => (
+                <label key={item.id} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    name="produkcjaIds"
+                    value={item.id}
+                    defaultChecked={relations.produkcjaIds.includes(item.id)}
+                  />
+                  {item.zakres}
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className={styles.field}>
