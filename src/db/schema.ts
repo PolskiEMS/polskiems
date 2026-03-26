@@ -136,4 +136,3 @@ export const companyEvents = mysqlTable("company_events", {
                                                               .notNull()
                                                                   .default(sql`CURRENT_TIMESTAMP`),
                                                                   });
-})
