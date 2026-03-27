@@ -44,7 +44,6 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/zapytania" className={styles.adminBox}>
             Zapytania
           </Link>
-
         </div>       
 
         <div className={styles.dashboardGrid}>
