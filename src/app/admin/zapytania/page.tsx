@@ -3,7 +3,6 @@ import { getAdminInquiries } from "@/lib/actions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
-
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
 
