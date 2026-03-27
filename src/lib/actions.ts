@@ -830,4 +830,38 @@ export async function sendInquiryAction(formData: FormData) {
 
   redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
 }
-                                                                                                                                                                                  
+
+export async function getAdminInquiries() {
+  const db = getDb();
+
+  return await db
+    .select({
+      inquiryId: inquiries.id,
+      customerName: inquiries.customerName,
+      customerCompany: inquiries.customerCompany,
+      customerEmail: inquiries.customerEmail,
+      customerPhone: inquiries.customerPhone,
+      serviceType: inquiries.serviceType,
+      quantity: inquiries.quantity,
+      deadline: inquiries.deadline,
+      message: inquiries.message,
+      createdAt: inquiries.createdAt,
+
+      recipientId: inquiryRecipients.id,
+      companyId: producenci.id,
+      companyName: producenci.nazwa,
+      companyEmail: inquiryRecipients.companyEmail,
+      status: inquiryRecipients.status,
+      sentAt: inquiryRecipients.sentAt,
+    })
+    .from(inquiries)
+    .leftJoin(
+      inquiryRecipients,
+      eq(inquiryRecipients.inquiryId, inquiries.id)
+    )
+    .leftJoin(
+      producenci,
+      eq(producenci.id, inquiryRecipients.companyId)
+    )
+    .orderBy(desc(inquiries.id), desc(inquiryRecipients.id));
+}
