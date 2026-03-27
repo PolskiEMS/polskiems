@@ -105,7 +105,7 @@ const SearchContent = () => {
                         </a>
                       )}
 
-                      <Link href={`/zapytanie-ofertowe?companyId=${producer.id}`}>
+                      <Link href={`/zapytania-ofertowe?companyId=${producer.id}`}>
                         <button className={styles.contactMeBtn}>Poproś o wycenę</button>
                       </Link>
 
