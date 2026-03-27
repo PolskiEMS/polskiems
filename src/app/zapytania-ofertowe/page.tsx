@@ -68,11 +68,22 @@ export default async function InquiryPage({
             <label htmlFor="serviceType">Typ usługi</label>
             <select id="serviceType" name="serviceType" className={styles.select} required>
               <option value="">Wybierz usługę</option>
-              <option value="Montaż SMT">Montaż SMT</option>
+              <option value="Projekt">Projekt</option>
+              <option value="Dostarcza PCB">Dostarcza PCB</option>
+              <option value="Kupuje komponenty">Kupuje komponenty</option>
+              <option value="Montaż SMD">Montaż SMD</option>
               <option value="Montaż THT">Montaż THT</option>
-              <option value="Produkcja PCB">Produkcja PCB</option>
-              <option value="Montaż elektroniki">Montaż elektroniki</option>
-              <option value="Kontraktowy montaż elektroniki">Kontraktowy montaż elektroniki</option>
+              <option value="Inspekcja">Inspekcja</option>
+              <option value="Test Flying Probe">Test Flying Probe</option>
+              <option value="Montaż produktu finalnego">Montaż produktu finalnego</option>
+              <option value="Conformal Coating">Conformal Coating</option>
+              <option value="Mycie płytek">Mycie płytek</option>
+              <option value="Lakierowanie">Lakierowanie</option>
+              <option value="Hermetyzacja">Hermetyzacja</option>
+              <option value="IPC Klasa 3">IPC Klasa 3</option>
+              <option value="IPC Klasa 2">IPC Klasa 2</option>
+              <option value="IPC Klasa 1">IPC Klasa 1</option>
+              <option value="Umożliwia audyt">Umożliwia audyt</option>
               <option value="Inne">Inne</option>
             </select>
           </div>
