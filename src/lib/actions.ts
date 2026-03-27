@@ -778,7 +778,7 @@ export async function sendInquiryAction(formData: FormData) {
   const message = String(formData.get("message") ?? "").trim();
 
   if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
-    redirect("/zapytanie-ofertowe");
+    redirect("/zapytania-ofertowe");
   }
 
   const companyRows = await db
@@ -793,7 +793,7 @@ export async function sendInquiryAction(formData: FormData) {
   const company = companyRows[0];
 
   if (!company || !company.email) {
-    redirect("/zapytanie-ofertowe");
+    redirect("/zapytania-ofertowe");
   }
 
   const inquiryResult = await db.insert(inquiries).values({
@@ -828,7 +828,7 @@ export async function sendInquiryAction(formData: FormData) {
     message,
   });
 
-  redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
+  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
 }
 
 export async function getAdminInquiries() {
