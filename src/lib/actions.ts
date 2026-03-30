@@ -813,7 +813,7 @@ export async function sendInquiryAction(formData: FormData) {
     inquiryId,
     companyId: company.id,
     companyEmail: company.email,
-    status: "sent",
+    status: "pending",
   });
 
   console.log("NOWE ZAPYTANIE OFERTOWE:", {
