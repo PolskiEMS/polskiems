@@ -108,6 +108,10 @@ export default async function AdminInquiriesPage() {
                 <p>{row.message}</p>
               </div>
             </div>
+            <form action={sendInquiryToCompanyAction}>
+              <input type="hidden" name="recipientId" value={row.recipientId} />
+              <button type="submit">Wyślij</button>
+            </form>
           ))}
         </div>
 
