@@ -36,12 +36,13 @@ export default function PageViewTracker({ page }: { page: string }) {
       body: JSON.stringify({
         page: pageRef.current,
         visitorId,
-        timestamp: now,
-        userAgent: navigator.userAgent,
       }),
     })
       .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          console.warn(`Page view request failed: ${res.status}`);
+          return;
+        }
         localStorage.setItem(throttleKey, String(now));
         console.log("[Tracker] Sent OK");
       })
