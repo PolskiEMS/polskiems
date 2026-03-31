@@ -920,7 +920,7 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
   const row = rows[0];
   if (!row) return;
 
-  // 🔥 LOGIKA PAKIETÓW
+  // LOGIKA PAKIETÓW
   if (row.packageType === "standard") {
     throw new Error("Standard nie może otrzymywać leadów");
   }
