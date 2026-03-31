@@ -652,6 +652,9 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId,
+    packageType,
+    monthlyInquiryLimit,
+    monthlyInquiryCount: 0,
     featured,
     isActive: true,
   });
@@ -674,6 +677,20 @@ export async function createCompanyAction(formData: FormData) {
         produkcjaId,
       }))
     );
+  }
+
+  const isPremium = formData.get("isPremium") === "on";
+  const isFeatured = formData.get("isFeatured") === "on";
+
+  let packageType = "standard";
+  let monthlyInquiryLimit = 0;
+
+  if (isFeatured) {
+    packageType = "featured";
+    monthlyInquiryLimit = 999999;
+  } else if (isPremium) {
+    packageType = "premium";
+    monthlyInquiryLimit = 10;
   }
 
   redirect("/admin/firmy?success=1");
