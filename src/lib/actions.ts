@@ -1,6 +1,6 @@
 import {redirect} from "next/navigation";
 import {sendInquiryEmail} from "@/lib/mail";
-import {revalidatePath} from "next/cach";
+import {revalidatePath} from "next/cache";
 
 import {
   dzialaniaEms,
@@ -644,6 +644,20 @@ export async function createCompanyAction(formData: FormData) {
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
   }
+  
+  const isPremium = formData.get("isPremium") === "on";
+  const isFeatured = formData.get("isFeatured") === "on";
+  
+  let packageType = "standard";
+  let monthlyInquiryLimit = 0;
+  
+  if (isFeatured) {
+    packageType = "featured";
+    monthlyInquiryLimit = 999999;
+  } else if (isPremium) {
+    packageType = "premium";
+    monthlyInquiryLimit = 10;
+  }
 
   const result = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
@@ -677,20 +691,6 @@ export async function createCompanyAction(formData: FormData) {
         produkcjaId,
       }))
     );
-  }
-
-  const isPremium = formData.get("isPremium") === "on";
-  const isFeatured = formData.get("isFeatured") === "on";
-
-  let packageType = "standard";
-  let monthlyInquiryLimit = 0;
-
-  if (isFeatured) {
-    packageType = "featured";
-    monthlyInquiryLimit = 999999;
-  } else if (isPremium) {
-    packageType = "premium";
-    monthlyInquiryLimit = 10;
   }
 
   redirect("/admin/firmy?success=1");
