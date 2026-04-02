@@ -2,34 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { pageViews } from "@/db/schema";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const db = getDb();
-    const body = await req.json();
-
-    const page = String(body.page ?? "").trim();
-    const visitorId = String(body.visitorId ?? "").trim();
-    const referrer = req.headers.get("referer") || null;
+    const body = await request.json();
+    const { page, visitorId } = body;
 
     if (!page || !visitorId) {
       return NextResponse.json(
-        { ok: false, error: "Missing page or visitorId" },
+        { error: 'Missing page or visitorId' },
         { status: 400 }
       );
     }
 
+    const db = getDb();
     await db.insert(pageViews).values({
       page,
       visitorId,
-      referrer,
+      createdAt: new Date(),
     });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("pageView error:", error);
-
+    console.error('[pageView API Error]', error);
     return NextResponse.json(
-      { ok: false, error: "Internal server error" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
