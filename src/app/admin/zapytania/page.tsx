@@ -25,37 +25,49 @@ export default async function AdminInquiriesPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, index) => (
-                <tr key={`${row.inquiryId}-${row.recipientId ?? index}`}>
-                  <td>{row.createdAt || "-"}</td>
-                  <td>
-                    <div>{row.customerName}</div>
-                    {row.customerCompany && (
-                      <div className={styles.muted}>{row.customerCompany}</div>
-                    )}
-                  </td>
-                  <td>
-                    <div>{row.customerEmail}</div>
-                    {row.customerPhone && (
-                      <div className={styles.muted}>{row.customerPhone}</div>
-                    )}
-                  </td>
-                  <td>{row.serviceType}</td>
-                  <td>{row.quantity || "-"}</td>
-                  <td>
-                    {row.companyName ? (
-                      <div>
-                        <div>{row.companyName}</div>
-                        <div className={styles.muted}>{row.companyEmail}</div>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td>{row.status || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
+  {rows.map((row, index) => (
+    <tr key={`${row.inquiryId}-${row.recipientId ?? index}`}>
+      <td>{row.createdAt || "-"}</td>
+      <td>
+        <div>{row.customerName}</div>
+        {row.customerCompany && (
+          <div className={styles.muted}>{row.customerCompany}</div>
+        )}
+      </td>
+      <td>
+        <div>{row.customerEmail}</div>
+        {row.customerPhone && (
+          <div className={styles.muted}>{row.customerPhone}</div>
+        )}
+      </td>
+      <td>{row.serviceType}</td>
+      <td>{row.quantity || "-"}</td>
+      <td>
+        {row.companyName ? (
+          <div>
+            <div>{row.companyName}</div>
+            <div className={styles.muted}>{row.companyEmail}</div>
+          </div>
+        ) : (
+          "-"
+        )}
+      </td>
+      <td>{row.status || "-"}</td>
+      <td>
+        {row.recipientId && row.status !== "sent" ? (
+          <form action={sendInquiryToCompanyAction}>
+            <input type="hidden" name="recipientId" value={row.recipientId} />
+            <button type="submit" className={styles.sendBtn}>
+              Wyślij
+            </button>
+          </form>
+        ) : (
+          "-"
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
 
