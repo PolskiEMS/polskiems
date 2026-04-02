@@ -10,21 +10,21 @@ export default async function InquiryPage({
     searchParams: Promise<{ companyId?: string; success?: string }>;
     }) {
       const params = await searchParams;
-        const companyId = Number(params?.companyId ?? 0);
-          const success = params?.success === "1";
+      const companyId = Number(params?.companyId ?? 0);
+      const success = params?.success === "1";
 
-            const companies = await getAllProducers();
+      const companies = await getAllProducers();
 
-              return (
-                  <div className={styles.page}>
-                        <div className={styles.container}>
-                                <h1 className={styles.title}>Zapytanie ofertowe</h1>
+      return (
+      <div className={styles.page}>
+      <div className={styles.container}>
+      <h1 className={styles.title}>Zapytanie ofertowe</h1>
 
-                                        {success && (
-                                                  <div className={styles.successBox}>
-                                                              Zapytanie zostało wysłane pomyślnie.
-                                                                        </div>
-                                                                                )}
+      {success && (
+      <div className={styles.successBox}>
+        Zapytanie zostało wysłane pomyślnie.
+      </div>
+      )}
 
                                                                                         <form action={sendInquiryAction} className={styles.form}>
                                                                                                   <div className={styles.field}>
