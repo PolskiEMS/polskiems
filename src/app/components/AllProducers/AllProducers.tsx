@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './styles.module.css'
 import { motion } from "motion/react"
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
@@ -45,6 +46,10 @@ return (
             Skontaktuj się
         </button>
         </a>
+
+        <Link href = { `/zapytanie-ofertowe?companyId= ${ producer.id} ` } > 
+        <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+        </Link>
 
         {producer.www && (
             <a href={ producer.www.startsWith("http") ? producer.www : `https://${producer.www}`}

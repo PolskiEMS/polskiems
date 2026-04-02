@@ -763,72 +763,71 @@ export async function getAllRegion() {
 }
 
 export async function sendInquiryAction(formData: FormData) {
-    "use server";
+  "use server";
 
-      const db = getDb();
+  const db = getDb();
 
-        const companyId = Number(formData.get("companyId"));
-          const customerName = String(formData.get("customerName") ?? "").trim();
-            const customerCompany = String(formData.get("customerCompany") ?? "").trim();
-              const customerEmail = String(formData.get("customerEmail") ?? "").trim();
-                const customerPhone = String(formData.get("customerPhone") ?? "").trim();
-                  const serviceType = String(formData.get("serviceType") ?? "").trim();
-                    const quantity = String(formData.get("quantity") ?? "").trim();
-                      const deadline = String(formData.get("deadline") ?? "").trim();
-                        const message = String(formData.get("message") ?? "").trim();
+  const companyId = Number(formData.get("companyId"));
+  const customerName = String(formData.get("customerName") ?? "").trim();
+  const customerCompany = String(formData.get("customerCompany") ?? "").trim();
+  const customerEmail = String(formData.get("customerEmail") ?? "").trim();
+  const customerPhone = String(formData.get("customerPhone") ?? "").trim();
+  const serviceType = String(formData.get("serviceType") ?? "").trim();
+  const quantity = String(formData.get("quantity") ?? "").trim();
+  const deadline = String(formData.get("deadline") ?? "").trim();
+  const message = String(formData.get("message") ?? "").trim();
 
-                          if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
-                              redirect("/zapytanie-ofertowe");
-                                }
+  if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
+    redirect("/zapytanie-ofertowe");
+  }
 
-                                  const companyRows = await db
-                                      .select({
-                                            id: producenci.id,
-                                                  nazwa: producenci.nazwa,
-                                                        email: producenci.email,
-                                                            })
-                                                                .from(producenci)
-                                                                    .where(eq(producenci.id, companyId));
+  const companyRows = await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      email: producenci.email,
+    })
+    .from(producenci)
+    .where(eq(producenci.id, companyId));
 
-                                                                      const company = companyRows[0];
+  const company = companyRows[0];
 
-                                                                        if (!company || !company.email) {
-                                                                            redirect("/zapytanie-ofertowe");
-                                                                              }
+  if (!company || !company.email) {
+    redirect("/zapytanie-ofertowe");
+  }
 
-                                                                                const inquiryResult = await db.insert(inquiries).values({
-                                                                                    customerName,
-                                                                                        customerCompany: customerCompany || null,
-                                                                                            customerEmail,
-                                                                                                customerPhone: customerPhone || null,
-                                                                                                    serviceType,
-                                                                                                        quantity: quantity || null,
-                                                                                                            deadline: deadline || null,
-                                                                                                                message,
-                                                                                                                  });
+  const inquiryResult = await db.insert(inquiries).values({
+    customerName,
+    customerCompany: customerCompany || null,
+    customerEmail,
+    customerPhone: customerPhone || null,
+    serviceType,
+    quantity: quantity || null,
+    deadline: deadline || null,
+    message,
+  });
 
-                                                                                                                    const inquiryId = Number((inquiryResult as any).insertId);
+  const inquiryId = Number((inquiryResult as any).insertId);
 
-                                                                                                                      await db.insert(inquiryRecipients).values({
-                                                                                                                          inquiryId,
-                                                                                                                              companyId: company.id,
-                                                                                                                                  companyEmail: company.email,
-                                                                                                                                      status: "sent",
-                                                                                                                                        });
+  await db.insert(inquiryRecipients).values({
+    inquiryId,
+    companyId: company.id,
+    companyEmail: company.email,
+    status: "sent",
+  });
 
-                                                                                                                                          // tu później podepniemy realną wysyłkę maila
-                                                                                                                                            console.log("NOWE ZAPYTANIE DO FIRMY:", {
-                                                                                                                                                company: company.nazwa,
-                                                                                                                                                    companyEmail: company.email,
-                                                                                                                                                        customerName,
-                                                                                                                                                            customerEmail,
-                                                                                                                                                                customerPhone,
-                                                                                                                                                                    serviceType,
-                                                                                                                                                                        quantity,
-                                                                                                                                                                            deadline,
-                                                                                                                                                                                message,
-                                                                                                                                                                                  });
+  // tu później podepniemy realną wysyłkę maila
+  console.log("NOWE ZAPYTANIE DO FIRMY:", {
+    company: company.nazwa,
+    companyEmail: company.email,
+    customerName,
+    customerEmail,
+    customerPhone,
+    serviceType,
+    quantity,
+    deadline,
+    message,
+  });
 
-                                                                                                                                                                                    redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
-                                                                                                                                                                                    }
-                                                                                                                                                                                  
+  redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
+}

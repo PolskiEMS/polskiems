@@ -104,35 +104,35 @@ export const companyEvents = mysqlTable("company_events", {
 
   export const inquiries = mysqlTable("inquiries", {
     id: int("id").primaryKey().autoincrement(),
-      customerName: varchar("customer_name", { length: 150 }).notNull(),
-        customerCompany: varchar("customer_company", { length: 150 }),
-          customerEmail: varchar("customer_email", { length: 150 }).notNull(),
-            customerPhone: varchar("customer_phone", { length: 50 }),
-              serviceType: varchar("service_type", { length: 100 }).notNull(),
-                quantity: varchar("quantity", { length: 100 }),
-                  deadline: varchar("deadline", { length: 100 }),
-                    message: text("message").notNull(),
-                      createdAt: datetime("created_at", { mode: "string" })
-                          .notNull()
-                              .default(sql`CURRENT_TIMESTAMP`),
-                              });
+    customerName: varchar("customer_name", { length: 150 }).notNull(),
+    customerCompany: varchar("customer_company", { length: 150 }),
+    customerEmail: varchar("customer_email", { length: 150 }).notNull(),
+    customerPhone: varchar("customer_phone", { length: 50 }),
+    serviceType: varchar("service_type", { length: 100 }).notNull(),
+    quantity: varchar("quantity", { length: 100 }),
+    deadline: varchar("deadline", { length: 100 }),
+    message: text("message").notNull(),
+    createdAt: datetime("created_at", { mode: "string" })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
+    });
 
-                              export const inquiryRecipients = mysqlTable("inquiry_recipients", {
-                                id: int("id").primaryKey().autoincrement(),
+  export const inquiryRecipients = mysqlTable("inquiry_recipients", {
+    id: int("id").primaryKey().autoincrement(),
 
-                                  inquiryId: int("inquiry_id")
-                                      .notNull()
-                                          .references(() => inquiries.id),
+    inquiryId: int("inquiry_id")
+      .notNull()
+      .references(() => inquiries.id),
 
-                                            companyId: int("company_id")
-                                                .notNull()
-                                                    .references(() => producenci.id),
+      companyId: int("company_id")
+        .notNull()
+        .references(() => producenci.id),
 
-                                                      companyEmail: varchar("company_email", { length: 150 }).notNull(),
+      companyEmail: varchar("company_email", { length: 150 }).notNull(),
 
-                                                        status: varchar("status", { length: 50 }).notNull().default("sent"),
+      status: varchar("status", { length: 50 }).notNull().default("sent"),
 
-                                                          sentAt: datetime("sent_at", { mode: "string" })
-                                                              .notNull()
-                                                                  .default(sql`CURRENT_TIMESTAMP`),
-                                                                  });
+      sentAt: datetime("sent_at", { mode: "string" })
+        .notNull()
+        .default(sql`CURRENT_TIMESTAMP`),
+      });

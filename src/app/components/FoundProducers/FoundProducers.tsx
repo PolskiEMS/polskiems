@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { trackCompanyEvent } from "@/lib/trackCompanyEvent";
+import Link from 'next/link';
 
 const SearchContent = () => {
   const [producers, setProducers] = useState<any[]>([])
@@ -103,6 +104,10 @@ const SearchContent = () => {
                           <button className={styles.contactMeBtn}>Skontaktuj się</button>
                         </a>
                       )}
+
+                      <Link href = { `/zapytanie-ofertowe?companyId= ${ producer.id} ` } > 
+                      <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+                      </Link>
 
                       {producer.www && (
                         <a
