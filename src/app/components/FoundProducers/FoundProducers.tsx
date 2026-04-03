@@ -5,11 +5,7 @@ import { motion } from "motion/react"
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { trackCompanyEvent } from "@/lib/trackCompanyEvent";
-<<<<<<< HEAD
 import Link from 'next/link';
-=======
-import Link from "next/link";
->>>>>>> 9dd411a1fa0bc0c9e0ba3b07715a8669a609d187
 
 const SearchContent = () => {
   const [producers, setProducers] = useState<any[]>([])
@@ -109,13 +105,8 @@ const SearchContent = () => {
                         </a>
                       )}
 
-<<<<<<< HEAD
                       <Link href = { `/zapytanie-ofertowe?companyId= ${ producer.id} ` } > 
                       <button className={styles.contactMeBtn}>Poproś o wycenę</button>
-=======
-                      <Link href={`/zapytania-ofertowe?companyId=${producer.id}`}>
-                        <button className={styles.contactMeBtn}>Poproś o wycenę</button>
->>>>>>> 9dd411a1fa0bc0c9e0ba3b07715a8669a609d187
                       </Link>
 
                       {producer.www && (
