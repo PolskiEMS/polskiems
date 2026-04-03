@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './styles.module.css'
 import { motion } from "motion/react"
+import Link from "next/link";
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
 
 const AllProducers = ({ producers }: { producers: any[] }) => {
@@ -47,8 +48,13 @@ return (
         </button>
         </a>
 
+<<<<<<< HEAD
         <Link href = { `/zapytanie-ofertowe?companyId= ${ producer.id} ` } > 
         <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+=======
+        <Link href={`/zapytania-ofertowe?companyId=${producer.id}`}>
+          <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+>>>>>>> 9dd411a1fa0bc0c9e0ba3b07715a8669a609d187
         </Link>
 
         {producer.www && (

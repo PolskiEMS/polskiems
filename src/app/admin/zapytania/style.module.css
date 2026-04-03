@@ -1,0 +1,110 @@
+.page {
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 2.6rem;
+  margin-bottom: 28px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  display: block;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.22);
+  border-radius: 14px;
+  overflow: hidden;
+  color: white;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.14);
+  vertical-align: top;
+}
+
+.table th {
+  font-weight: 700;
+}
+
+.muted {
+  opacity: 0.8;
+  font-size: 0.92rem;
+}
+
+.cards {
+  display: none;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.22);
+  border-radius: 14px;
+  padding: 18px;
+  color: white;
+}
+
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cardRow {
+  margin-bottom: 8px;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.messageBox {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.16);
+}
+
+.bottomBack {
+  margin-top: 24px;
+}
+
+.backBtn {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.backBtn:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+@media (max-width: 900px) {
+  .tableWrap {
+    display: none;
+  }
+
+  .cards {
+    display: grid;
+    gap: 16px;
+  }
+}

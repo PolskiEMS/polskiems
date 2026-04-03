@@ -39,16 +39,14 @@ export const producenci = mysqlTable("producenci", {
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
   packageType: varchar("packageType", { length: 20 })
-    .notNull()
-    .default("standard"),
-
-  monthlyInquiryLimit: int("monthlyInquiryLimit")
-    .notNull()
-    .default(0),
-
-  monthlyInquiryCount: int("monthlyInquiryCount")
-    .notNull()
-    .default(0),
+  .notNull()
+  .default("standard"),
+monthlyInquiryLimit: int("monthlyInquiryLimit")
+  .notNull()
+  .default(0),
+monthlyInquiryCount: int("monthlyInquiryCount")
+  .notNull()
+  .default(0),
 });
 
 export const producenciEmsDzialania = mysqlTable("producenci_ems_dzialania", {

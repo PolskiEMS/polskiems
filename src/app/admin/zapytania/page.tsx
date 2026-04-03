@@ -1,14 +1,11 @@
 import Link from "next/link";
-import { getAdminInquiries, sendInquiryToCompanyAction } from "@/lib/actions";
-import styles from './style.module.css';
+import { getAdminInquiries } from "@/lib/actions";
+import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
-
-type AdminInquiryRow = Awaited<ReturnType<typeof getAdminInquiries>>[number];
-
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
-  
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -25,59 +22,61 @@ export default async function AdminInquiriesPage() {
                 <th>Ilość</th>
                 <th>Firma</th>
                 <th>Status</th>
-                <th>Akcja</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((row: AdminInquiryRow, index: number) => (
-                <tr key={`${row.inquiryId}-${row.recipientId ?? index}`}>
-                  <td>{row.createdAt || "-"}</td>
-                  <td>
-                    <div>{row.customerName}</div>
-                    {row.customerCompany && (
-                      <div className={styles.muted}>{row.customerCompany}</div>
-                    )}
-                  </td>
-                  <td>
-                    <div>{row.customerEmail}</div>
-                    {row.customerPhone && (
-                      <div className={styles.muted}>{row.customerPhone}</div>
-                    )}
-                  </td>
-                  <td>{row.serviceType}</td>
-                  <td>{row.quantity || "-"}</td>
-                  <td>
-                    {row.companyName ? (
-                      <div>
-                        <div>{row.companyName}</div>
-                        <div className={styles.muted}>{row.companyEmail}</div>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td>{row.status || "-"}</td>
-                  <td>
-                    {row.recipientId && row.status !== "sent" ? (
-                      <form action={sendInquiryToCompanyAction}>
-                        <input type="hidden" name="recipientId" value={String(row.recipientId)} />
-                        <button type="submit" className={styles.sendBtn}>
-                          Wyślij
-                        </button>
-                      </form>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {rows.map((row, index) => (
+    <tr key={`${row.inquiryId}-${row.recipientId ?? index}`}>
+      <td>{row.createdAt || "-"}</td>
+      <td>
+        <div>{row.customerName}</div>
+        {row.customerCompany && (
+          <div className={styles.muted}>{row.customerCompany}</div>
+        )}
+      </td>
+      <td>
+        <div>{row.customerEmail}</div>
+        {row.customerPhone && (
+          <div className={styles.muted}>{row.customerPhone}</div>
+        )}
+      </td>
+      <td>{row.serviceType}</td>
+      <td>{row.quantity || "-"}</td>
+      <td>
+        {row.companyName ? (
+          <div>
+            <div>{row.companyName}</div>
+            <div className={styles.muted}>{row.companyEmail}</div>
+          </div>
+        ) : (
+          "-"
+        )}
+      </td>
+      <td>{row.status || "-"}</td>
+      <td>
+        {row.recipientId && row.status !== "sent" ? (
+          <form action={sendInquiryToCompanyAction}>
+            <input type="hidden" name="recipientId" value={row.recipientId} />
+            <button type="submit" className={styles.sendBtn}>
+              Wyślij
+            </button>
+          </form>
+        ) : (
+          "-"
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
 
         <div className={styles.cards}>
-          {rows.map((row: AdminInquiryRow, index: number) => (
-            <div key={`${row.inquiryId}-${row.recipientId ?? index}`} className={styles.card}>
+          {rows.map((row, index) => (
+            <div
+              key={`${row.inquiryId}-${row.recipientId ?? index}`}
+              className={styles.card}
+            >
               <div className={styles.cardTitle}>
                 {row.customerName}
                 {row.customerCompany ? ` — ${row.customerCompany}` : ""}
@@ -120,14 +119,11 @@ export default async function AdminInquiriesPage() {
                 <div className={styles.label}>Opis projektu:</div>
                 <p>{row.message}</p>
               </div>
-
-              {row.recipientId && row.status !== "sent" && (
-                <form action={sendInquiryToCompanyAction}>
-                  <input type="hidden" name="recipientId" value={String(row.recipientId)} />
-                  <button type="submit">Wyślij</button>
-                </form>
-              )}
             </div>
+            <form action={sendInquiryToCompanyAction}>
+              <input type="hidden" name="recipientId" value={row.recipientId} />
+              <button type="submit">Wyślij</button>
+            </form>
           ))}
         </div>
 

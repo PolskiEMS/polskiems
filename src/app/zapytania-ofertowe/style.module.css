@@ -1,18 +1,23 @@
 .page {
   min-height: 100vh;
-    padding: 40px 20px 60px;
-    }
+  padding: 40px 20px 60px;
+}
 
 .container {
   max-width: 900px;
   margin: 0 auto;
+<<<<<<< HEAD
   }
+=======
+}
+>>>>>>> 9dd411a1fa0bc0c9e0ba3b07715a8669a609d187
 
 .title {
   text-align: center;
   color: white;
   font-size: 2.5rem;
   margin-bottom: 28px;
+<<<<<<< HEAD
   }
 
   .successBox {
@@ -74,3 +79,66 @@
     font-weight: 700;
     cursor: pointer;
     }
+=======
+}
+
+.successBox {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(120,255,160,0.45);
+  background: rgba(120,255,160,0.12);
+  color: white;
+  font-weight: 700;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 14px;
+  padding: 24px;
+  color: white;
+  backdrop-filter: blur(6px);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input,
+.select,
+.textarea {
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  padding: 12px 14px;
+}
+
+.select option {
+  color: black;
+}
+
+.textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.actions {
+  margin-top: 8px;
+}
+
+.submitBtn {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+>>>>>>> 9dd411a1fa0bc0c9e0ba3b07715a8669a609d187

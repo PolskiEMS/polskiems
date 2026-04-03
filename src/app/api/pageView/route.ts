@@ -2,41 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { pageViews } from "@/db/schema";
 
-export const runtime = "nodejs";
-
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
+    const body = await request.json();
+    const { page, visitorId } = body;
+
+    if (!page || !visitorId) {
+      return NextResponse.json(
+        { error: 'Missing page or visitorId' },
+        { status: 400 }
+      );
+    }
+
     const db = getDb();
-    const body = await req.json().catch(() => ({}));
-
-    const page =
-      typeof body.page === "string" && body.page.trim()
-        ? body.page.trim()
-        : "home";
-
-    const visitorId =
-      typeof body.visitorId === "string" && body.visitorId.trim()
-        ? body.visitorId.trim()
-        : null;
-
-    const referrer = req.headers.get("referer") ?? null;
-
     await db.insert(pageViews).values({
       page,
-      referrer,
       visitorId,
+      createdAt: new Date(),
     });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Error recording page view:", error);
-
+    console.error('[pageView API Error]', error);
     return NextResponse.json(
-      {
-        ok: false,
-        error:
-          error instanceof Error ? error.message : "Failed to record page view",
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

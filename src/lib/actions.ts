@@ -1,4 +1,7 @@
 import {redirect} from "next/navigation";
+import {sendInquiryEmail} from "@/lib/mail";
+import {revalidatePath} from "next/cache";
+
 import {
   dzialaniaEms,
   producenci,
@@ -13,8 +16,6 @@ import {
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { inquiries, inquiryRecipients } from "@/db/schema";
-import { revalidatePath } from "next/cache";
-import { sendInquiryEmail } from "@/lib/mail";
 
 export async function getDashboardStats(days = 30) {
   const db = getDb();
@@ -643,6 +644,20 @@ export async function createCompanyAction(formData: FormData) {
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
   }
+  
+  const isPremium = formData.get("isPremium") === "on";
+  const isFeatured = formData.get("isFeatured") === "on";
+  
+  let packageType = "standard";
+  let monthlyInquiryLimit = 0;
+  
+  if (isFeatured) {
+    packageType = "featured";
+    monthlyInquiryLimit = 999999;
+  } else if (isPremium) {
+    packageType = "premium";
+    monthlyInquiryLimit = 10;
+  }
 
   const result = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
@@ -676,20 +691,6 @@ export async function createCompanyAction(formData: FormData) {
         produkcjaId,
       }))
     );
-  }
-
-  const isPremium = formData.get("isPremium") === "on";
-  const isFeatured = formData.get("isFeatured") === "on";
-
-  let packageType = "standard";
-  let monthlyInquiryLimit = 0;
-
-  if (isFeatured) {
-    packageType = "featured";
-    monthlyInquiryLimit = 999999;
-  } else if (isPremium) {
-    packageType = "premium";
-    monthlyInquiryLimit = 10;
   }
 
   redirect("/admin/firmy?success=1");
@@ -831,9 +832,9 @@ export async function sendInquiryAction(formData: FormData) {
   const deadline = String(formData.get("deadline") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-  if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
-    redirect("/zapytanie-ofertowe");
-  }
+                          if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
+                              redirect("/zapytanie-ofertowe");
+                                }
 
   const companyRows = await db
     .select({
@@ -864,27 +865,27 @@ export async function sendInquiryAction(formData: FormData) {
   const inquiryId = Number((inquiryResult as any).insertId);
 
   await db.insert(inquiryRecipients).values({
-    inquiryId,
-    companyId: company.id,
-    companyEmail: company.email,
-    status: "sent",
-  });
+  inquiryId,
+  companyId: company.id,
+  companyEmail: company.email,
+  status: "sent",
+});
 
-  // tu później podepniemy realną wysyłkę maila
-  console.log("NOWE ZAPYTANIE DO FIRMY:", {
-    company: company.nazwa,
-    companyEmail: company.email,
-    customerName,
-    customerEmail,
-    customerPhone,
-    serviceType,
-    quantity,
-    deadline,
-    message,
-  });
+// tu później podepniemy realną wysyłkę maila
+console.log("NOWE ZAPYTANIE DO FIRMY:", {
+  company: company.nazwa,
+  companyEmail: company.email,
+  customerName,
+  customerEmail,
+  customerPhone,
+  serviceType,
+  quantity,
+  deadline,
+  message,
+});
 
-  redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
-}
+redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
+};
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
@@ -897,7 +898,6 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       recipientId: inquiryRecipients.id,
       status: inquiryRecipients.status,
       companyEmail: inquiryRecipients.companyEmail,
-      companyId: inquiryRecipients.companyId,
       companyName: producenci.nazwa,
 
       inquiryId: inquiries.id,
