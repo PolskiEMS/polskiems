@@ -13,6 +13,8 @@ import {
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { inquiries, inquiryRecipients } from "@/db/schema";
+import { revalidatePath } from "next/cache";
+import { sendInquiryEmail } from "@/lib/mail";
 
 export async function getDashboardStats(days = 30) {
   const db = getDb();
@@ -779,6 +781,41 @@ export async function getAllRegion() {
     .orderBy(asc(wojewodztwa.nazwa));
 }
 
+export async function getAdminInquiries() {
+  const db = getDb();
+
+  return await db
+    .select({
+      inquiryId: inquiries.id,
+      customerName: inquiries.customerName,
+      customerCompany: inquiries.customerCompany,
+      customerEmail: inquiries.customerEmail,
+      customerPhone: inquiries.customerPhone,
+      serviceType: inquiries.serviceType,
+      quantity: inquiries.quantity,
+      deadline: inquiries.deadline,
+      message: inquiries.message,
+      createdAt: inquiries.createdAt, // ✅ Z inquiries, NIE z inquiryRecipients!
+
+      recipientId: inquiryRecipients.id,
+      companyId: producenci.id,
+      companyName: producenci.nazwa,
+      companyEmail: inquiryRecipients.companyEmail,
+      status: inquiryRecipients.status,
+      sentAt: inquiryRecipients.sentAt,
+    })
+    .from(inquiries)
+    .leftJoin(
+      inquiryRecipients,
+      eq(inquiryRecipients.inquiryId, inquiries.id)
+    )
+    .leftJoin(
+      producenci,
+      eq(producenci.id, inquiryRecipients.companyId)
+    )
+    .orderBy(desc(inquiries.id), desc(inquiryRecipients.id));
+}
+
 export async function sendInquiryAction(formData: FormData) {
   "use server";
 
@@ -847,4 +884,87 @@ export async function sendInquiryAction(formData: FormData) {
   });
 
   redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
+}
+
+export async function sendInquiryToCompanyAction(formData: FormData) {
+  "use server";
+
+  const recipientId = Number(formData.get("recipientId"));
+  const db = getDb();
+
+  const rows = await db
+    .select({
+      recipientId: inquiryRecipients.id,
+      status: inquiryRecipients.status,
+      companyEmail: inquiryRecipients.companyEmail,
+      companyId: inquiryRecipients.companyId,
+      companyName: producenci.nazwa,
+
+      inquiryId: inquiries.id,
+      customerName: inquiries.customerName,
+      customerEmail: inquiries.customerEmail,
+      customerPhone: inquiries.customerPhone,
+      serviceType: inquiries.serviceType,
+      quantity: inquiries.quantity,
+      deadline: inquiries.deadline,
+      message: inquiries.message,
+
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
+    .from(inquiryRecipients)
+    .innerJoin(inquiries, eq(inquiries.id, inquiryRecipients.inquiryId))
+    .innerJoin(producenci, eq(producenci.id, inquiryRecipients.companyId))
+    .where(eq(inquiryRecipients.id, recipientId));
+
+  const row = rows[0];
+  if (!row) return;
+
+  // LOGIKA PAKIETÓW
+  if (row.packageType === "standard") {
+    throw new Error("Standard nie może otrzymywać leadów");
+  }
+
+  if (
+    row.packageType === "premium" &&
+    row.monthlyInquiryCount >= row.monthlyInquiryLimit
+  ) {
+    throw new Error("Limit leadów osiągnięty");
+  }
+
+  try {
+    await sendInquiryEmail({
+      companyEmail: row.companyEmail,
+      companyName: row.companyName,
+      customerName: row.customerName,
+      customerEmail: row.customerEmail,
+      customerPhone: row.customerPhone,
+      serviceType: row.serviceType,
+      quantity: row.quantity,
+      deadline: row.deadline,
+      message: row.message,
+    });
+
+    await db
+      .update(inquiryRecipients)
+      .set({ status: "sent" })
+      .where(eq(inquiryRecipients.id, recipientId));
+
+    // 🔥 zwiększ licznik
+    await db
+      .update(producenci)
+      .set({
+        monthlyInquiryCount: row.monthlyInquiryCount + 1,
+      })
+      .where(eq(producenci.id, row.companyId));
+
+  } catch (e) {
+    await db
+      .update(inquiryRecipients)
+      .set({ status: "error" })
+      .where(eq(inquiryRecipients.id, recipientId));
+  }
+
+  revalidatePath("/admin/zapytania");
 }
