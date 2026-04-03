@@ -832,9 +832,9 @@ export async function sendInquiryAction(formData: FormData) {
   const deadline = String(formData.get("deadline") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-                          if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
-                              redirect("/zapytanie-ofertowe");
-                                }
+    if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
+    redirect("/zapytanie-ofertowe");
+    }
 
   const companyRows = await db
     .select({
@@ -899,6 +899,7 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       status: inquiryRecipients.status,
       companyEmail: inquiryRecipients.companyEmail,
       companyName: producenci.nazwa,
+      companyId: producenci.id,
 
       inquiryId: inquiries.id,
       customerName: inquiries.customerName,
