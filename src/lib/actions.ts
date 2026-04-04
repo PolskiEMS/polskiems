@@ -668,8 +668,8 @@ export async function createCompanyAction(formData: FormData) {
     wojewodztwoId,
     featured,
     isActive: true,
-    packageType: "standard",
-    monthlyInquiryLimit: 0,
+    packageType,
+    monthlyInquiryLimit,
     monthlyInquiryCount: 0,
   });
 
@@ -832,9 +832,9 @@ export async function sendInquiryAction(formData: FormData) {
   const deadline = String(formData.get("deadline") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-    if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
-    redirect("/zapytanie-ofertowe");
-    }
+  if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
+    redirect("/zapytania-ofertowe");
+  }
 
   const companyRows = await db
     .select({
@@ -848,7 +848,7 @@ export async function sendInquiryAction(formData: FormData) {
   const company = companyRows[0];
 
   if (!company || !company.email) {
-    redirect("/zapytanie-ofertowe");
+    redirect("/zapytania-ofertowe");
   }
 
   const inquiryResult = await db.insert(inquiries).values({
@@ -865,27 +865,14 @@ export async function sendInquiryAction(formData: FormData) {
   const inquiryId = Number((inquiryResult as any).insertId);
 
   await db.insert(inquiryRecipients).values({
-  inquiryId,
-  companyId: company.id,
-  companyEmail: company.email,
-  status: "sent",
-});
+    inquiryId,
+    companyId: company.id,
+    companyEmail: company.email,
+    status: "pending",
+  });
 
-// tu później podepniemy realną wysyłkę maila
-console.log("NOWE ZAPYTANIE DO FIRMY:", {
-  company: company.nazwa,
-  companyEmail: company.email,
-  customerName,
-  customerEmail,
-  customerPhone,
-  serviceType,
-  quantity,
-  deadline,
-  message,
-});
-
-redirect(`/zapytanie-ofertowe?companyId=${companyId}&success=1`);
-};
+  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
+}
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";

@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function sendInquiryEmail(data: {
+type SendInquiryEmailData = {
   companyEmail: string;
   companyName: string;
   customerName: string;
@@ -12,7 +10,21 @@ export async function sendInquiryEmail(data: {
   quantity?: string | null;
   deadline?: string | null;
   message: string;
-}) {
+};
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("Brak RESEND_API_KEY");
+  }
+
+  return new Resend(apiKey);
+}
+
+export async function sendInquiryEmail(data: SendInquiryEmailData) {
+  const resend = getResendClient();
+
   return await resend.emails.send({
     from: "PolskiEMS <onboarding@resend.dev>",
     to: data.companyEmail,
@@ -30,7 +42,10 @@ export async function sendInquiryEmail(data: {
       <p><strong>Ilość:</strong> ${data.quantity || "-"}</p>
       <p><strong>Termin:</strong> ${data.deadline || "-"}</p>
 
-      <p><strong>Opis:</strong><br/>${data.message}</p>
+      <hr />
+
+      <p><strong>Opis projektu:</strong></p>
+      <p>${data.message.replace(/\n/g, "<br />")}</p>
     `,
   });
 }
