@@ -1,7 +1,6 @@
 import {redirect} from "next/navigation";
 import {sendInquiryEmail} from "@/lib/mail";
 import {revalidatePath} from "next/cache";
-
 import {
   dzialaniaEms,
   producenci,
@@ -796,7 +795,7 @@ export async function getAdminInquiries() {
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
       message: inquiries.message,
-      createdAt: inquiries.createdAt, // ✅ Z inquiries, NIE z inquiryRecipients!
+      createdAt: inquiries.createdAt,
 
       recipientId: inquiryRecipients.id,
       companyId: producenci.id,
@@ -873,29 +872,6 @@ export async function sendInquiryAction(formData: FormData) {
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
   }
-
-  const inquiryResult = await db.insert(inquiries).values({
-    customerName,
-    customerCompany: customerCompany || null,
-    customerEmail,
-    customerPhone: customerPhone || null,
-    serviceType,
-    quantity: quantity || null,
-    deadline: deadline || null,
-    message,
-  });
-
-  const inquiryId = Number((inquiryResult as any).insertId);
-
-  await db.insert(inquiryRecipients).values({
-    inquiryId,
-    companyId: company.id,
-    companyEmail: company.email,
-    status: "pending",
-  });
-
-  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
- }
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
