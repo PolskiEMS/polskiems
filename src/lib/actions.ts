@@ -556,6 +556,9 @@ export async function getAdminCompanies() {
       www: producenci.www,
       isActive: producenci.isActive,
       featured: producenci.featured,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
     })
     .from(producenci)
     .orderBy(asc(producenci.nazwa));
@@ -617,6 +620,32 @@ export async function updateCompany(
     .where(eq(producenci.id, id));
 }
 
+type PackageType = "standard" | "premium" | "featured";
+
+function getPackageConfig(packageType: PackageType) {
+  switch (packageType) {
+    case "featured":
+      return {
+        packageType: "featured" as const,
+        monthlyInquiryLimit: 999999,
+        featured: true,
+      };
+    case "premium":
+      return {
+        packageType: "premium" as const,
+        monthlyInquiryLimit: 10,
+        featured: false,
+      };
+    case "standard":
+    default:
+      return {
+        packageType: "standard" as const,
+        monthlyInquiryLimit: 0,
+        featured: false,
+      };
+  }
+}
+
 export async function createCompanyAction(formData: FormData) {
   "use server";
 
@@ -629,7 +658,14 @@ export async function createCompanyAction(formData: FormData) {
   const www = String(formData.get("www") || "");
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
-  const featured = formData.get("featured") === "on";
+
+  const packageTypeRaw = String(formData.get("packageType") || "standard");
+  const packageType =
+    packageTypeRaw === "featured" || packageTypeRaw === "premium"
+      ? packageTypeRaw
+      : "standard";
+
+  const resetInquiryCount = formData.get("resetInquiryCount") === "on";
 
   const dzialaniaIds = formData
     .getAll("dzialaniaIds")
@@ -644,20 +680,8 @@ export async function createCompanyAction(formData: FormData) {
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
   }
-  
-  const isPremium = formData.get("isPremium") === "on";
-  const isFeatured = formData.get("isFeatured") === "on";
-  
-  let packageType = "standard";
-  let monthlyInquiryLimit = 0;
-  
-  if (isFeatured) {
-    packageType = "featured";
-    monthlyInquiryLimit = 999999;
-  } else if (isPremium) {
-    packageType = "premium";
-    monthlyInquiryLimit = 10;
-  }
+
+  const packageConfig = getPackageConfig(packageType);
 
   const result = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
@@ -666,11 +690,11 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId,
-    featured,
+    featured: packageConfig.featured,
     isActive: true,
-    packageType,
-    monthlyInquiryLimit,
-    monthlyInquiryCount: 0,
+    packageType: packageConfig.packageType,
+    monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
+    monthlyInquiryCount: resetInquiryCount ? 0 : 0,
   });
 
   const companyId = Number((result as any).insertId);
@@ -709,49 +733,64 @@ export async function updateCompanyAction(formData: FormData) {
   const isActive = formData.get("isActive") === "on";
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
-  const featured = formData.get("featured") === "on";
 
-  const dzialaniaId = formData
-  .getAll("dzialaniaId")
-  .map((v) => Number(v))
-  .filter((v) => Number.isFinite(v));
+  const packageTypeRaw = String(formData.get("packageType") || "standard");
+  const packageType =
+    packageTypeRaw === "featured" || packageTypeRaw === "premium"
+      ? packageTypeRaw
+      : "standard";
 
-  const produkcjaId = formData
-  .getAll("produkcjaId")
-  .map((v) => Number(v))
-  .filter((v) => Number.isFinite(v));
+  const resetInquiryCount = formData.get("resetInquiryCount") === "on";
 
-   await db
-    .delete(producenciEmsDzialania).where(
-    eq(producenciEmsDzialania.companyId, id)
-  );
+  const dzialaniaIds = formData
+    .getAll("dzialaniaIds")
+    .map((v) => Number(v))
+    .filter((v) => Number.isFinite(v));
 
-  await db    
-    .delete(producenciEmsProdukcja).where(
-    eq(producenciEmsProdukcja.companyId, id)
-  );
+  const produkcjaIds = formData
+    .getAll("produkcjaIds")
+    .map((v) => Number(v))
+    .filter((v) => Number.isFinite(v));
 
   if (!id || !nazwa.trim()) {
     throw new Error("Brak danych firmy");
   }
 
-  if (dzialaniaId.length > 0) {
+  await db
+    .delete(producenciEmsDzialania)
+    .where(eq(producenciEmsDzialania.companyId, id));
+
+  await db
+    .delete(producenciEmsProdukcja)
+    .where(eq(producenciEmsProdukcja.companyId, id));
+
+  if (dzialaniaIds.length > 0) {
     await db.insert(producenciEmsDzialania).values(
-      dzialaniaId.map((dzialanieId) => ({
+      dzialaniaIds.map((dzialanieId) => ({
         companyId: id,
         dzialanieId,
-    }))
-  );
-}
+      }))
+    );
+  }
 
-  if (produkcjaId.length > 0) {
+  if (produkcjaIds.length > 0) {
     await db.insert(producenciEmsProdukcja).values(
-      produkcjaId.map((produkcjaId) => ({
+      produkcjaIds.map((produkcjaId) => ({
         companyId: id,
         produkcjaId,
-    }))
-  );
-}
+      }))
+    );
+  }
+
+  const currentCompany = await db
+    .select({
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
+    .from(producenci)
+    .where(eq(producenci.id, id));
+
+  const currentCount = Number(currentCompany[0]?.monthlyInquiryCount ?? 0);
+  const packageConfig = getPackageConfig(packageType);
 
   await db
     .update(producenci)
@@ -762,8 +801,11 @@ export async function updateCompanyAction(formData: FormData) {
       email: email.trim() || null,
       www: www.trim() || null,
       wojewodztwoId,
-      featured,
       isActive,
+      featured: packageConfig.featured,
+      packageType: packageConfig.packageType,
+      monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
+      monthlyInquiryCount: resetInquiryCount ? 0 : currentCount,
     })
     .where(eq(producenci.id, id));
 
@@ -817,6 +859,35 @@ export async function getAdminInquiries() {
     .orderBy(desc(inquiries.id), desc(inquiryRecipients.id));
 }
 
+export async function getAdminInquiries() {
+  const db = getDb();
+
+  return await db
+    .select({
+      inquiryId: inquiries.id,
+      customerName: inquiries.customerName,
+      customerCompany: inquiries.customerCompany,
+      customerEmail: inquiries.customerEmail,
+      customerPhone: inquiries.customerPhone,
+      serviceType: inquiries.serviceType,
+      quantity: inquiries.quantity,
+      deadline: inquiries.deadline,
+      message: inquiries.message,
+      createdAt: inquiries.createdAt,
+
+      recipientId: inquiryRecipients.id,
+      companyId: producenci.id,
+      companyName: producenci.nazwa,
+      companyEmail: inquiryRecipients.companyEmail,
+      status: inquiryRecipients.status,
+      sentAt: inquiryRecipients.sentAt,
+    })
+    .from(inquiries)
+    .leftJoin(inquiryRecipients, eq(inquiryRecipients.inquiryId, inquiries.id))
+    .leftJoin(producenci, eq(producenci.id, inquiryRecipients.companyId))
+    .orderBy(desc(inquiries.id), desc(inquiryRecipients.id));
+}
+
 export async function sendInquiryAction(formData: FormData) {
   "use server";
 
@@ -843,7 +914,8 @@ export async function sendInquiryAction(formData: FormData) {
       email: producenci.email,
     })
     .from(producenci)
-    .where(eq(producenci.id, companyId));
+    .where(eq(producenci.id, companyId))
+    .limit(1);
 
   const company = companyRows[0];
 
@@ -868,7 +940,7 @@ export async function sendInquiryAction(formData: FormData) {
     inquiryId,
     companyId: company.id,
     companyEmail: company.email,
-    status: "pending",
+    status: "new",
   });
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
@@ -904,12 +976,12 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
     .from(inquiryRecipients)
     .innerJoin(inquiries, eq(inquiries.id, inquiryRecipients.inquiryId))
     .innerJoin(producenci, eq(producenci.id, inquiryRecipients.companyId))
-    .where(eq(inquiryRecipients.id, recipientId));
+    .where(eq(inquiryRecipients.id, recipientId))
+    .limit(1);
 
   const row = rows[0];
   if (!row) return;
 
-  // LOGIKA PAKIETÓW
   if (row.packageType === "standard") {
     throw new Error("Standard nie może otrzymywać leadów");
   }
@@ -939,14 +1011,12 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       .set({ status: "sent" })
       .where(eq(inquiryRecipients.id, recipientId));
 
-    // 🔥 zwiększ licznik
     await db
       .update(producenci)
       .set({
         monthlyInquiryCount: row.monthlyInquiryCount + 1,
       })
       .where(eq(producenci.id, row.companyId));
-
   } catch (e) {
     await db
       .update(inquiryRecipients)

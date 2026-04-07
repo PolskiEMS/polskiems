@@ -91,9 +91,18 @@ export default async function NewCompanyPage() {
           </div>
 
           <div className={styles.field}>
+            <label htmlFor="packageType">Pakiet</label>
+            <select id="packageType" name="packageType" className={styles.select} defaultValue="standard">
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+              <option value="featured">Featured</option>
+            </select>
+          </div>
+
+          <div className={styles.field}>
             <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <input type="checkbox" name="featured" />
-              Wyróżniony producent
+              <input type="checkbox" name="resetInquiryCount" defaultChecked />
+              Wyzeruj licznik zapytań przy zapisie
             </label>
           </div>
 

@@ -158,14 +158,33 @@ export default async function EditCompanyPage({ params }: Props) {
           </div>
 
           <div className={styles.field}>
+            <label htmlFor="packageType">Pakiet</label>
+            <select
+              id="packageType"
+              name="packageType"
+              className={styles.select}
+              defaultValue={company.packageType ?? "standard"}
+            >
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+              <option value="featured">Featured</option>
+            </select>
+          </div>
+
+          <div className={styles.field}>
             <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <input
-                type="checkbox"
-                name="featured"
-                defaultChecked={!!company.featured}
-              />
-              Wyróżniony producent
+              <input type="checkbox" name="resetInquiryCount" />
+              Wyzeruj licznik miesięcznych zapytań
             </label>
+          </div>
+
+          <div className={styles.field}>
+            <label>Licznik zapytań w tym miesiącu</label>
+            <input
+              className={styles.input}
+              value={`${company.monthlyInquiryCount ?? 0} / ${company.monthlyInquiryLimit ?? 0}`}
+              readOnly
+            />
           </div>
 
           <div className={styles.field}>
