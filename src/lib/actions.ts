@@ -796,7 +796,7 @@ export async function getAdminInquiries() {
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
       message: inquiries.message,
-      createdAt: inquiries.createdAt, // ✅ Z inquiries, NIE z inquiryRecipients!
+      createdAt: inquiries.createdAt,
 
       recipientId: inquiryRecipients.id,
       companyId: producenci.id,
@@ -872,7 +872,7 @@ export async function sendInquiryAction(formData: FormData) {
   });
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
-}
+  }
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
