@@ -963,7 +963,7 @@ export async function sendInquiryAction(formData: FormData) {
     inquiryId,
     companyId: company.id,
     companyEmail: company.email,
-    status: "new",
+    status: "pending",
   });
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
