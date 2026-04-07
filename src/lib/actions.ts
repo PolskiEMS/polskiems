@@ -1,7 +1,6 @@
 import {redirect} from "next/navigation";
 import {sendInquiryEmail} from "@/lib/mail";
 import {revalidatePath} from "next/cache";
-
 import {
   dzialaniaEms,
   producenci,
@@ -16,6 +15,7 @@ import {
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { inquiries, inquiryRecipients } from "@/db/schema";
+import error from "next/error";
 
 export async function getDashboardStats(days = 30) {
   const db = getDb();
@@ -874,34 +874,15 @@ export async function sendInquiryAction(formData: FormData) {
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
 }
 
-  const inquiryResult = await db.insert(inquiries).values({
-    customerName,
-    customerCompany: customerCompany || null,
-    customerEmail,
-    customerPhone: customerPhone || null,
-    serviceType,
-    quantity: quantity || null,
-    deadline: deadline || null,
-    message,
-  });
-
-  const inquiryId = Number((inquiryResult as any).insertId);
-
-  await db.insert(inquiryRecipients).values({
-    inquiryId,
-    companyId: company.id,
-    companyEmail: company.email,
-    status: "pending",
-  });
-
-  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
-}
-
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
 
   const recipientId = Number(formData.get("recipientId"));
   const db = getDb();
+
+  if (!Number.isFinite(recipientId) || recipientId <= 0) {
+    throw new Error("Nieprawidłowy recipientId");
+  }
 
   const rows = await db
     .select({
@@ -910,6 +891,7 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       companyEmail: inquiryRecipients.companyEmail,
       companyName: producenci.nazwa,
       companyId: producenci.id,
+      sentAt: inquiryRecipients.sentAt,
 
       inquiryId: inquiries.id,
       customerName: inquiries.customerName,
@@ -930,7 +912,15 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
     .where(eq(inquiryRecipients.id, recipientId));
 
   const row = rows[0];
-  if (!row) return;
+
+  if (!row) {
+    throw new Error("Nie znaleziono odbiorcy zapytania");
+  }
+
+  if (row.status === "sent") {
+    revalidatePath("/admin/zapytania");
+    return;
+  }
 
   // LOGIKA PAKIETÓW
   if (row.packageType === "standard") {
@@ -959,7 +949,10 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
 
     await db
       .update(inquiryRecipients)
-      .set({ status: "sent" })
+      .set({
+        status: "sent",
+        sentAt: new Date().toISOString().slice(0, 19).replace("T", " "),
+      })
       .where(eq(inquiryRecipients.id, recipientId));
 
     // 🔥 zwiększ licznik
@@ -973,8 +966,13 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
   } catch (e) {
     await db
       .update(inquiryRecipients)
-      .set({ status: "error" })
+      .set({
+        status: "error",
+        sentAt: null,
+      })
       .where(eq(inquiryRecipients.id, recipientId));
+
+    throw error;
   }
 
   revalidatePath("/admin/zapytania");

@@ -133,15 +133,13 @@ export const companyEvents = mysqlTable("company_events", {
       .notNull()
       .references(() => inquiries.id),
 
-      companyId: int("company_id")
-        .notNull()
-        .references(() => producenci.id),
+    companyId: int("company_id")
+      .notNull()
+      .references(() => producenci.id),
 
-      companyEmail: varchar("company_email", { length: 150 }).notNull(),
+    companyEmail: varchar("company_email", { length: 150 }).notNull(),
 
-      status: varchar("status", { length: 50 }).notNull().default("sent"),
+    status: varchar("status", { length: 50 }).notNull().default("new"),
 
-      sentAt: datetime("sent_at", { mode: "string" })
-        .notNull()
-        .default(sql`CURRENT_TIMESTAMP`),
-      });
+    sentAt: datetime("sent_at", { mode: "string" }),
+  });
