@@ -98,6 +98,12 @@
   background: rgba(255,255,255,0.18);
 }
 
+.noAction {
+  margin-top: 12px;
+  opacity: 0.85;
+  font-size: 14px;
+}
+
 @media (max-width: 900px) {
   .tableWrap {
     display: none;
