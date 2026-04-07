@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { getDashboardStats } from "@/lib/actions";
-import { getPageViewsStats } from "@/lib/actions";
+import { getDashboardStats, getPageViewsStats } from "@/lib/actions";
 import styles from "./style.module.css";
 import LogoutButton from "@/app/components/admin/LogoutButton";
 
