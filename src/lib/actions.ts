@@ -946,6 +946,29 @@ export async function sendInquiryAction(formData: FormData) {
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
 }
 
+  const inquiryResult = await db.insert(inquiries).values({
+    customerName,
+    customerCompany: customerCompany || null,
+    customerEmail,
+    customerPhone: customerPhone || null,
+    serviceType,
+    quantity: quantity || null,
+    deadline: deadline || null,
+    message,
+  });
+
+  const inquiryId = Number((inquiryResult as any).insertId);
+
+  await db.insert(inquiryRecipients).values({
+    inquiryId,
+    companyId: company.id,
+    companyEmail: company.email,
+    status: "new",
+  });
+
+  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
+}
+
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
 
