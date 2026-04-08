@@ -10,8 +10,8 @@ const packages = [
     features: [
       'Widoczność w katalogu',
       'Profil firmy (nazwa, opis, email, telefon)',
-      'Brak wyróżnienia',
-      'Brak Lead',
+      'Brak Wyróżnienia',
+      'Brak Zapytań',
     ]
   },
   {
@@ -22,7 +22,7 @@ const packages = [
     features: [
       'Wszystko z FREE + odbieranie leadów',
       'Badge Standard',
-      'Wyróżnienie (featured) + pełne statystyki',
+      'Wyróżnienie + pełne statystyki',
       'Limit: do 10 zapytań / miesiąc'
     ]
   },
@@ -34,7 +34,7 @@ const packages = [
     features: [
       'Wszystko z STANDARD',
       'Złoty badge Premium + najwyższa pozycja',
-      'Priorytetowa obsługa leadów',
+      'Priorytetowa obsługa zapytań',
       'Brak realnego limitu zapytań'
     ]
   }
@@ -51,7 +51,7 @@ const paymentFlow = [
   },
   {
     title: '3. Webhook',
-    description: 'Po potwierdzeniu płatności webhook oznacza transakcję jako paid i zapisuje event.'
+    description: 'Po potwierdzeniu płatności oznacza transakcję jako paid i zapisuje event.'
   },
   {
     title: '4. Aktywacja',
