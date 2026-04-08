@@ -218,7 +218,15 @@ export const getAllProducers = async () => {
     .select()
     .from(producenci)
     .where(sql`${producenci.isActive} = 1`)
-    .orderBy(desc(producenci.featured), asc(producenci.id));
+    .orderBy(
+      desc(sql`CASE
+        WHEN ${producenci.packageType} = 'premium' THEN 2
+        WHEN ${producenci.packageType} = 'standard' THEN 1
+        ELSE 0
+      END`),
+      desc(producenci.featured),
+      asc(producenci.id)
+    );
 };
 
 export const saveStatistics = async (data: string) => {
@@ -289,6 +297,7 @@ export async function getFilteredProducers(filters: Filters) {
       www: producenci.www,
       isActive: producenci.isActive,
       featured: producenci.featured,
+      packageType: producenci.packageType,
       wojewodztwo: wojewodztwa.nazwa,
     })
     .from(producenci)
@@ -309,7 +318,15 @@ export async function getFilteredProducers(filters: Filters) {
   }
 
   query.where(and(...whereConditions));
-  query.orderBy(desc(producenci.featured), asc(producenci.id));
+  query.orderBy(
+    desc(sql`CASE
+      WHEN ${producenci.packageType} = 'premium' THEN 2
+      WHEN ${producenci.packageType} = 'standard' THEN 1
+      ELSE 0
+    END`),
+    desc(producenci.featured),
+    asc(producenci.id)
+  );
 
   return await query;
 }
@@ -634,11 +651,9 @@ export async function createCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
 
   const packageTypeRaw = String(formData.get("packageType") || "free");
-  const featuredRaw = formData.get("featured") === "on";
 
   const packageConfig = getPackageConfig(packageTypeRaw);
-  const featured =
-    packageConfig.packageType !== "free" ? featuredRaw : false;
+  const featured = packageConfig.packageType !== "free";
 
   const dzialaniaIds = formData
     .getAll("dzialaniaIds")
@@ -706,12 +721,10 @@ export async function updateCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
   
   const packageTypeRaw = String(formData.get("packageType") || "free");
-  const featuredRaw = formData.get("featured") === "on";
   const resetInquiryCount = formData.get("resetInquiryCount") === "on";
 
   const packageConfig = getPackageConfig(packageTypeRaw);
-  const featured =
-    packageConfig.packageType !== "free" ? featuredRaw : false;
+  const featured = packageConfig.packageType !== "free";
 
   const dzialaniaId = formData
   .getAll("dzialaniaId")
@@ -834,6 +847,7 @@ export async function getAdminInquiries() {
       recipientId: inquiryRecipients.id,
       companyId: producenci.id,
       companyName: producenci.nazwa,
+      packageType: producenci.packageType,
       companyEmail: inquiryRecipients.companyEmail,
       status: inquiryRecipients.status,
       sentAt: inquiryRecipients.sentAt,
@@ -1026,4 +1040,14 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
   }
 
   revalidatePath("/admin/zapytania");
+}
+
+export async function resetMonthlyInquiryCounts() {
+  const db = getDb();
+
+  const result = await db
+    .update(producenci)
+    .set({ monthlyInquiryCount: 0 });
+
+  return result;
 }

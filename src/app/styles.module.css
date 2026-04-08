@@ -58,7 +58,7 @@
     cursor: pointer;
     background-color: rgb(6, 122, 255);
 
-    margin-bottom: 175px;
+    margin-bottom: 70px;
 }
 
 .chceZnalezcSie:hover {
@@ -66,9 +66,62 @@
 }
 
 .seoSection {
-    margin-top: 40px;
+    margin-top: 48px;
     margin-bottom: 120px;
     text-align: center;
+}
+
+.recommendedSection {
+    margin: 0 auto;
+    max-width: 820px;
+}
+
+.recommendedSection h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.recommendedCard {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.recommendedCard img {
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.recommendedContent h4 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+}
+
+.recommendedContent p {
+    color: rgba(255, 255, 255, 0.82);
+    margin-bottom: 12px;
+}
+
+.recommendedActions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.recommendedActions a {
+    padding: 9px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.27);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.recommendedActions a:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .seoSection h3 {
@@ -113,9 +166,18 @@
     }
 
     .chceZnalezcSie {
-        margin-bottom: 240px;
+        margin-bottom: 64px;
         width: 300px;
         max-width: 280px;
+    }
+
+    .recommendedCard {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .recommendedActions {
+        justify-content: center;
     }
 
     .buttons button {
