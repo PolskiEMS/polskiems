@@ -651,11 +651,9 @@ export async function createCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
 
   const packageTypeRaw = String(formData.get("packageType") || "free");
-  const featuredRaw = formData.get("featured") === "on";
 
   const packageConfig = getPackageConfig(packageTypeRaw);
-  const featured =
-    packageConfig.packageType !== "free" ? featuredRaw : false;
+  const featured = packageConfig.packageType !== "free";
 
   const dzialaniaIds = formData
     .getAll("dzialaniaIds")
@@ -723,12 +721,10 @@ export async function updateCompanyAction(formData: FormData) {
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
   
   const packageTypeRaw = String(formData.get("packageType") || "free");
-  const featuredRaw = formData.get("featured") === "on";
   const resetInquiryCount = formData.get("resetInquiryCount") === "on";
 
   const packageConfig = getPackageConfig(packageTypeRaw);
-  const featured =
-    packageConfig.packageType !== "free" ? featuredRaw : false;
+  const featured = packageConfig.packageType !== "free";
 
   const dzialaniaId = formData
   .getAll("dzialaniaId")
