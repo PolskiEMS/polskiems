@@ -15,7 +15,19 @@ type Producer = {
   email?: string | null;
   www?: string | null;
   featured?: boolean | null;
+  packageType?: string | null;
 };
+
+function getPackageBadgeLabel(packageType: string | null | undefined) {
+  if (packageType === 'standard') return 'Standard';
+  if (packageType === 'premium') return 'Premium';
+  return null;
+}
+
+function getPackageBadgeClass(packageType: string | null | undefined) {
+  if (packageType === 'premium') return styles.packageBadgePremium;
+  return styles.packageBadgeStandard;
+}
 
 const SearchContent = () => {
   const [producers, setProducers] = useState<Producer[]>([]);
@@ -94,6 +106,11 @@ const SearchContent = () => {
 
                     {producer.featured && (
                       <div className={styles.featuredBadge}>Polecany Producent</div>
+                    )}
+                    {getPackageBadgeLabel(producer.packageType) && (
+                      <div className={`${styles.packageBadge} ${getPackageBadgeClass(producer.packageType)}`}>
+                        {getPackageBadgeLabel(producer.packageType)}
+                      </div>
                     )}
 
                     <h2>{producer.nazwa}</h2>

@@ -15,6 +15,32 @@ function formatDate(value: string | Date | null | undefined) {
   return date.toLocaleString("pl-PL");
 }
 
+function getStatusClass(status: string | null | undefined) {
+  switch (status) {
+    case "new":
+      return styles.statusNew;
+    case "sent":
+      return styles.statusSent;
+    case "error":
+      return styles.statusError;
+    case "blocked":
+      return styles.statusBlocked;
+    default:
+      return "";
+  }
+}
+
+function getPackageBadgeLabel(packageType: string | null | undefined) {
+  if (packageType === "standard") return "Standard";
+  if (packageType === "premium") return "Premium";
+  return null;
+}
+
+function getPackageBadgeClass(packageType: string | null | undefined) {
+  if (packageType === "premium") return styles.packageBadgePremium;
+  return styles.packageBadgeStandard;
+}
+
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
 
@@ -40,7 +66,7 @@ export default async function AdminInquiriesPage() {
             <tbody>
               {rows.map((row: AdminInquiryRow, index: number) => (
                 <tr key={`${row.inquiryId}-${row.recipientId ?? index}`}>
-                  <td>{row.createdAt || '-'}</td>
+                  <td>{formatDate(row.createdAt)}</td>
                   <td>
                     <div>{row.customerName}</div>
                     {row.customerCompany && (
@@ -58,14 +84,25 @@ export default async function AdminInquiriesPage() {
                   <td>
                     {row.companyName ? (
                       <div>
-                        <div>{row.companyName}</div>
+                        <div className={styles.companyRow}>
+                          <span>{row.companyName}</span>
+                          {getPackageBadgeLabel(row.packageType) && (
+                            <span className={`${styles.packageBadge} ${getPackageBadgeClass(row.packageType)}`}>
+                              {getPackageBadgeLabel(row.packageType)}
+                            </span>
+                          )}
+                        </div>
                         <div className={styles.muted}>{row.companyEmail}</div>
                       </div>
                     ) : (
                       '-'
                     )}
                   </td>
-                  <td>{row.status || '-'}</td>
+                  <td>
+                    <span className={`${styles.status} ${getStatusClass(row.status)}`}>
+                      {row.status || "-"}
+                    </span>
+                  </td>
                   <td>
                     {row.recipientId && row.status !== 'sent' ? (
                       <form action={sendInquiryToCompanyAction}>
@@ -93,7 +130,7 @@ export default async function AdminInquiriesPage() {
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.label}>Data:</span> {row.createdAt || '-'}
+                <span className={styles.label}>Data:</span> {formatDate(row.createdAt)}
               </div>
               <div className={styles.cardRow}>
                 <span className={styles.label}>Email:</span> {row.customerEmail}
@@ -112,9 +149,17 @@ export default async function AdminInquiriesPage() {
               </div>
               <div className={styles.cardRow}>
                 <span className={styles.label}>Firma:</span> {row.companyName || '-'}
+                {getPackageBadgeLabel(row.packageType) && (
+                  <span className={`${styles.packageBadge} ${getPackageBadgeClass(row.packageType)}`}>
+                    {getPackageBadgeLabel(row.packageType)}
+                  </span>
+                )}
               </div>
               <div className={styles.cardRow}>
-                <span className={styles.label}>Status:</span> {row.status || '-'}
+                <span className={styles.label}>Status:</span>{" "}
+                <span className={`${styles.status} ${getStatusClass(row.status)}`}>
+                  {row.status || "-"}
+                </span>
               </div>
 
               <div className={styles.messageBox}>
