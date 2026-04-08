@@ -49,3 +49,32 @@ export async function sendInquiryEmail(data: SendInquiryEmailData) {
     `,
   });
 }
+
+type SendMonthlyReportEmailData = {
+  companyEmail: string;
+  companyName: string;
+  periodLabel: string;
+  pdfBase64: string;
+};
+
+export async function sendMonthlyReportEmail(data: SendMonthlyReportEmailData) {
+  const resend = getResendClient();
+
+  return await resend.emails.send({
+    from: "PolskiEMS <onboarding@resend.dev>",
+    to: data.companyEmail,
+    subject: `Miesięczny raport PDF – ${data.companyName}`,
+    html: `
+      <h2>Miesięczny raport PolskiEMS</h2>
+      <p>Firma: <strong>${data.companyName}</strong></p>
+      <p>Zakres: ${data.periodLabel}</p>
+      <p>W załączniku znajdziesz raport PDF.</p>
+    `,
+    attachments: [
+      {
+        filename: `raport-${data.companyName.replace(/\\s+/g, "-").toLowerCase()}.pdf`,
+        content: data.pdfBase64,
+      },
+    ],
+  });
+}

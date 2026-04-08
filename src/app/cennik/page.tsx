@@ -1,59 +1,129 @@
 import Link from 'next/link';
 import styles from './styles.module.css'
-import { FaCircle } from "react-icons/fa";
+import PackageCheckout from './PackageCheckout';
 
-const cennik = () => {
-    const packages = [
-        { name: "Light", duration: "1 miesiąc", details: "Wyświetlanie firmy na stronie", price: "100 zł" },
-        { name: "Light", duration: "6 miesięcy", details: "Wyświetlanie firmy na stronie", price: "500 zł" },
-        { name: "Light", duration: "12 miesięcy", details: "Wyświetlanie firmy na stronie", price: "900 zł" },
-        { name: "Standard", duration: "1 miesiąc", details: "Wyświetlanie + raport PDF z ogólnych wyszukiwań", price: "300 zł" },
-        { name: "Standard", duration: "6 miesięcy", details: "Wyświetlanie + comiesięczny raport PDF", price: "1500 zł" },
-        { name: "Standard", duration: "12 miesięcy", details: "Wyświetlanie + comiesięczny raport PDF", price: "2500 zł" },
-    ];
+const packages = [
+  {
+    key: 'free',
+    name: 'FREE',
+    price: '0 zł / mies.',
+    badge: 'Start',
+    features: [
+      'Widoczność w katalogu',
+      'Profil firmy (nazwa, opis, email, telefon)',
+      'Brak wyróżnienia i brak badge',
+      'Leady zapisywane jako blocked (nie trafiają do firmy)'
+    ]
+  },
+  {
+    key: 'standard',
+    name: 'STANDARD',
+    price: '399 zł / mies.',
+    badge: 'Najczęściej wybierany',
+    features: [
+      'Wszystko z FREE + odbieranie leadów',
+      'Badge Standard',
+      'Wyróżnienie (featured) + pełne statystyki',
+      'Limit: do 10 zapytań / miesiąc'
+    ]
+  },
+  {
+    key: 'premium',
+    name: 'PREMIUM',
+    price: '999 zł / mies.',
+    badge: 'Top',
+    features: [
+      'Wszystko z STANDARD',
+      'Złoty badge Premium + najwyższa pozycja',
+      'Priorytetowa obsługa leadów',
+      'Brak realnego limitu zapytań (999999)'
+    ]
+  }
+];
 
+const paymentFlow = [
+  {
+    title: '1. Wybór pakietu',
+    description: 'Firma wybiera Standard albo Premium w panelu / na stronie cennika.'
+  },
+  {
+    title: '2. Płatność',
+    description: 'Przekierowanie do bramki Stripe lub Przelewy24 i opłacenie subskrypcji.'
+  },
+  {
+    title: '3. Webhook',
+    description: 'Po potwierdzeniu płatności webhook oznacza transakcję jako paid i zapisuje event.'
+  },
+  {
+    title: '4. Aktywacja',
+    description: 'System ustawia packageType, featured=true, limit leadów i datę kolejnego rozliczenia.'
+  }
+];
 
-    return (
-        <div className={styles.page}>
-            <h1>Cennik</h1>
-            <p>*Ten cennik jest wyłącznie poglądowy i nie stanowi oferty handlowej*</p>
-            <div className={styles.container}>
-                <div className="overflow-x-auto bg-gray-900 text-white rounded-lg shadow-md">
-                    <table className="min-w-full text-sm text-left">
-                        <thead className="bg-gray-800 text-xs uppercase font-medium text-gray-300">
-                            <tr>
-                                <th className="px-4 py-3">Pakiet</th>
-                                <th className="px-4 py-3">Okres</th>
-                                <th className="px-4 py-3">Co zawiera</th>
-                                <th className="px-4 py-3">Cena (PLN)</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-700">
-                            {packages.map((item, index) => (
-                                <tr key={index} className="hover:bg-gray-800">
-                                    <td className="px-4 py-3 font-semibold text-white">{item.name}</td>
-                                    <td className="px-4 py-3 text-gray-200">{item.duration}</td>
-                                    <td className="px-4 py-3 text-gray-200">{item.details}</td>
-                                    <td className="px-4 py-3 text-white">{item.price}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <h3>Dlaczego warto się dodać?</h3>
-                    <ul>
-                        <li><FaCircle size={10} /> Równe szanse – każda firma ma taką samą widoczność</li>
-                        <li><FaCircle size={10} /> Żadnych ukrytych opłat ani reklam</li>
-                        <li><FaCircle size={10} /> Raporty statystyk (w pakiecie Standard)</li>
-                        <li><FaCircle size={10} /> Promujemy tylko EMS – 100% branżowo</li>
-                        <li><FaCircle size={10} /> Możliwość rezygnacji w każdej chwili ze zwrotem środków</li>
-                    </ul>
-                </div>
+const CennikPage = () => {
+  return (
+    <div className={styles.page}>
+      <h1>Cennik pakietów</h1>
+      <p className={styles.note}>Poniżej model pakietów docelowych dla PolskieEMS.</p>
+
+      <section className={styles.packageGrid}>
+        {packages.map((item) => (
+          <article
+            key={item.key}
+            className={`${styles.packageCard} ${item.key === 'premium' ? styles.premiumCard : ''}`}
+          >
+            <div className={styles.packageHeader}>
+              <h2>{item.name}</h2>
+              <span className={`${styles.badge} ${item.key === 'premium' ? styles.badgePremium : ''}`}>
+                {item.badge}
+              </span>
             </div>
-            <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+            <div className={styles.price}>{item.price}</div>
+            <ul>
+              {item.features.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+            </ul>
+            {item.key !== 'free' && (
+              <Link href={`/cennik?pakiet=${item.key}#checkout`} className={styles.selectPackageBtn}>
+                Wybierz pakiet i przejdź do płatności
+              </Link>
+            )}
+          </article>
+        ))}
+      </section>
+
+      <section className={styles.flowSection}>
+        <h3>Jak wygląda płatność i aktywacja pakietu?</h3>
+
+        <div className={styles.gatewayRow}>
+          <div className={styles.gatewayCard}>
+            <strong>Stripe</strong>
+            <p>Karta, Apple Pay / Google Pay, cykliczna subskrypcja i webhook aktywujący pakiet.</p>
+          </div>
+          <div className={styles.gatewayCard}>
+            <strong>Przelewy24</strong>
+            <p>BLIK i szybkie przelewy dla PL; po statusie paid uruchamiamy automatycznie aktywację.</p>
+          </div>
         </div>
-    );
+
+        <div className={styles.flowGrid}>
+          {paymentFlow.map((step) => (
+            <article key={step.title} className={styles.flowCard}>
+              <h4>{step.title}</h4>
+              <p>{step.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <PackageCheckout />
+
+      <Link href={'formularz_zgloszeniowy_firmy.docx'}>
+        <button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button>
+      </Link>
+    </div>
+  );
 }
 
-export default cennik;
+export default CennikPage;
