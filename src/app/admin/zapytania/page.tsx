@@ -6,6 +6,37 @@ export const dynamic = 'force-dynamic';
 
 type AdminInquiryRow = Awaited<ReturnType<typeof getAdminInquiries>>[number];
 
+function formatDate(value: string | Date | null | undefined) {
+  if (!value) return "-";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+
+  return date.toLocaleString("pl-PL");
+}
+
+function getStatusLabel(status: string | null | undefined) {
+  switch (status) {
+    case "new":
+      return "Nowe";
+    case "blocked":
+      return "Zablokowane";
+    case "sent":
+      return "Wysłane";
+    case "error":
+      return "Błąd";
+    default:
+      return "-";
+  }
+}
+
+function canSendInquiry(row: AdminInquiryRow) {
+  return Boolean(
+    row.recipientId &&
+      (row.status === "new" || row.status === "error")
+  );
+}
+
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
 

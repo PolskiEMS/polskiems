@@ -556,6 +556,9 @@ export async function getAdminCompanies() {
       www: producenci.www,
       isActive: producenci.isActive,
       featured: producenci.featured,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
     })
     .from(producenci)
     .orderBy(asc(producenci.nazwa));
@@ -629,7 +632,13 @@ export async function createCompanyAction(formData: FormData) {
   const www = String(formData.get("www") || "");
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
-  const featured = formData.get("featured") === "on";
+
+  const packageTypeRaw = String(formData.get("packageType") || "free");
+  const featuredRaw = formData.get("featured") === "on";
+
+  const packageConfig = getPackageConfig(packageTypeRaw);
+  const featured =
+    packageConfig.packageType !== "free" ? featuredRaw : false;
 
   const dzialaniaIds = formData
     .getAll("dzialaniaIds")
@@ -644,20 +653,6 @@ export async function createCompanyAction(formData: FormData) {
   if (!nazwa.trim()) {
     throw new Error("Nazwa firmy jest wymagana");
   }
-  
-  const isPremium = formData.get("isPremium") === "on";
-  const isFeatured = formData.get("isFeatured") === "on";
-  
-  let packageType = "standard";
-  let monthlyInquiryLimit = 0;
-  
-  if (isFeatured) {
-    packageType = "featured";
-    monthlyInquiryLimit = 999999;
-  } else if (isPremium) {
-    packageType = "premium";
-    monthlyInquiryLimit = 10;
-  }
 
   const result = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
@@ -668,8 +663,8 @@ export async function createCompanyAction(formData: FormData) {
     wojewodztwoId,
     featured,
     isActive: true,
-    packageType,
-    monthlyInquiryLimit,
+    packageType: packageConfig.packageType,
+    monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
     monthlyInquiryCount: 0,
   });
 
@@ -709,7 +704,14 @@ export async function updateCompanyAction(formData: FormData) {
   const isActive = formData.get("isActive") === "on";
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
-  const featured = formData.get("featured") === "on";
+  
+  const packageTypeRaw = String(formData.get("packageType") || "free");
+  const featuredRaw = formData.get("featured") === "on";
+  const resetInquiryCount = formData.get("resetInquiryCount") === "on";
+
+  const packageConfig = getPackageConfig(packageTypeRaw);
+  const featured =
+    packageConfig.packageType !== "free" ? featuredRaw : false;
 
   const dzialaniaId = formData
   .getAll("dzialaniaId")
@@ -721,7 +723,7 @@ export async function updateCompanyAction(formData: FormData) {
   .map((v) => Number(v))
   .filter((v) => Number.isFinite(v));
 
-   await db
+  await db
     .delete(producenciEmsDzialania).where(
     eq(producenciEmsDzialania.companyId, id)
   );
@@ -764,6 +766,9 @@ export async function updateCompanyAction(formData: FormData) {
       wojewodztwoId,
       featured,
       isActive,
+      packageType: packageConfig.packageType,
+      monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
+      ...(resetInquiryCount ? { monthlyInquiryCount: 0 } : {}),
     })
     .where(eq(producenci.id, id));
 
@@ -780,6 +785,34 @@ export async function getAllRegion() {
     })
     .from(wojewodztwa)
     .orderBy(asc(wojewodztwa.nazwa));
+}
+
+function getPackageConfig(packageType: string) {
+  switch (packageType) {
+    case "free":
+      return {
+        packageType: "free",
+        monthlyInquiryLimit: 0,
+      };
+
+    case "standard":
+      return {
+        packageType: "standard",
+        monthlyInquiryLimit: 10,
+      };
+
+    case "premium":
+      return {
+        packageType: "premium",
+        monthlyInquiryLimit: 999999,
+      };
+
+    default:
+      return {
+        packageType: "free",
+        monthlyInquiryLimit: 0,
+      };
+  }
 }
 
 export async function getAdminInquiries() {
@@ -841,6 +874,8 @@ export async function sendInquiryAction(formData: FormData) {
       id: producenci.id,
       nazwa: producenci.nazwa,
       email: producenci.email,
+      packageType: producenci.packageType,
+      isActive: producenci.isActive,
     })
     .from(producenci)
     .where(eq(producenci.id, companyId));
@@ -864,11 +899,13 @@ export async function sendInquiryAction(formData: FormData) {
 
   const inquiryId = Number((inquiryResult as any).insertId);
 
+  const recipientStatus = company.packageType === "free" ? "blocked" : "new";
+
   await db.insert(inquiryRecipients).values({
     inquiryId,
     companyId: company.id,
     companyEmail: company.email,
-    status: "new",
+    status: recipientStatus,
   });
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
@@ -922,17 +959,22 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
     return;
   }
 
-  // LOGIKA PAKIETÓW
-  if (row.packageType === "standard") {
-    throw new Error("Standard nie może otrzymywać leadów");
+  if (row.status === "blocked") {
+    throw new Error("To zapytanie jest zablokowane dla pakietu Free");
+  }
+
+  if (row.packageType === "free") {
+    throw new Error("Pakiet Free nie może otrzymywać leadów");
   }
 
   if (
-    row.packageType === "premium" &&
+    row.packageType === "standard" &&
     row.monthlyInquiryCount >= row.monthlyInquiryLimit
   ) {
-    throw new Error("Limit leadów osiągnięty");
+    throw new Error("Miesięczny limit leadów dla pakietu Standard został osiągnięty");
   }
+
+  const sentAt = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   try {
     await sendInquiryEmail({
@@ -951,19 +993,17 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       .update(inquiryRecipients)
       .set({
         status: "sent",
-        sentAt: new Date().toISOString().slice(0, 19).replace("T", " "),
+        sentAt,
       })
       .where(eq(inquiryRecipients.id, recipientId));
 
-    // 🔥 zwiększ licznik
     await db
       .update(producenci)
       .set({
         monthlyInquiryCount: row.monthlyInquiryCount + 1,
       })
       .where(eq(producenci.id, row.companyId));
-
-  } catch (e) {
+  } catch (error) {
     await db
       .update(inquiryRecipients)
       .set({

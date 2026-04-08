@@ -40,7 +40,7 @@ export const producenci = mysqlTable("producenci", {
     .default(sql`CURRENT_TIMESTAMP`),
   packageType: varchar("packageType", { length: 20 })
   .notNull()
-  .default("standard"),
+  .default("free"),
 monthlyInquiryLimit: int("monthlyInquiryLimit")
   .notNull()
   .default(0),
