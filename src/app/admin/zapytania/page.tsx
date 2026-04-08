@@ -15,28 +15,6 @@ function formatDate(value: string | Date | null | undefined) {
   return date.toLocaleString("pl-PL");
 }
 
-function getStatusLabel(status: string | null | undefined) {
-  switch (status) {
-    case "new":
-      return "Nowe";
-    case "blocked":
-      return "Zablokowane";
-    case "sent":
-      return "Wysłane";
-    case "error":
-      return "Błąd";
-    default:
-      return "-";
-  }
-}
-
-function canSendInquiry(row: AdminInquiryRow) {
-  return Boolean(
-    row.recipientId &&
-      (row.status === "new" || row.status === "error")
-  );
-}
-
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
 

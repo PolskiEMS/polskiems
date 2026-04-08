@@ -1012,7 +1012,7 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       })
       .where(eq(inquiryRecipients.id, recipientId));
 
-    throw e;
+    throw error;
   }
 
   revalidatePath("/admin/zapytania");
