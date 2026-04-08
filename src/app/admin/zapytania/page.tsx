@@ -36,6 +36,11 @@ function getPackageBadgeLabel(packageType: string | null | undefined) {
   return null;
 }
 
+function getPackageBadgeClass(packageType: string | null | undefined) {
+  if (packageType === "premium") return styles.packageBadgePremium;
+  return styles.packageBadgeStandard;
+}
+
 export default async function AdminInquiriesPage() {
   const rows = await getAdminInquiries();
 
@@ -82,7 +87,7 @@ export default async function AdminInquiriesPage() {
                         <div className={styles.companyRow}>
                           <span>{row.companyName}</span>
                           {getPackageBadgeLabel(row.packageType) && (
-                            <span className={styles.packageBadge}>
+                            <span className={`${styles.packageBadge} ${getPackageBadgeClass(row.packageType)}`}>
                               {getPackageBadgeLabel(row.packageType)}
                             </span>
                           )}
@@ -145,7 +150,7 @@ export default async function AdminInquiriesPage() {
               <div className={styles.cardRow}>
                 <span className={styles.label}>Firma:</span> {row.companyName || '-'}
                 {getPackageBadgeLabel(row.packageType) && (
-                  <span className={styles.packageBadge}>
+                  <span className={`${styles.packageBadge} ${getPackageBadgeClass(row.packageType)}`}>
                     {getPackageBadgeLabel(row.packageType)}
                   </span>
                 )}

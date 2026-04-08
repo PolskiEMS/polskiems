@@ -24,6 +24,11 @@ function getPackageBadgeLabel(packageType: string | null | undefined) {
   return null;
 }
 
+function getPackageBadgeClass(packageType: string | null | undefined) {
+  if (packageType === 'premium') return styles.packageBadgePremium;
+  return styles.packageBadgeStandard;
+}
+
 const SearchContent = () => {
   const [producers, setProducers] = useState<Producer[]>([]);
   const [notFound, setNotFound] = useState(false);
@@ -103,7 +108,7 @@ const SearchContent = () => {
                       <div className={styles.featuredBadge}>Polecany Producent</div>
                     )}
                     {getPackageBadgeLabel(producer.packageType) && (
-                      <div className={styles.packageBadge}>
+                      <div className={`${styles.packageBadge} ${getPackageBadgeClass(producer.packageType)}`}>
                         {getPackageBadgeLabel(producer.packageType)}
                       </div>
                     )}
