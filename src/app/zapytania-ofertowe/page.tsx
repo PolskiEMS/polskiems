@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { producenci } from '@/db/schema';
 import { getDb } from '@/lib/db';
@@ -19,18 +19,27 @@ export default async function InquiryPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const companyId = Number(params.companyId ?? 0);
   const success = params.success === '1';
+  const db = getDb();
+
+  const activeCompanies = await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+    })
+    .from(producenci)
+    .where(eq(producenci.isActive, true))
+    .orderBy(asc(producenci.nazwa));
 
   let company: { id: number; nazwa: string } | null = null;
 
   if (Number.isFinite(companyId) && companyId > 0) {
-    const db = getDb();
     const rows = await db
       .select({
         id: producenci.id,
         nazwa: producenci.nazwa,
       })
       .from(producenci)
-      .where(eq(producenci.id, companyId))
+      .where(and(eq(producenci.id, companyId), eq(producenci.isActive, true)))
       .limit(1);
 
     company = rows[0] ?? null;
@@ -48,16 +57,22 @@ export default async function InquiryPage({ searchParams }: PageProps) {
         )}
 
         <form action={sendInquiryAction} className={styles.form}>
-          <input type="hidden" name="companyId" value={company?.id ?? ''} />
-
           <div className={styles.field}>
             <label htmlFor="company">Firma</label>
-            <input
+            <select
               id="company"
+              name="companyId"
               className={styles.input}
-              value={company?.nazwa ?? 'Nie wybrano firmy'}
-              readOnly
-            />
+              defaultValue={company?.id ? String(company.id) : ''}
+              required
+            >
+              <option value="" disabled>Wybierz firmę</option>
+              {activeCompanies.map((activeCompany) => (
+                <option key={activeCompany.id} value={activeCompany.id}>
+                  {activeCompany.nazwa}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className={styles.field}>
