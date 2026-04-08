@@ -81,24 +81,23 @@ export default async function InquiryPage({ searchParams }: PageProps) {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="serviceType">Usługa *</label>
+            <label htmlFor="serviceTypes">Usługi *</label>
             <select
-              id="serviceType"
-              name="serviceType"
+              id="serviceTypes"
+              name="serviceTypes"
               className={styles.select}
+              multiple
+              size={SERVICES.length}
               required
-              defaultValue=""
+              defaultValue={[]}
             >
-              <option value="" disabled>
-                Wybierz usługę
-              </option>
-
               {SERVICES.map((service) => (
                 <option key={service} value={service}>
                   {service}
                 </option>
               ))}
             </select>
+            <small>Przytrzymaj Ctrl (Windows) lub Cmd (Mac), aby zaznaczyć wiele usług.</small>
           </div>
 
           <div className={styles.field}>

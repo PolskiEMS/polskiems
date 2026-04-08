@@ -860,12 +860,22 @@ export async function sendInquiryAction(formData: FormData) {
   const customerCompany = String(formData.get("customerCompany") ?? "").trim();
   const customerEmail = String(formData.get("customerEmail") ?? "").trim();
   const customerPhone = String(formData.get("customerPhone") ?? "").trim();
-  const serviceType = String(formData.get("serviceType") ?? "").trim();
+  const selectedServices = formData
+    .getAll("serviceTypes")
+    .map((service) => String(service).trim())
+    .filter((service) => service.length > 0);
+  const legacyServiceType = String(formData.get("serviceType") ?? "").trim();
+  const normalizedServices = selectedServices.length > 0
+    ? selectedServices
+    : legacyServiceType
+      ? [legacyServiceType]
+      : [];
+  const serviceType = normalizedServices.join(", ");
   const quantity = String(formData.get("quantity") ?? "").trim();
   const deadline = String(formData.get("deadline") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-  if (!companyId || !customerName || !customerEmail || !serviceType || !message) {
+  if (!companyId || !customerName || !customerEmail || normalizedServices.length === 0 || !message) {
     redirect("/zapytania-ofertowe");
   }
 

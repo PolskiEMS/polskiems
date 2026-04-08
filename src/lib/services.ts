@@ -17,7 +17,6 @@ export const SERVICES = [
   "IPC Klasa 2",
   "IPC Klasa 1",
   "Umożliwia audyt",
-  "Inne",
 ] as const;
 
 export type ServiceName = (typeof SERVICES)[number];
