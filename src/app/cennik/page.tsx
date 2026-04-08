@@ -10,14 +10,14 @@ const packages = [
     features: [
       'Widoczność w katalogu',
       'Profil firmy (nazwa, opis, email, telefon)',
-      'Brak wyróżnienia i brak badge',
-      'Leady zapisywane jako blocked (nie trafiają do firmy)'
+      'Brak wyróżnienia',
+      'Brak Lead',
     ]
   },
   {
     key: 'standard',
     name: 'STANDARD',
-    price: '399 zł / mies.',
+    price: '199 zł / mies.',
     badge: 'Najczęściej wybierany',
     features: [
       'Wszystko z FREE + odbieranie leadów',
@@ -29,13 +29,13 @@ const packages = [
   {
     key: 'premium',
     name: 'PREMIUM',
-    price: '999 zł / mies.',
+    price: '299 zł / mies.',
     badge: 'Top',
     features: [
       'Wszystko z STANDARD',
       'Złoty badge Premium + najwyższa pozycja',
       'Priorytetowa obsługa leadów',
-      'Brak realnego limitu zapytań (999999)'
+      'Brak realnego limitu zapytań'
     ]
   }
 ];
@@ -55,7 +55,7 @@ const paymentFlow = [
   },
   {
     title: '4. Aktywacja',
-    description: 'System ustawia packageType, featured=true, limit leadów i datę kolejnego rozliczenia.'
+    description: 'System ustawia Pakiet, limit leadów i datę kolejnego rozliczenia.'
   }
 ];
 
@@ -97,7 +97,7 @@ const CennikPage = () => {
           </div>
           <div className={styles.gatewayCard}>
             <strong>Przelewy24</strong>
-            <p>BLIK i szybkie przelewy dla PL; po statusie paid uruchamiamy automatycznie aktywację.</p>
+            <p>BLIK i szybkie przelewy dla PL; po statusie uruchamiamy automatycznie aktywację.</p>
           </div>
         </div>
 
