@@ -62,7 +62,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
             <select
               id="company"
               name="companyId"
-              className={styles.input}
+              className={`${styles.input} ${styles.select}`}
               defaultValue={company?.id ? String(company.id) : ''}
               required
             >
