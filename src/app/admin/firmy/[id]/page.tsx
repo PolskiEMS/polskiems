@@ -7,7 +7,7 @@ import {
   getAllRegion,
   updateCompanyAction,
 } from "@/lib/actions";
-import styles from "../style.module.css";
+import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
 
