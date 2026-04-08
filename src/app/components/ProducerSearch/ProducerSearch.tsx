@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import styles from './styles.module.css'
 import Link from 'next/link';
+import { SERVICES } from '@/lib/services';
 
 type FilterCategory = "regions" | "requirements" | "scales";
 
@@ -12,12 +13,7 @@ const filtersData = {
         "pomorskie", "śląskie", "świętokrzyskie", "warmińsko-mazurskie",
         "wielkopolskie", "zachodniopomorskie"
     ],
-    requirements: [
-        "Projekt", "Dostarcza PCB", "Kupuje komponenty", "Montaż SMD", "Montaż THT",
-        "Inspekcja", "Test Flying Probe", "Test funkcjonalny", "Montaż obudowe",
-        "Montaż produktu finalnego", "Conformal Coating", "Mycie płytek", "Lakierowanie",
-        "Hermetyzacja", "IPC Klasa 3", "IPC Klasa 2", "IPC Klasa 1", "Umożliwia audyt"
-    ],
+    requirements: [...SERVICES],
     scales: [
         "1 - 10", "10 - 50", "50 - 200", "200 - 1000", "1000 +", "Umowa kontrakowa"
     ]
