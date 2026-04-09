@@ -121,9 +121,7 @@ const CennikPage = () => {
         </div>
       </section>
 
-      <Suspense fallback={null}>
-        <PackageCheckout />
-      </Suspense>
+      <PackageCheckout />
 
       <Link href={'formularz_zgloszeniowy_firmy.docx'}>
         <button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button>
