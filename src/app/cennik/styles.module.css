@@ -76,6 +76,23 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+.packageCta {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  transition: 0.1s ease-in-out;
+}
+
+.packageCta:hover {
+  background: rgba(6, 122, 255, 0.8);
+  border-color: rgba(6, 122, 255, 0.8);
+}
+
 .flowSection {
   margin-top: 34px;
   border: 1px solid rgba(255, 255, 255, 0.24);
@@ -135,6 +152,112 @@
 .flowCard p {
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.95rem;
+}
+
+.checkoutSection {
+  margin-top: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.checkoutSection h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.checkoutHint {
+  color: rgba(255, 255, 255, 0.86);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.inlineLink {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.checkoutGrid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  gap: 6px;
+}
+
+.field span,
+.fieldWide span {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.field select,
+.field input,
+.fieldWide input {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(10, 14, 35, 0.4);
+  color: white;
+  padding: 10px;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.checkoutSummary {
+  margin-top: 14px;
+}
+
+.checkoutActions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.checkoutActions button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgb(6, 122, 255);
+  cursor: pointer;
+}
+
+.checkoutActions button:hover {
+  background: rgb(0, 73, 156);
+}
+
+.checkoutActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.confirmBtn {
+  background: rgba(245, 158, 11, 0.9) !important;
+  border-color: rgba(245, 158, 11, 0.9) !important;
+  color: #231200;
+}
+
+.confirmBtn:hover {
+  background: rgba(217, 119, 6, 0.95) !important;
+}
+
+.success {
+  margin-top: 12px;
+  color: #86efac;
+}
+
+.error {
+  margin-top: 12px;
+  color: #fca5a5;
 }
 
 .chceZnalezcSie {

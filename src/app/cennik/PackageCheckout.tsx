@@ -116,8 +116,8 @@ export default function PackageCheckout() {
         <label className={styles.field}>
           <span>Pakiet</span>
           <select value={selectedPackage} onChange={(e) => setSelectedPackage(e.target.value as PaidPackage)}>
-            <option value="standard">STANDARD — 399 zł / mies.</option>
-            <option value="premium">PREMIUM — 999 zł / mies.</option>
+            <option value="standard">STANDARD — 199 zł / mies.</option>
+            <option value="premium">PREMIUM — 299 zł / mies.</option>
           </select>
         </label>
 
