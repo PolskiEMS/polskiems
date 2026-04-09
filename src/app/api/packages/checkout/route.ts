@@ -6,8 +6,8 @@ import { eq, or } from "drizzle-orm";
 export const runtime = "nodejs";
 
 const PACKAGE_PRICE: Record<"standard" | "premium", number> = {
-  standard: 399,
-  premium: 999,
+  standard: 199,
+  premium: 299,
 };
 
 function isPackageType(value: string): value is "standard" | "premium" {

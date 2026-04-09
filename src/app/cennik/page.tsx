@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import styles from './styles.module.css'
 import PackageCheckout from './PackageCheckout';
 
@@ -8,6 +9,8 @@ const packages = [
     name: 'FREE',
     price: '0 zł / mies.',
     badge: 'Start',
+    ctaLabel: 'Pakiet aktywny',
+    ctaHref: '/formularz_zgloszeniowy_firmy.docx',
     features: [
       'Widoczność w katalogu',
       'Profil firmy (nazwa, email, strona www)',
@@ -19,6 +22,8 @@ const packages = [
     name: 'STANDARD',
     price: '199 zł / mies.',
     badge: 'Najczęściej wybierany',
+    ctaLabel: 'Aktywuj STANDARD',
+    ctaHref: '/cennik?pakiet=standard#checkout',
     features: [
       'Wszystko z FREE + odbieranie leadów',
       'Badge Standard',
@@ -31,6 +36,8 @@ const packages = [
     name: 'PREMIUM',
     price: '299 zł / mies.',
     badge: 'Top',
+    ctaLabel: 'Aktywuj PREMIUM',
+    ctaHref: '/cennik?pakiet=premium#checkout',
     features: [
       'Wszystko z STANDARD',
       'Złoty badge Premium + najwyższa pozycja',
@@ -83,6 +90,9 @@ const CennikPage = () => {
                 <li key={feature}>{feature}</li>
               ))}
             </ul>
+            <Link href={item.ctaHref} className={styles.packageCta}>
+              {item.ctaLabel}
+            </Link>
           </article>
         ))}
       </section>
@@ -110,6 +120,10 @@ const CennikPage = () => {
           ))}
         </div>
       </section>
+
+      <Suspense fallback={null}>
+        <PackageCheckout />
+      </Suspense>
 
       <Link href={'formularz_zgloszeniowy_firmy.docx'}>
         <button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button>
