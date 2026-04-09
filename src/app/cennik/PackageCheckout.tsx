@@ -9,8 +9,8 @@ type PaidPackage = 'standard' | 'premium';
 type Provider = 'stripe' | 'przelewy24';
 
 const PACKAGE_PRICE: Record<PaidPackage, number> = {
-  standard: 399,
-  premium: 999,
+  standard: 199,
+  premium: 299,
 };
 
 export default function PackageCheckout() {
