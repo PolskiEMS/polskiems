@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styles from './styles.module.css'
+import PackageCheckout from './PackageCheckout';
 
 const packages = [
   {
@@ -9,9 +10,8 @@ const packages = [
     badge: 'Start',
     features: [
       'Widoczność w katalogu',
-      'Profil firmy (nazwa, opis, email, telefon)',
-      'Brak Wyróżnienia',
-      'Brak Zapytań',
+      'Profil firmy (nazwa, email, strona www)',
+      'Brak wyróżnienia',
     ]
   },
   {

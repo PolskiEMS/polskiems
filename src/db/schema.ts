@@ -143,3 +143,20 @@ export const companyEvents = mysqlTable("company_events", {
 
     sentAt: datetime("sent_at", { mode: "string" }),
   });
+
+export const packageOrders = mysqlTable("package_orders", {
+  id: int("id").primaryKey().autoincrement(),
+  companyId: int("company_id")
+    .notNull()
+    .references(() => producenci.id),
+  packageType: mysqlEnum("package_type", ["standard", "premium"]).notNull(),
+  provider: mysqlEnum("provider", ["stripe", "przelewy24"]).notNull(),
+  amountGross: int("amount_gross").notNull(),
+  status: mysqlEnum("status", ["pending", "paid", "failed", "cancelled"])
+    .notNull()
+    .default("pending"),
+  paidAt: datetime("paid_at", { mode: "string" }),
+  createdAt: datetime("created_at", { mode: "string" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});
