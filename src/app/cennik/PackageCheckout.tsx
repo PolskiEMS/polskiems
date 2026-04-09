@@ -102,19 +102,19 @@ export default function PackageCheckout() {
 
   return (
     <section className={styles.checkoutSection}>
-      <h3>Wybór pakietu i aktywacja</h3>
+      <h3>Dane aktywacji</h3>
       <p id="checkout" className={styles.checkoutHint}>
-        Wypełnij podstawowe dane firmy, wybierz pakiet i operatora płatności, a po opłaceniu pakiet zostanie aktywowany.
+        Uzupełnij dane firmy, wybierz metodę płatności i aktywuj pakiet.
       </p>
       <p className={styles.checkoutHint}>
         Jeśli firma już istnieje, system pokaże komunikat i poprosi o uzupełnienie danych przez formularz zgłoszeniowy.
-        {" "}
+        {' '}
         <Link href="/formularz_zgloszeniowy_firmy.docx" className={styles.inlineLink}>Pobierz formularz</Link>
       </p>
 
       <div className={styles.checkoutGrid}>
         <label className={styles.field}>
-          <span>Pakiet</span>
+          <span>Wybrany pakiet</span>
           <select value={selectedPackage} onChange={(e) => setSelectedPackage(e.target.value as PaidPackage)}>
             <option value="standard">STANDARD — 199 zł / mies.</option>
             <option value="premium">PREMIUM — 299 zł / mies.</option>
@@ -122,7 +122,7 @@ export default function PackageCheckout() {
         </label>
 
         <label className={styles.field}>
-          <span>Operator płatności</span>
+          <span>Wybór metody płatności</span>
           <select value={provider} onChange={(e) => setProvider(e.target.value as Provider)}>
             <option value="stripe">Stripe</option>
             <option value="przelewy24">Przelewy24</option>
@@ -130,7 +130,7 @@ export default function PackageCheckout() {
         </label>
 
         <label className={styles.field}>
-          <span>Nazwa firmy</span>
+          <span>Dane firmy — nazwa</span>
           <input
             type="text"
             value={companyName}
@@ -140,7 +140,7 @@ export default function PackageCheckout() {
         </label>
 
         <label className={styles.field}>
-          <span>Email firmy</span>
+          <span>Dane firmy — email</span>
           <input
             type="email"
             value={companyEmail}
@@ -150,7 +150,7 @@ export default function PackageCheckout() {
         </label>
 
         <label className={styles.field}>
-          <span>Telefon (opcjonalnie)</span>
+          <span>Dane firmy — telefon (opcjonalnie)</span>
           <input
             type="text"
             value={companyPhone}
@@ -160,7 +160,7 @@ export default function PackageCheckout() {
         </label>
 
         <label className={styles.fieldWide}>
-          <span>Krótki opis firmy (opcjonalnie)</span>
+          <span>Krótki opis firmy</span>
           <input
             type="text"
             value={companyDescription}
@@ -170,11 +170,11 @@ export default function PackageCheckout() {
         </label>
       </div>
 
-      <div className={styles.checkoutSummary}>Do zapłaty: <strong>{total} zł brutto</strong></div>
+      <div className={styles.checkoutSummary}>Podsumowanie: <strong>{selectedPackage.toUpperCase()}</strong> — <strong>{total} zł brutto / mies.</strong></div>
 
       <div className={styles.checkoutActions}>
         <button type="button" onClick={handleCheckout} disabled={isLoading}>
-          {isLoading ? 'Przetwarzanie...' : 'Utwórz płatność'}
+          {isLoading ? 'Przetwarzanie...' : 'Przejdź do płatności'}
         </button>
 
         <button
@@ -183,7 +183,7 @@ export default function PackageCheckout() {
           disabled={isLoading || !orderId}
           className={styles.confirmBtn}
         >
-          {isLoading ? 'Przetwarzanie...' : 'Potwierdź płatność i aktywuj'}
+          {isLoading ? 'Przetwarzanie...' : 'Aktywuj pakiet'}
         </button>
       </div>
 
