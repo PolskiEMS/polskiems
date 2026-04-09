@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import styles from './styles.module.css'
 import PackageCheckout from './PackageCheckout';
 
@@ -120,7 +121,9 @@ const CennikPage = () => {
         </div>
       </section>
 
-      <PackageCheckout />
+      <Suspense fallback={<p className={styles.note}>Ładowanie formularza checkout...</p>}>
+        <PackageCheckout />
+      </Suspense>
 
       <Link href={'formularz_zgloszeniowy_firmy.docx'}>
         <button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button>
