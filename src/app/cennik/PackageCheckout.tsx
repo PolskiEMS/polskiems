@@ -1,24 +1,48 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import styles from './styles.module.css';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import styles from './styles.module.css';
+import FreePackageSignup from '../aktywacja_pakietu/FreePackageSignup';
 
 type PaidPackage = 'standard' | 'premium';
+type PackageType = 'free' | PaidPackage;
 type Provider = 'stripe' | 'przelewy24';
+
+type PackageCheckoutProps = {
+  initialPackage?: PackageType;
+};
+
+type PaidPackageCheckoutProps = {
+  initialPackage: PaidPackage;
+};
 
 const PACKAGE_PRICE: Record<PaidPackage, number> = {
   standard: 199,
   premium: 299,
 };
 
-export default function PackageCheckout() {
+export default function PackageCheckout({ initialPackage = 'standard' }: PackageCheckoutProps) {
   const searchParams = useSearchParams();
   const packageFromQuery = searchParams.get('pakiet');
 
+  const resolvedPackage: PackageType = packageFromQuery === 'premium'
+    ? 'premium'
+    : packageFromQuery === 'free'
+      ? 'free'
+      : initialPackage;
+
+  if (resolvedPackage === 'free') {
+    return <FreePackageSignup />;
+  }
+
+  return <PaidPackageCheckout initialPackage={resolvedPackage} />;
+}
+
+function PaidPackageCheckout({ initialPackage }: PaidPackageCheckoutProps) {
   const [selectedPackage, setSelectedPackage] = useState<PaidPackage>(
-    packageFromQuery === 'premium' ? 'premium' : 'standard'
+    initialPackage === 'premium' ? 'premium' : 'standard'
   );
   const [provider, setProvider] = useState<Provider>('stripe');
   const [companyName, setCompanyName] = useState('');
@@ -170,7 +194,9 @@ export default function PackageCheckout() {
         </label>
       </div>
 
-      <div className={styles.checkoutSummary}>Podsumowanie: <strong>{selectedPackage.toUpperCase()}</strong> — <strong>{total} zł brutto / mies.</strong></div>
+      <div className={styles.checkoutSummary}>
+        Podsumowanie: <strong>{selectedPackage.toUpperCase()}</strong> — <strong>{total} zł brutto / mies.</strong>
+      </div>
 
       <div className={styles.checkoutActions}>
         <button type="button" onClick={handleCheckout} disabled={isLoading}>
