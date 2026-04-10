@@ -32,16 +32,9 @@ export default function PackageCheckout({ initialPackage = 'standard' }: Package
     return <FreePackageSignup />;
   }
 
-  return <PaidPackageCheckout initialPackage={resolvedPackage} />;
-}
-
-type PaidPackageCheckoutProps = {
-  initialPackage: PaidPackage;
-};
-
 function PaidPackageCheckout({ initialPackage }: PaidPackageCheckoutProps) {
   const [selectedPackage, setSelectedPackage] = useState<PaidPackage>(
-    initialPackage === 'premium' ? 'premium' : 'standard'
+    resolvedPackage === 'premium' ? 'premium' : 'standard'
   );
   const [provider, setProvider] = useState<Provider>('stripe');
   const [companyName, setCompanyName] = useState('');
