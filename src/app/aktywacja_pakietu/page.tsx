@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import PackageCheckout from '../cennik/PackageCheckout';
-import FreePackageSignup from './FreePackageSignup';
 import styles from './styles.module.css';
 
 type SearchParams = {
@@ -8,7 +7,7 @@ type SearchParams = {
 };
 
 const packageDescriptions: Record<string, string> = {
-  free: 'Pakiet startowy dla firm rozpoczynających obecność w katalogu — bez płatności online.',
+  free: 'Pakiet startowy dla firm rozpoczynających obecność w katalogu.',
   standard: 'Najlepszy wybór dla firm, które chcą regularnie pozyskiwać zapytania ofertowe.',
   premium: 'Maksymalna widoczność i priorytetowa ekspozycja w katalogu.'
 };
@@ -34,14 +33,10 @@ export default async function AktywacjaPakietuPage({
         <h2>Wybrany pakiet</h2>
         <p className={styles.selectedPackage}>{selectedPackage.toUpperCase()}</p>
         <p>{packageDescriptions[selectedPackage]}</p>
-        <p className={styles.muted}>
-          Krótkie podsumowanie: {selectedPackage === 'free'
-            ? 'pakiet FREE aktywuje widoczność firmy bez płatności.'
-            : 'po płatności pakiet aktywuje się automatycznie, a konto otrzyma odpowiednie limity i funkcje.'}
-        </p>
+        <p className={styles.muted}>Krótkie podsumowanie: po płatności pakiet aktywuje się automatycznie, a konto otrzyma odpowiednie limity i funkcje.</p>
       </section>
 
-      {selectedPackage === 'free' ? <FreePackageSignup /> : <PackageCheckout />}
+      <PackageCheckout />
 
       <p className={styles.backLinkWrap}>
         <Link href={`/cennik?pakiet=${selectedPackage}`} className={styles.backLink}>Wróć do cennika</Link>

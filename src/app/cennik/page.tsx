@@ -30,7 +30,7 @@ const packages = [
     features: [
       'Wszystko ze STANDARD',
       'Najwyższa pozycja i dodatkowe wyróżnienie',
-      'Priorytetowa obsługa ofert',
+      'Priorytetowa obsługa zapytań',
       'Maksymalne limity funkcji i widoczności'
     ]
   }
