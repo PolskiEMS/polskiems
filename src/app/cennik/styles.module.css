@@ -45,20 +45,6 @@
   font-size: 1.5rem;
 }
 
-.badge {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-  color: white;
-}
-
-.badgePremium {
-  background: linear-gradient(135deg, #f59e0b, #facc15);
-  color: #2b1900;
-}
-
 .price {
   margin-top: 10px;
   font-size: 1.3rem;
@@ -93,42 +79,22 @@
   border-color: rgba(6, 122, 255, 0.8);
 }
 
-.flowSection {
-  margin-top: 34px;
+.flowSection,
+.benefitsSection,
+.ctaSection {
+  margin-top: 28px;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   padding: 18px;
 }
 
-.flowSection h3 {
+.flowSection h3,
+.benefitsSection h3,
+.ctaSection h3 {
   text-align: center;
-  font-size: 1.7rem;
-  margin-bottom: 18px;
-}
-
-.gatewayRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
+  font-size: 1.6rem;
   margin-bottom: 14px;
-}
-
-.gatewayCard {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.gatewayCard strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 1rem;
-}
-
-.gatewayCard p {
-  color: rgba(255, 255, 255, 0.86);
 }
 
 .flowGrid {
@@ -152,6 +118,38 @@
 .flowCard p {
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.95rem;
+}
+
+.benefitsList {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.benefitsList li {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ctaSection p {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.finalCta {
+  margin: 14px auto 0;
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgb(6, 122, 255);
+}
+
+.finalCta:hover {
+  background: rgb(0, 73, 156);
 }
 
 .checkoutSection {
@@ -258,24 +256,4 @@
 .error {
   margin-top: 12px;
   color: #fca5a5;
-}
-
-.chceZnalezcSie {
-  margin-top: 26px;
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.178);
-  background-color: rgb(6, 122, 255);
-  transition: 0.06s ease-in-out;
-  width: 250px;
-  text-align: center;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 30px;
-}
-
-.chceZnalezcSie:hover {
-  background-color: rgb(0, 73, 156);
 }
