@@ -5,6 +5,7 @@ const packages = [
   {
     key: 'free',
     name: 'FREE',
+    ctaLabel: 'Wybierz Free',
     price: '0 zł / mies.',
     features: [
       'Widoczność firmy w katalogu',
@@ -15,6 +16,7 @@ const packages = [
   {
     key: 'standard',
     name: 'STANDARD',
+    ctaLabel: 'Wybierz Standard',
     price: '199 zł / mies.',
     features: [
       'Większa widoczność firmy w katalogu',
@@ -26,6 +28,7 @@ const packages = [
   {
     key: 'premium',
     name: 'PREMIUM',
+    ctaLabel: 'Wybierz Premium',
     price: '299 zł / mies.',
     features: [
       'Wszystko ze STANDARD',
