@@ -36,7 +36,7 @@ export default async function AktywacjaPakietuPage({
         <p className={styles.muted}>Krótkie podsumowanie: po płatności pakiet aktywuje się automatycznie, a konto otrzyma odpowiednie limity i funkcje.</p>
       </section>
 
-      <PackageCheckout />
+      <PackageCheckout initialPackage={selectedPackage} />
 
       <p className={styles.backLinkWrap}>
         <Link href={`/cennik?pakiet=${selectedPackage}`} className={styles.backLink}>Wróć do cennika</Link>

@@ -4,8 +4,10 @@ import { useMemo, useState } from 'react';
 import styles from './styles.module.css';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import FreePackageSignup from '../aktywacja_pakietu/FreePackageSignup';
 
 type PaidPackage = 'standard' | 'premium';
+type PackageType = 'free' | PaidPackage;
 type Provider = 'stripe' | 'przelewy24';
 
 const PACKAGE_PRICE: Record<PaidPackage, number> = {
@@ -13,12 +15,25 @@ const PACKAGE_PRICE: Record<PaidPackage, number> = {
   premium: 299,
 };
 
-export default function PackageCheckout() {
+type PackageCheckoutProps = {
+  initialPackage?: PackageType;
+};
+
+export default function PackageCheckout({ initialPackage = 'standard' }: PackageCheckoutProps) {
   const searchParams = useSearchParams();
   const packageFromQuery = searchParams.get('pakiet');
+  const resolvedPackage = packageFromQuery === 'premium'
+    ? 'premium'
+    : packageFromQuery === 'free'
+      ? 'free'
+      : initialPackage;
+
+  if (resolvedPackage === 'free') {
+    return <FreePackageSignup />;
+  }
 
   const [selectedPackage, setSelectedPackage] = useState<PaidPackage>(
-    packageFromQuery === 'premium' ? 'premium' : 'standard'
+    resolvedPackage === 'premium' ? 'premium' : 'standard'
   );
   const [provider, setProvider] = useState<Provider>('stripe');
   const [companyName, setCompanyName] = useState('');
