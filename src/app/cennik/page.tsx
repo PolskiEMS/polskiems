@@ -16,7 +16,7 @@ const packages = [
   {
     key: 'standard',
     name: 'STANDARD',
-    ctaLabel: 'Wybierz pakiet Standard',
+    ctaLabel: 'Wybierz Standard',
     price: '199 zł / mies.',
     features: [
       'Większa widoczność firmy w katalogu',
@@ -33,7 +33,7 @@ const packages = [
     features: [
       'Wszystko ze STANDARD',
       'Najwyższa pozycja i dodatkowe wyróżnienie',
-      'Priorytetowa obsługa ofert',
+      'Priorytetowa obsługa zapytań',
       'Maksymalne limity funkcji i widoczności'
     ]
   }
@@ -87,7 +87,7 @@ const CennikPage = () => {
               ))}
             </ul>
             <Link href={`/aktywacja_pakietu?pakiet=${item.key}`} className={styles.packageCta}>
-              {item.ctaLabel}
+              Wybierz pakiet
             </Link>
           </article>
         ))}

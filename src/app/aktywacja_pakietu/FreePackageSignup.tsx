@@ -10,46 +10,10 @@ export default function FreePackageSignup() {
   const [phone, setPhone] = useState('');
   const [description, setDescription] = useState('');
   const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    setSent(false);
-
-    try {
-      const res = await fetch('/api/packages/free-signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companyName,
-          companyEmail: email,
-          companyPhone: phone,
-          companyWebsite: website,
-          companyDescription: description,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data?.ok) {
-        setError(data?.error || 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie.');
-        return;
-      }
-
-      setSent(true);
-      setCompanyName('');
-      setEmail('');
-      setWebsite('');
-      setPhone('');
-      setDescription('');
-    } catch {
-      setError('Błąd połączenia. Spróbuj ponownie za chwilę.');
-    } finally {
-      setSubmitting(false);
-    }
+    setSent(true);
   }
 
   return (
@@ -101,17 +65,14 @@ export default function FreePackageSignup() {
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />
         </label>
 
-        <button type="submit" className={styles.freeSubmitBtn} disabled={submitting}>
-          {submitting ? 'Wysyłanie...' : 'Wyślij zgłoszenie FREE'}
-        </button>
+        <button type="submit" className={styles.freeSubmitBtn}>Wyślij zgłoszenie FREE</button>
       </form>
 
       {sent && (
         <p className={styles.success}>
-          Dziękujemy! Zgłoszenie zostało zapisane i trafiło do panelu admin. Firma będzie aktywna po akceptacji.
+          Dziękujemy! Zgłoszenie z formularza online zostało wysłane.
         </p>
       )}
-      {error && <p className={styles.error}>{error}</p>}
     </section>
   );
 }
