@@ -32,6 +32,7 @@ export default function PackageCheckout({ initialPackage = 'standard' }: Package
     return <FreePackageSignup />;
   }
 
+function PaidPackageCheckout({ initialPackage }: PaidPackageCheckoutProps) {
   const [selectedPackage, setSelectedPackage] = useState<PaidPackage>(
     resolvedPackage === 'premium' ? 'premium' : 'standard'
   );

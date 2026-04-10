@@ -2,30 +2,59 @@ import Link from 'next/link';
 import styles from './styles.module.css'
 
 const Kontakt = () => {
-    return (
-        <div className={styles.page}>
-            <h1>Kontakt</h1>
-            <h2>Chcesz się z nami skontaktować?<br />
-                Jesteśmy do Twojej dyspozycji przez całą dobę!</h2>
-            <p>Napisz do nas lub zadzwoń, a postaramy się odpowiedzieć w ciągu 24 godzin.</p>
-            <div>
-                <p><span>:</span></p>
-                <p><span>E-mail:</span> info@polskiems.pl</p>
-            </div>
-            <div>
-                <h3>Osoba kontaktowa:</h3>
-                
-                <p>Michał Kowalski – programista i założyciel</p>
-            </div>
-            <div>
-                <p>Jeśli chcesz dowiedzieć się więcej o naszej firmie, napisz a odpowiemy na wszelkie pytania</p>
-                <p>Zapraszamy do kontaktu – każda wiadomość jest dla nas ważna!</p>
-                <p>Nie czekaj, napisz i przekonaj się, jak możemy Ci pomóc! <br />
-                    Współpracując z nami, możecie liczyć na partnera, który bierze czynny udział w rozwoju Waszej działalności i dba o to, byście mieli realną przewagę na rynku.</p>
-            </div>
-            <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
-        </div>
-    );
+  return (
+    <section className={styles.page}>
+      <header className={styles.hero}>
+        <h1>Kontakt</h1>
+        <p className={styles.lead}>
+          Chcesz porozmawiać o współpracy, dodaniu firmy do katalogu lub płatnym pakiecie?
+          Napisz do nas — odpowiadamy maksymalnie w ciągu 24 godzin roboczych.
+        </p>
+      </header>
+
+      <div className={styles.contactGrid}>
+        <article className={styles.card}>
+          <h2>Dane kontaktowe</h2>
+          <ul className={styles.contactList}>
+            <li>
+              <span>E-mail</span>
+              <a href="mailto:info@polskiems.pl">info@polskiems.pl</a>
+            </li>
+            <li>
+              <span>Telefon</span>
+              <a href="tel:+48733811482">+48 733 811 482</a>
+            </li>
+            <li>
+              <span>Czas odpowiedzi</span>
+              <p>Do 24h w dni robocze</p>
+            </li>
+          </ul>
+        </article>
+
+        <article className={styles.card}>
+          <h2>Osoba kontaktowa</h2>
+          <p className={styles.personName}>Michał Kowalski</p>
+          <p className={styles.personRole}>Założyciel PolskiEMS</p>
+          <p className={styles.personNote}>
+            Pomożemy dobrać odpowiedni pakiet, zweryfikować profil firmy i zaplanować dalsze kroki publikacji.
+          </p>
+        </article>
+      </div>
+
+      <article className={styles.infoBox}>
+        <h3>Jak możemy pomóc?</h3>
+        <p>
+          Wspieramy firmy produkcyjne i usługowe w zwiększaniu widoczności w branży EMS.
+          Każde zapytanie traktujemy priorytetowo — od pierwszego kontaktu po pełne uruchomienie profilu.
+        </p>
+      </article>
+
+      <div className={styles.actions}>
+        <a href="mailto:info@polskiems.pl" className={styles.primaryBtn}>Napisz e-mail</a>
+        <Link href="/formularz_zgloszeniowy_firmy.docx" className={styles.secondaryBtn}>Pobierz formularz zgłoszeniowy</Link>
+      </div>
+    </section>
+  );
 }
 
 export default Kontakt;
