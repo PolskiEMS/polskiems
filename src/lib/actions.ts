@@ -11,6 +11,7 @@ import {
   wojewodztwa,
   companyEvents,
   pageViews,
+  packageOrders,
 } from "@/db/schema";
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
@@ -560,6 +561,57 @@ export async function getCompanyReport(companyId: number, days = 30) {
     );
 
   return rows[0] ?? null;
+}
+
+
+export async function getAdminSubscriptions() {
+  const db = getDb();
+
+  const companies = await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      email: producenci.email,
+      telefon: producenci.telefon,
+      packageType: producenci.packageType,
+      featured: producenci.featured,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      packageValidUntil: producenci.packageValidUntil,
+      isActive: producenci.isActive,
+    })
+    .from(producenci)
+    .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
+    .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
+
+  const orders = await db
+    .select({
+      id: packageOrders.id,
+      createdAt: packageOrders.createdAt,
+      paidAt: packageOrders.paidAt,
+      status: packageOrders.status,
+      provider: packageOrders.provider,
+      packageType: packageOrders.packageType,
+      amountGross: packageOrders.amountGross,
+      billingCycleMonths: packageOrders.billingCycleMonths,
+      companyId: producenci.id,
+      companyName: producenci.nazwa,
+      buyerName: packageOrders.buyerName,
+      buyerEmail: packageOrders.buyerEmail,
+      buyerPhone: packageOrders.buyerPhone,
+      buyerCompanyName: packageOrders.buyerCompanyName,
+      buyerTaxId: packageOrders.buyerTaxId,
+      buyerAddressLine1: packageOrders.buyerAddressLine1,
+      buyerPostalCode: packageOrders.buyerPostalCode,
+      buyerCity: packageOrders.buyerCity,
+      buyerCountry: packageOrders.buyerCountry,
+      accessValidUntil: packageOrders.accessValidUntil,
+    })
+    .from(packageOrders)
+    .innerJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .orderBy(desc(packageOrders.createdAt))
+    .limit(200);
+
+  return { companies, orders };
 }
 
 export async function getAdminCompanies() {

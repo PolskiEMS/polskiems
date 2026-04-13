@@ -5,17 +5,29 @@ import { eq, or } from "drizzle-orm";
 
 export const runtime = "nodejs";
 
-const PACKAGE_PRICE: Record<"standard" | "premium", number> = {
+type PaidPackage = "standard" | "premium";
+type BillingCycleMonths = 1 | 3 | 6 | 12;
+
+const PACKAGE_PRICE_PER_MONTH: Record<PaidPackage, number> = {
   standard: 199,
   premium: 299,
 };
 
-function isPackageType(value: string): value is "standard" | "premium" {
+function isPackageType(value: string): value is PaidPackage {
   return value === "standard" || value === "premium";
 }
 
 function isProvider(value: string): value is "stripe" | "przelewy24" {
   return value === "stripe" || value === "przelewy24";
+}
+
+function parseBillingCycleMonths(value: unknown): BillingCycleMonths | null {
+  const months = Number(value);
+  if (months === 1 || months === 3 || months === 6 || months === 12) {
+    return months;
+  }
+
+  return null;
 }
 
 export async function POST(req: NextRequest) {
@@ -27,6 +39,16 @@ export async function POST(req: NextRequest) {
   const companyDescription = String(body?.companyDescription ?? "").trim();
   const packageType = String(body?.packageType || "");
   const provider = String(body?.provider || "");
+  const billingCycleMonths = parseBillingCycleMonths(body?.billingCycleMonths);
+  const buyerName = String(body?.buyerName ?? "").trim();
+  const buyerEmail = String(body?.buyerEmail ?? "").trim();
+  const buyerPhone = String(body?.buyerPhone ?? "").trim();
+  const buyerCompanyName = String(body?.buyerCompanyName ?? "").trim();
+  const buyerTaxId = String(body?.buyerTaxId ?? "").trim();
+  const buyerAddressLine1 = String(body?.buyerAddressLine1 ?? "").trim();
+  const buyerPostalCode = String(body?.buyerPostalCode ?? "").trim();
+  const buyerCity = String(body?.buyerCity ?? "").trim();
+  const buyerCountry = String(body?.buyerCountry ?? "Polska").trim();
 
   if (!companyName || !companyEmail) {
     return NextResponse.json(
@@ -41,6 +63,13 @@ export async function POST(req: NextRequest) {
 
   if (!isProvider(provider)) {
     return NextResponse.json({ ok: false, error: "Wybierz operatora płatności" }, { status: 400 });
+  }
+
+  if (!billingCycleMonths) {
+    return NextResponse.json(
+      { ok: false, error: "Wybierz okres subskrypcji: 1, 3, 6 lub 12 miesięcy" },
+      { status: 400 }
+    );
   }
 
   const db = getDb();
@@ -76,15 +105,27 @@ export async function POST(req: NextRequest) {
     packageType: "free",
     monthlyInquiryLimit: 0,
     monthlyInquiryCount: 0,
+    packageValidUntil: null,
   });
 
   const companyId = Number((companyInsertResult as any).insertId);
+  const amountGross = PACKAGE_PRICE_PER_MONTH[packageType] * billingCycleMonths;
 
   const insertResult = await db.insert(packageOrders).values({
     companyId,
     packageType,
     provider,
-    amountGross: PACKAGE_PRICE[packageType],
+    billingCycleMonths,
+    amountGross,
+    buyerName: buyerName || null,
+    buyerEmail: buyerEmail || null,
+    buyerPhone: buyerPhone || null,
+    buyerCompanyName: buyerCompanyName || null,
+    buyerTaxId: buyerTaxId || null,
+    buyerAddressLine1: buyerAddressLine1 || null,
+    buyerPostalCode: buyerPostalCode || null,
+    buyerCity: buyerCity || null,
+    buyerCountry: buyerCountry || null,
     status: "pending",
   });
 
@@ -95,8 +136,9 @@ export async function POST(req: NextRequest) {
     orderId,
     companyId,
     companyName,
-    amountGross: PACKAGE_PRICE[packageType],
+    amountGross,
     provider,
     packageType,
+    billingCycleMonths,
   });
 }
