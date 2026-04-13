@@ -8,8 +8,8 @@ const packages = [
     ctaLabel: 'Wybierz Free',
     price: '0 zł / mies.',
     features: [
-      'Widoczność firmy w katalogu',
-      'Profil firmy (nazwa, email, strona www)',
+      'Ograniczona widoczność firmy w katalogu',
+      'Podstawowa Wizytówka',
       'Start bez opłat miesięcznych',
     ]
   },
