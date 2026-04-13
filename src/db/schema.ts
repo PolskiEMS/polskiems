@@ -47,6 +47,7 @@ monthlyInquiryLimit: int("monthlyInquiryLimit")
 monthlyInquiryCount: int("monthlyInquiryCount")
   .notNull()
   .default(0),
+packageValidUntil: datetime("package_valid_until", { mode: "string" }),
 });
 
 export const producenciEmsDzialania = mysqlTable("producenci_ems_dzialania", {
@@ -152,10 +153,22 @@ export const packageOrders = mysqlTable("package_orders", {
   packageType: mysqlEnum("package_type", ["standard", "premium"]).notNull(),
   provider: mysqlEnum("provider", ["stripe", "przelewy24"]).notNull(),
   amountGross: int("amount_gross").notNull(),
+  billingCycleMonths: int("billing_cycle_months").notNull().default(1),
+  buyerName: varchar("buyer_name", { length: 150 }),
+  buyerEmail: varchar("buyer_email", { length: 150 }),
+  buyerPhone: varchar("buyer_phone", { length: 50 }),
+  buyerCompanyName: varchar("buyer_company_name", { length: 180 }),
+  buyerTaxId: varchar("buyer_tax_id", { length: 30 }),
+  buyerAddressLine1: varchar("buyer_address_line1", { length: 255 }),
+  buyerPostalCode: varchar("buyer_postal_code", { length: 20 }),
+  buyerCity: varchar("buyer_city", { length: 120 }),
+  buyerCountry: varchar("buyer_country", { length: 120 }),
   status: mysqlEnum("status", ["pending", "paid", "failed", "cancelled"])
     .notNull()
     .default("pending"),
   paidAt: datetime("paid_at", { mode: "string" }),
+  activatedAt: datetime("activated_at", { mode: "string" }),
+  accessValidUntil: datetime("access_valid_until", { mode: "string" }),
   createdAt: datetime("created_at", { mode: "string" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
