@@ -216,7 +216,21 @@ export async function getCompanyRelations(companyId: number) {
 export const getAllProducers = async () => {
   const db = getDb();
   return await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(sql`${producenci.isActive} = 1`)
     .orderBy(
@@ -245,7 +259,21 @@ export async function getFeaturedProducers(limit = 6) {
   const db = getDb();
 
   return await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(and(eq(producenci.isActive, true), eq(producenci.featured, true)))
     .orderBy(asc(producenci.id))
@@ -637,7 +665,21 @@ export async function getCompanyById(id: number) {
   const db = getDb();
 
   const rows = await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(eq(producenci.id, id));
 
