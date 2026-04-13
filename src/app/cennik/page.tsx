@@ -20,9 +20,9 @@ const packages = [
     price: '199 zł / mies.',
     features: [
       'Większa widoczność firmy w katalogu',
-      'Możliwość otrzymywania zapytań ofertowych',
-      'Lepsza ekspozycja oferty',
-      'Szybszy kontakt z potencjalnymi klientami'
+      'Możliwość otrzymywania do 10 zapytań miesięcznie',
+      'Logo + opis + strona www',
+      'Wyróżnienie w katalogu'
     ]
   },
   {
@@ -31,10 +31,10 @@ const packages = [
     ctaLabel: 'Wybierz Premium',
     price: '299 zł / mies.',
     features: [
-      'Wszystko ze STANDARD',
-      'Najwyższa pozycja i dodatkowe wyróżnienie',
-      'Priorytetowa obsługa zapytań',
-      'Maksymalne limity funkcji i widoczności'
+      '🔥 Nielimitowane zapytania ofertowe',
+      '🥇 TOP pozycja w katalogu',
+      'Priorytetowa obsługa leadów',
+      'Wyróżnienie w katalogu (2–3x więcej wyświetleń)'
     ]
   }
 ];
