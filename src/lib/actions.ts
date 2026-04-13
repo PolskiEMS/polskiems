@@ -595,55 +595,21 @@ export async function getCompanyReport(companyId: number, days = 30) {
 export async function getAdminSubscriptions() {
   const db = getDb();
 
-  let companies: Array<{
-    id: number;
-    nazwa: string | null;
-    email: string | null;
-    telefon: string | null;
-    packageType: string | null;
-    featured: boolean | null;
-    monthlyInquiryLimit: number | null;
-    packageValidUntil: string | null;
-    isActive: boolean | null;
-  }> = [];
-
-  try {
-    companies = await db
-      .select({
-        id: producenci.id,
-        nazwa: producenci.nazwa,
-        email: producenci.email,
-        telefon: producenci.telefon,
-        packageType: producenci.packageType,
-        featured: producenci.featured,
-        monthlyInquiryLimit: producenci.monthlyInquiryLimit,
-        packageValidUntil: producenci.packageValidUntil,
-        isActive: producenci.isActive,
-      })
-      .from(producenci)
-      .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
-      .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
-  } catch {
-    const companiesFallback = await db
-      .select({
-        id: producenci.id,
-        nazwa: producenci.nazwa,
-        email: producenci.email,
-        telefon: producenci.telefon,
-        packageType: producenci.packageType,
-        featured: producenci.featured,
-        monthlyInquiryLimit: producenci.monthlyInquiryLimit,
-        isActive: producenci.isActive,
-      })
-      .from(producenci)
-      .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
-      .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
-
-    companies = companiesFallback.map((company) => ({
-      ...company,
-      packageValidUntil: null,
-    }));
-  }
+  const companies = await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      email: producenci.email,
+      telefon: producenci.telefon,
+      packageType: producenci.packageType,
+      featured: producenci.featured,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      packageValidUntil: producenci.packageValidUntil,
+      isActive: producenci.isActive,
+    })
+    .from(producenci)
+    .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
+    .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
 
   const orders = await db
     .select({

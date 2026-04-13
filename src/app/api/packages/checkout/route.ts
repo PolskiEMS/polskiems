@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
     packageType: "free",
     monthlyInquiryLimit: 0,
     monthlyInquiryCount: 0,
+    packageValidUntil: null,
   });
 
   const companyId = Number((companyInsertResult as any).insertId);

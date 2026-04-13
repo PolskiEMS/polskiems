@@ -53,36 +53,21 @@ export async function POST(req: NextRequest) {
   const nowDate = new Date();
   const now = toSqlDateTime(nowDate);
 
-  let existingValidUntil: string | null = null;
+  const companyRows = await db
+    .select({
+      id: producenci.id,
+      packageValidUntil: producenci.packageValidUntil,
+    })
+    .from(producenci)
+    .where(eq(producenci.id, order.companyId));
 
-  try {
-    const companyRows = await db
-      .select({
-        id: producenci.id,
-        packageValidUntil: producenci.packageValidUntil,
-      })
-      .from(producenci)
-      .where(eq(producenci.id, order.companyId));
-
-    const company = companyRows[0];
-    if (!company) {
-      return NextResponse.json({ ok: false, error: "Nie znaleziono firmy dla zamówienia" }, { status: 404 });
-    }
-
-    existingValidUntil = company.packageValidUntil ?? null;
-  } catch {
-    const companyRows = await db
-      .select({ id: producenci.id })
-      .from(producenci)
-      .where(eq(producenci.id, order.companyId));
-
-    if (!companyRows[0]) {
-      return NextResponse.json({ ok: false, error: "Nie znaleziono firmy dla zamówienia" }, { status: 404 });
-    }
+  const company = companyRows[0];
+  if (!company) {
+    return NextResponse.json({ ok: false, error: "Nie znaleziono firmy dla zamówienia" }, { status: 404 });
   }
 
-  const baseDate = existingValidUntil
-    ? new Date(existingValidUntil.replace(" ", "T") + "Z")
+  const baseDate = company.packageValidUntil
+    ? new Date(company.packageValidUntil.replace(" ", "T") + "Z")
     : nowDate;
 
   const validUntil = addMonths(baseDate > nowDate ? baseDate : nowDate, Number(order.billingCycleMonths || 1));
@@ -93,28 +78,16 @@ export async function POST(req: NextRequest) {
     .set({ status: "paid", paidAt: now, activatedAt: now, accessValidUntil: validUntilSql })
     .where(and(eq(packageOrders.id, order.id), eq(packageOrders.status, "pending")));
 
-  try {
-    await db
-      .update(producenci)
-      .set({
-        packageType: order.packageType,
-        featured: true,
-        monthlyInquiryLimit: PACKAGE_LIMIT[order.packageType],
-        monthlyInquiryCount: 0,
-        packageValidUntil: validUntilSql,
-      })
-      .where(eq(producenci.id, order.companyId));
-  } catch {
-    await db
-      .update(producenci)
-      .set({
-        packageType: order.packageType,
-        featured: true,
-        monthlyInquiryLimit: PACKAGE_LIMIT[order.packageType],
-        monthlyInquiryCount: 0,
-      })
-      .where(eq(producenci.id, order.companyId));
-  }
+  await db
+    .update(producenci)
+    .set({
+      packageType: order.packageType,
+      featured: true,
+      monthlyInquiryLimit: PACKAGE_LIMIT[order.packageType],
+      monthlyInquiryCount: 0,
+      packageValidUntil: validUntilSql,
+    })
+    .where(eq(producenci.id, order.companyId));
 
   return NextResponse.json({
     ok: true,
