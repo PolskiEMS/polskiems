@@ -43,6 +43,10 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/zapytania" className={styles.adminBox}>
             Zapytania
           </Link>
+
+          <Link href="/admin/subskrypcje" className={styles.adminBox}>
+            Subskrypcje
+          </Link>
         </div>       
 
         <div className={styles.dashboardGrid}>

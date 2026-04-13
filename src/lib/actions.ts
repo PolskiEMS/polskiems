@@ -11,6 +11,7 @@ import {
   wojewodztwa,
   companyEvents,
   pageViews,
+  packageOrders,
 } from "@/db/schema";
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
@@ -215,7 +216,21 @@ export async function getCompanyRelations(companyId: number) {
 export const getAllProducers = async () => {
   const db = getDb();
   return await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(sql`${producenci.isActive} = 1`)
     .orderBy(
@@ -244,7 +259,21 @@ export async function getFeaturedProducers(limit = 6) {
   const db = getDb();
 
   return await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(and(eq(producenci.isActive, true), eq(producenci.featured, true)))
     .orderBy(asc(producenci.id))
@@ -562,6 +591,91 @@ export async function getCompanyReport(companyId: number, days = 30) {
   return rows[0] ?? null;
 }
 
+
+export async function getAdminSubscriptions() {
+  const db = getDb();
+
+  let companies: Array<{
+    id: number;
+    nazwa: string | null;
+    email: string | null;
+    telefon: string | null;
+    packageType: string | null;
+    featured: boolean | null;
+    monthlyInquiryLimit: number | null;
+    packageValidUntil: string | null;
+    isActive: boolean | null;
+  }> = [];
+
+  try {
+    companies = await db
+      .select({
+        id: producenci.id,
+        nazwa: producenci.nazwa,
+        email: producenci.email,
+        telefon: producenci.telefon,
+        packageType: producenci.packageType,
+        featured: producenci.featured,
+        monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+        packageValidUntil: producenci.packageValidUntil,
+        isActive: producenci.isActive,
+      })
+      .from(producenci)
+      .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
+      .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
+  } catch {
+    const companiesFallback = await db
+      .select({
+        id: producenci.id,
+        nazwa: producenci.nazwa,
+        email: producenci.email,
+        telefon: producenci.telefon,
+        packageType: producenci.packageType,
+        featured: producenci.featured,
+        monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+        isActive: producenci.isActive,
+      })
+      .from(producenci)
+      .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
+      .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
+
+    companies = companiesFallback.map((company) => ({
+      ...company,
+      packageValidUntil: null,
+    }));
+  }
+
+  const orders = await db
+    .select({
+      id: packageOrders.id,
+      createdAt: packageOrders.createdAt,
+      paidAt: packageOrders.paidAt,
+      status: packageOrders.status,
+      provider: packageOrders.provider,
+      packageType: packageOrders.packageType,
+      amountGross: packageOrders.amountGross,
+      billingCycleMonths: packageOrders.billingCycleMonths,
+      companyId: producenci.id,
+      companyName: producenci.nazwa,
+      buyerName: packageOrders.buyerName,
+      buyerEmail: packageOrders.buyerEmail,
+      buyerPhone: packageOrders.buyerPhone,
+      buyerCompanyName: packageOrders.buyerCompanyName,
+      buyerTaxId: packageOrders.buyerTaxId,
+      buyerAddressLine1: packageOrders.buyerAddressLine1,
+      buyerPostalCode: packageOrders.buyerPostalCode,
+      buyerCity: packageOrders.buyerCity,
+      buyerCountry: packageOrders.buyerCountry,
+      accessValidUntil: packageOrders.accessValidUntil,
+    })
+    .from(packageOrders)
+    .innerJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .orderBy(desc(packageOrders.createdAt))
+    .limit(200);
+
+  return { companies, orders };
+}
+
 export async function getAdminCompanies() {
   const db = getDb();
 
@@ -585,7 +699,21 @@ export async function getCompanyById(id: number) {
   const db = getDb();
 
   const rows = await db
-    .select()
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwoId: producenci.wojewodztwoId,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      isActive: producenci.isActive,
+      createdAt: producenci.createdAt,
+      packageType: producenci.packageType,
+      monthlyInquiryLimit: producenci.monthlyInquiryLimit,
+      monthlyInquiryCount: producenci.monthlyInquiryCount,
+    })
     .from(producenci)
     .where(eq(producenci.id, id));
 
