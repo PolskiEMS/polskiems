@@ -323,7 +323,7 @@ function drawMiniInfoBox(
 function drawStandardReport(doc: any, data: ReportPdfData) {
   let y = 245;
 
-  drawSectionTitle(doc, "Podsumowanie");
+  drawSectionTitle(doc, "Podsumowanie", y);
   y += 24;
 
   doc
