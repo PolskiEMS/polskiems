@@ -9,7 +9,7 @@ const packages = [
     price: '0 zł / mies.',
     features: [
       'Ograniczona widoczność firmy w katalogu',
-      'Podstawowa Wizytówka',
+      '❌ ograniczone dane firmy',
       'Start bez opłat miesięcznych',
     ]
   },
@@ -21,8 +21,8 @@ const packages = [
     price: '199 zł / mies.',
     features: [
       'Większa widoczność firmy w katalogu',
-      'Możliwość otrzymywania do 10 zapytań miesięcznie',
       'Pełne dane kontaktowe',
+      '🔥 Do 10 zapytań ofertowych miesięcznie',
       '🔥 Wyróżnienie w katalogu',
       '📈 Miesięczny raport skuteczności',
     ]
