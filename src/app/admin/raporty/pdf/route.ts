@@ -41,11 +41,11 @@ function drawFooter(doc: any, contentWidth: number, now: Date) {
   doc
     .fillColor("#9ca3af")
     .font("Roboto")
-    .fontSize(9)
+    .fontSize(8.5)
     .text(
       `Raport wygenerowany automatycznie | PolskiEMS.pl | ${formatDate(now)}`,
       50,
-      790,
+      800,
       {
         width: contentWidth,
         align: "center",
@@ -59,26 +59,28 @@ function drawHeader(doc: any, data: ReportPdfData, logoPath: string) {
   const badgeBg = data.isPremium ? "#6d28d9" : "#dbeafe";
   const badgeText = data.isPremium ? "#ffffff" : "#1d4ed8";
 
-  doc.roundedRect(40, 35, data.pageWidth - 80, 140, 18).fill(headerBg);
+  doc.roundedRect(40, 32, data.pageWidth - 80, 120, 18).fill(headerBg);
 
-  doc.image(logoPath, 65, 52, {
-    fit: [92, 92],
+  doc.image(logoPath, 62, 46, {
+    fit: [78, 78],
+    align: "center",
+    valign: "center",
   });
 
   doc
     .fillColor(accent)
     .font("Roboto-Bold")
-    .fontSize(24)
-    .text("Raport PolskiEMS", 180, 58, {
-      width: 260,
+    .fontSize(22)
+    .text("Raport PolskiEMS", 160, 50, {
+      width: 250,
       align: "left",
     });
 
   doc
     .fillColor("#111827")
     .font("Roboto-Bold")
-    .fontSize(16)
-    .text(data.companyName, 180, 90, {
+    .fontSize(15)
+    .text(data.companyName, 160, 80, {
       width: 260,
       align: "left",
     });
@@ -86,78 +88,82 @@ function drawHeader(doc: any, data: ReportPdfData, logoPath: string) {
   doc
     .fillColor("#6b7280")
     .font("Roboto")
-    .fontSize(10.5)
-    .text(`Zakres raportu: ${data.reportRangeLabel}`, 180, 114);
-
-  doc
-    .fillColor("#6b7280")
-    .font("Roboto")
-    .fontSize(10.5)
-    .text("Aktywność profilu firmy w katalogu PolskiEMS", 180, 130, {
+    .fontSize(10)
+    .text(`Zakres raportu: ${data.reportRangeLabel}`, 160, 102, {
       width: 260,
       align: "left",
     });
 
-  doc.roundedRect(455, 58, 90, 26, 13).fill(badgeBg);
+  doc
+    .fillColor("#6b7280")
+    .font("Roboto")
+    .fontSize(10)
+    .text("Aktywność profilu firmy w katalogu PolskiEMS", 160, 118, {
+      width: 280,
+      align: "left",
+    });
+
+  doc.roundedRect(448, 50, 96, 26, 13).fill(badgeBg);
 
   doc
     .fillColor(badgeText)
     .font("Roboto-Bold")
     .fontSize(10)
-    .text(data.isPremium ? "PREMIUM" : "STANDARD", 455, 66, {
-      width: 90,
+    .text(data.isPremium ? "PREMIUM" : "STANDARD", 448, 58, {
+      width: 96,
       align: "center",
     });
 }
 
 function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
-  const y = 190;
+  const y = 168;
 
-  doc.roundedRect(50, y, data.contentWidth, 72, 14).fillAndStroke("#ffffff", "#e5e7eb");
+  doc.roundedRect(50, y, data.contentWidth, 58, 12).fillAndStroke("#ffffff", "#e5e7eb");
 
   doc
     .fillColor("#111827")
     .font("Roboto-Bold")
-    .fontSize(11)
-    .text("Dane firmy", 66, y + 14);
+    .fontSize(10.5)
+    .text("Dane firmy", 64, y + 10);
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(10)
-    .text(`Firma: ${data.companyName}`, 66, y + 34, { width: 220 });
+    .fontSize(9.6)
+    .text(`Firma: ${data.companyName}`, 64, y + 28, { width: 180 });
 
-  doc.text(`Pakiet: ${data.packageType.toUpperCase()}`, 66, y + 50, {
-    width: 220,
+  doc.text(`Pakiet: ${data.packageType.toUpperCase()}`, 64, y + 42, {
+    width: 180,
   });
 
-  let rightY = y + 34;
+  let rightX = 250;
+  let rightY = y + 18;
 
   if (data.companyWebsite) {
-    doc.text(`WWW: ${data.companyWebsite}`, 310, rightY, { width: 230 });
-    rightY += 16;
+    doc.text(`WWW: ${data.companyWebsite}`, rightX, rightY, { width: 290 });
+    rightY += 14;
   }
 
   if (data.companyEmail) {
-    doc.text(`Email: ${data.companyEmail}`, 310, rightY, { width: 230 });
-    rightY += 16;
+    doc.text(`Email: ${data.companyEmail}`, rightX, rightY, { width: 290 });
+    rightY += 14;
   }
 
   if (data.companyPhone) {
-    doc.text(`Telefon: ${data.companyPhone}`, 310, rightY, { width: 230 });
+    doc.text(`Telefon: ${data.companyPhone}`, rightX, rightY, { width: 290 });
   }
 }
 
-function drawSectionTitle(doc: any, title: string, y: number) {
+function drawSectionTitle(doc: any, title: string, y: number, accent = "#111827") {
   doc
-    .fillColor("#111827")
+    .fillColor(accent)
     .font("Roboto-Bold")
-    .fontSize(14)
+    .fontSize(12.5)
     .text(title, 50, y);
 
   doc
-    .moveTo(50, y + 20)
-    .lineTo(545, y + 20)
+    .moveTo(50, y + 18)
+    .lineTo(545, y + 18)
     .strokeColor("#e5e7eb")
     .lineWidth(1)
     .stroke();
@@ -171,20 +177,20 @@ function drawKpiCardsStandard(doc: any, data: ReportPdfData, y: number) {
     { label: "Łączny CTR", value: `${data.totalCtrPct.toFixed(2)}%` },
   ];
 
-  const cardWidth = 115;
-  const cardHeight = 78;
-  const gap = 12;
+  const cardWidth = 114;
+  const cardHeight = 62;
+  const gap = 13;
 
   cards.forEach((card, index) => {
     const x = 50 + index * (cardWidth + gap);
 
-    doc.roundedRect(x, y, cardWidth, cardHeight, 12).fillAndStroke("#ffffff", "#dbeafe");
+    doc.roundedRect(x, y, cardWidth, cardHeight, 10).fillAndStroke("#ffffff", "#dbeafe");
 
     doc
       .fillColor("#6b7280")
       .font("Roboto")
-      .fontSize(9.5)
-      .text(card.label, x, y + 14, {
+      .fontSize(8.8)
+      .text(card.label, x, y + 11, {
         width: cardWidth,
         align: "center",
       });
@@ -192,8 +198,8 @@ function drawKpiCardsStandard(doc: any, data: ReportPdfData, y: number) {
     doc
       .fillColor("#111827")
       .font("Roboto-Bold")
-      .fontSize(22)
-      .text(card.value, x, y + 34, {
+      .fontSize(18)
+      .text(card.value, x, y + 28, {
         width: cardWidth,
         align: "center",
       });
@@ -214,19 +220,19 @@ function drawKpiCardsPremium(doc: any, data: ReportPdfData, y: number) {
   ];
 
   const cardWidth = 90;
-  const cardHeight = 82;
+  const cardHeight = 66;
   const gap = 10;
 
   cards.forEach((card, index) => {
     const x = 50 + index * (cardWidth + gap);
 
-    doc.roundedRect(x, y, cardWidth, cardHeight, 12).fillAndStroke("#ffffff", "#ddd6fe");
+    doc.roundedRect(x, y, cardWidth, cardHeight, 10).fillAndStroke("#ffffff", "#ddd6fe");
 
     doc
       .fillColor("#7c3aed")
       .font("Roboto")
-      .fontSize(9)
-      .text(card.label, x, y + 14, {
+      .fontSize(8.5)
+      .text(card.label, x, y + 10, {
         width: cardWidth,
         align: "center",
       });
@@ -234,8 +240,8 @@ function drawKpiCardsPremium(doc: any, data: ReportPdfData, y: number) {
     doc
       .fillColor("#111827")
       .font("Roboto-Bold")
-      .fontSize(20)
-      .text(card.value, x, y + 38, {
+      .fontSize(16.5)
+      .text(card.value, x, y + 29, {
         width: cardWidth,
         align: "center",
       });
@@ -250,59 +256,97 @@ function drawActivityChart(
   const maxValue = Math.max(...items.map((i) => i.value), 1);
 
   items.forEach((item, index) => {
-    const rowY = y + index * 34;
-    const barX = 170;
-    const barW = 290;
-    const barH = 14;
+    const rowY = y + index * 26;
+    const barX = 165;
+    const barW = 280;
+    const barH = 12;
     const fillW = (item.value / maxValue) * barW;
 
     doc
       .fillColor("#374151")
       .font("Roboto")
-      .fontSize(10.5)
-      .text(item.label, 50, rowY + 1, { width: 105 });
+      .fontSize(9.8)
+      .text(item.label, 50, rowY + 1, { width: 95 });
 
-    doc.roundedRect(barX, rowY, barW, barH, 7).fill("#e5e7eb");
+    doc.roundedRect(barX, rowY, barW, barH, 6).fill("#e5e7eb");
 
     if (item.value > 0) {
-      doc.roundedRect(barX, rowY, fillW, barH, 7).fill(item.color);
+      doc.roundedRect(barX, rowY, fillW, barH, 6).fill(item.color);
     }
 
     doc
       .fillColor("#111827")
       .font("Roboto-Bold")
-      .fontSize(10.5)
-      .text(String(item.value), 480, rowY, {
+      .fontSize(9.8)
+      .text(String(item.value), 468, rowY, {
         width: 50,
         align: "right",
       });
   });
 }
 
-function drawStandardReport(doc: any, data: ReportPdfData) {
-  let y = 285;
+function drawMiniInfoBox(
+  doc: any,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  title: string,
+  text: string,
+  accentColor: string,
+  bg = "#f8fafc",
+  border = "#e5e7eb"
+) {
+  doc.roundedRect(x, y, w, h, 10).fillAndStroke(bg, border);
 
-  drawSectionTitle(doc, "Podsumowanie", y);
-  y += 32;
+  doc
+    .fillColor(accentColor)
+    .font("Roboto-Bold")
+    .fontSize(9.6)
+    .text(title, x + 10, y + 10, {
+      width: w - 20,
+      align: "left",
+    });
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(10.5)
+    .fontSize(8.8)
+    .text(text, x + 10, y + 26, {
+      width: w - 20,
+      height: h - 34,
+      align: "left",
+      ellipsis: true,
+    });
+}
+
+function drawStandardReport(doc: any, data: ReportPdfData) {
+  let y = 245;
+
+  drawSectionTitle(doc, "Podsumowanie");
+  y += 24;
+
+  doc
+    .fillColor("#4b5563")
+    .font("Roboto")
+    .fontSize(9.8)
     .text(
-      "Raport pokazuje podstawową aktywność użytkowników wokół profilu firmy w katalogu PolskiEMS. Standard zawiera najważniejsze wskaźniki oraz podstawowe wskazówki dotyczące skuteczności profilu.",
+      "Standard zawiera podstawowe wskaźniki aktywności profilu i krótkie wskazówki optymalizacyjne.",
       50,
       y,
-      { width: data.contentWidth, align: "left" }
+      {
+        width: data.contentWidth,
+        align: "left",
+      }
     );
 
-  y += 62;
+  y += 30;
 
   drawKpiCardsStandard(doc, data, y);
-  y += 102;
+  y += 82;
 
   drawSectionTitle(doc, "Aktywność profilu", y);
-  y += 34;
+  y += 28;
 
   drawActivityChart(
     doc,
@@ -314,117 +358,127 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     y
   );
 
-  y += 118;
+  y += 92;
 
-  drawSectionTitle(doc, "Interpretacja wyników", y);
-  y += 32;
+  drawSectionTitle(doc, "Interpretacja", y);
+  y += 26;
 
   const interpretation =
     data.totalCtrPct >= 8
-      ? "Profil generuje dobrą aktywność i skutecznie kieruje użytkowników do kontaktu lub strony WWW."
+      ? "Profil notuje dobrą aktywność i skutecznie kieruje do kontaktu."
       : data.totalCtrPct > 0
-      ? "Profil generuje podstawowe zainteresowanie, ale nadal istnieje przestrzeń do zwiększenia liczby interakcji."
-      : "Profil jest wyświetlany, ale nie generuje jeszcze kliknięć do kontaktu ani strony WWW.";
+      ? "Profil generuje ruch, ale można zwiększyć liczbę interakcji."
+      : "Profil ma wyświetlenia, ale nie generuje jeszcze kliknięć.";
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(10.5)
+    .fontSize(9.8)
     .text(interpretation, 50, y, {
       width: data.contentWidth,
       align: "left",
     });
 
-  y += 52;
-
-  drawSectionTitle(doc, "Podstawowe rekomendacje", y);
   y += 34;
 
-  const recs = [
-    {
-      title: "Opis profilu",
-      text: "Doprecyzuj zakres usług i specjalizację firmy.",
-    },
-    {
-      title: "CTA",
-      text: "Dodaj krótką zachętę do kontaktu lub wysłania zapytania.",
-    },
-    {
-      title: "Dane kontaktowe",
-      text: "Upewnij się, że WWW i email są aktualne i widoczne.",
-    },
-  ];
+  drawSectionTitle(doc, "Podstawowe rekomendacje", y);
+  y += 28;
 
   const boxW = 155;
-  const boxGap = 15;
+  const boxH = 54;
+  const gap = 15;
 
-  recs.forEach((rec, i) => {
-    const x = 50 + i * (boxW + boxGap);
+  drawMiniInfoBox(
+    doc,
+    50,
+    y,
+    boxW,
+    boxH,
+    "Opis profilu",
+    "Doprecyzuj zakres usług i specjalizację firmy.",
+    "#1d4ed8",
+    "#f8fbff",
+    "#dbeafe"
+  );
 
-    doc.roundedRect(x, y, boxW, 72, 12).fillAndStroke("#f8fafc", "#e5e7eb");
+  drawMiniInfoBox(
+    doc,
+    50 + boxW + gap,
+    y,
+    boxW,
+    boxH,
+    "CTA",
+    "Dodaj krótką zachętę do kontaktu lub zapytania.",
+    "#1d4ed8",
+    "#f8fbff",
+    "#dbeafe"
+  );
 
-    doc
-      .fillColor("#111827")
-      .font("Roboto-Bold")
-      .fontSize(10)
-      .text(rec.title, x + 12, y + 12, { width: boxW - 24 });
+  drawMiniInfoBox(
+    doc,
+    50 + (boxW + gap) * 2,
+    y,
+    boxW,
+    boxH,
+    "Dane kontaktowe",
+    "Sprawdź aktualność WWW i adresu email.",
+    "#1d4ed8",
+    "#f8fbff",
+    "#dbeafe"
+  );
 
-    doc
-      .fillColor("#6b7280")
-      .font("Roboto")
-      .fontSize(9.2)
-      .text(rec.text, x + 12, y + 30, {
-        width: boxW - 24,
-        align: "left",
-      });
-  });
+  y += 72;
 
-  y += 94;
-
-  doc.roundedRect(50, y, data.contentWidth, 54, 12).fillAndStroke("#eff6ff", "#bfdbfe");
+  doc.roundedRect(50, y, data.contentWidth, 44, 10).fillAndStroke("#eff6ff", "#bfdbfe");
 
   doc
     .fillColor("#1d4ed8")
     .font("Roboto-Bold")
-    .fontSize(10.5)
-    .text("Rozszerz raport do Premium", 64, y + 12);
+    .fontSize(9.8)
+    .text("Rozszerz raport do Premium", 62, y + 10);
 
   doc
     .fillColor("#3b82f6")
     .font("Roboto")
-    .fontSize(9.5)
+    .fontSize(8.8)
     .text(
-      "Odblokuj bardziej szczegółową analizę, wskaźnik jakości profilu, rozbudowane rekomendacje i dodatkowe insighty.",
-      64,
-      y + 28,
-      { width: 430 }
+      "Odblokuj score profilu, insighty i bardziej szczegółowe rekomendacje.",
+      62,
+      y + 24,
+      {
+        width: 430,
+        align: "left",
+      }
     );
 }
 
 function drawPremiumReport(doc: any, data: ReportPdfData) {
-  let y = 285;
+  let y = 245;
 
-  drawSectionTitle(doc, "Podsumowanie Premium", y);
-  y += 32;
+  drawSectionTitle(doc, "Podsumowanie Premium", y, "#6d28d9");
+  y += 24;
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(10.5)
+    .fontSize(9.8)
     .text(
-      "Raport Premium zawiera rozszerzoną analizę skuteczności profilu wraz z dodatkowymi wskaźnikami i rekomendacjami optymalizacyjnymi.",
+      "Premium zawiera rozszerzoną analizę skuteczności profilu oraz dodatkowe insighty i rekomendacje.",
       50,
       y,
-      { width: data.contentWidth, align: "left" }
+      {
+        width: data.contentWidth,
+        align: "left",
+      }
     );
 
-  y += 56;
+  y += 30;
 
   drawKpiCardsPremium(doc, data, y);
-  y += 106;
+  y += 86;
 
-  drawSectionTitle(doc, "Aktywność i skuteczność", y);
-  y += 34;
+  drawSectionTitle(doc, "Aktywność i skuteczność", y, "#6d28d9");
+  y += 28;
 
   drawActivityChart(
     doc,
@@ -436,58 +490,81 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     y
   );
 
-  y += 118;
+  y += 92;
 
-  drawSectionTitle(doc, "Insighty Premium", y);
-  y += 30;
+  drawSectionTitle(doc, "Insighty Premium", y, "#6d28d9");
+  y += 28;
 
   const leadPotential =
     data.totalCtrPct >= 10 ? "Wysoki" : data.totalCtrPct > 0 ? "Średni" : "Niski";
 
-  const insights = [
-    `Łączny CTR profilu wynosi ${data.totalCtrPct.toFixed(2)}%.`,
-    `Potencjał leadowy: ${leadPotential}.`,
+  const insightBoxW = 155;
+  const insightGap = 15;
+  const insightBoxH = 56;
+
+  drawMiniInfoBox(
+    doc,
+    50,
+    y,
+    insightBoxW,
+    insightBoxH,
+    "Łączny CTR",
+    `${data.totalCtrPct.toFixed(2)}%`,
+    "#6d28d9",
+    "#faf5ff",
+    "#ddd6fe"
+  );
+
+  drawMiniInfoBox(
+    doc,
+    50 + insightBoxW + insightGap,
+    y,
+    insightBoxW,
+    insightBoxH,
+    "Potencjał leadowy",
+    leadPotential,
+    "#6d28d9",
+    "#faf5ff",
+    "#ddd6fe"
+  );
+
+  drawMiniInfoBox(
+    doc,
+    50 + (insightBoxW + insightGap) * 2,
+    y,
+    insightBoxW,
+    insightBoxH,
+    "Wniosek",
     data.totalCtrPct < 4
-      ? "Największa przestrzeń do poprawy dotyczy komunikacji oferty i CTA."
-      : "Profil osiąga poprawne wyniki i warto kontynuować dalszą optymalizację.",
-  ];
+      ? "Największa przestrzeń do poprawy dotyczy CTA i oferty."
+      : "Profil osiąga poprawne wyniki i ma potencjał wzrostu.",
+    "#6d28d9",
+    "#faf5ff",
+    "#ddd6fe"
+  );
 
-  insights.forEach((text, idx) => {
-    doc
-      .fillColor("#4b5563")
-      .font("Roboto")
-      .fontSize(10.3)
-      .text(`• ${text}`, 50, y + idx * 18, {
-        width: data.contentWidth,
-      });
-  });
+  y += 74;
 
-  y += 72;
-
-  drawSectionTitle(doc, "Rekomendacja Premium", y);
-  y += 32;
+  drawSectionTitle(doc, "AI rekomendacja", y, "#6d28d9");
+  y += 28;
 
   const recommendation =
     !data.companyWebsite || !data.companyEmail
-      ? "Uzupełnij wszystkie dane kontaktowe, ponieważ pełny profil zwiększa szansę na kontakt i buduje wiarygodność firmy."
+      ? "Uzupełnij wszystkie dane kontaktowe, aby zwiększyć wiarygodność i szansę na kontakt."
       : data.totalCtrPct >= 8
-      ? "Wyniki są dobre. Warto testować nowe wersje oferty, rozwijać opis firmy i utrzymywać pełną aktualność danych."
-      : "Warto przetestować bardziej konkretne komunikaty oferty, dodać mocniejsze CTA oraz rozbudować opis usług, aby zwiększyć CTR.";
+      ? "Wyniki są dobre. Warto testować nowe wersje oferty i utrzymywać aktualność profilu."
+      : "Przetestuj bardziej konkretne komunikaty oferty, mocniejsze CTA i rozbudowany opis usług.";
 
-  doc.roundedRect(50, y, data.contentWidth, 72, 12).fillAndStroke("#faf5ff", "#ddd6fe");
-
-  doc
-    .fillColor("#6d28d9")
-    .font("Roboto-Bold")
-    .fontSize(11)
-    .text("AI rekomendacja", 64, y + 12);
+  doc.roundedRect(50, y, data.contentWidth, 58, 10).fillAndStroke("#faf5ff", "#ddd6fe");
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(10)
-    .text(recommendation, 64, y + 30, {
-      width: data.contentWidth - 28,
+    .fontSize(9.8)
+    .text(recommendation, 62, y + 16, {
+      width: data.contentWidth - 24,
+      height: 28,
+      ellipsis: true,
       align: "left",
     });
 }
