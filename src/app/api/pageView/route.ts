@@ -2,10 +2,27 @@ import { NextResponse } from "next/server";
 import { pageViews } from "@/db/schema";
 import { getDb } from "@/lib/db";
 
+function normalizePageKey(pageRaw: string) {
+  const page = pageRaw.trim().toLowerCase();
+
+  if (page === "home" || page === "/") return "home";
+  if (page === "search" || page === "/wyszukaj") return "search";
+  if (
+    page === "all-producers" ||
+    page === "all-producer" ||
+    page === "/wszyscy-producenci" ||
+    page === "wszyscy-producenci"
+  ) {
+    return "all-producers";
+  }
+
+  return pageRaw.trim();
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const page = String(body?.page ?? "").trim();
+    const page = normalizePageKey(String(body?.page ?? ""));
     const visitorId = String(body?.visitorId ?? "").trim();
     const referrer = body?.referrer ? String(body.referrer) : null;
 

@@ -118,10 +118,28 @@ export async function getPageViewsStats(days = 30) {
   };
 
   const data = rows as unknown as Array<{ page: string; views: number }>;
+
+  const normalizePageKey = (pageRaw: string) => {
+    const page = (pageRaw || "").trim().toLowerCase();
+
+    if (page === "home" || page === "/") return "home";
+    if (page === "search" || page === "/wyszukaj") return "search";
+    if (
+      page === "all-producers" ||
+      page === "all-producer" ||
+      page === "/wszyscy-producenci" ||
+      page === "wszyscy-producenci"
+    ) {
+      return "all-producers";
+    }
+
+    return null;
+  };
   
   for (const row of data) {
-    if (row.page in result) {
-      result[row.page as keyof typeof result] = Number(row.views);
+    const normalizedPage = normalizePageKey(row.page);
+    if (normalizedPage) {
+      result[normalizedPage as keyof typeof result] += Number(row.views);
     }
   }
 
