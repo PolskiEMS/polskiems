@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     email: companyEmail,
     telefon: companyPhone || null,
     opis: companyDescription || null,
-    isActive: true,
+    isActive: false,
     featured: false,
     packageType: "free",
     monthlyInquiryLimit: 0,
