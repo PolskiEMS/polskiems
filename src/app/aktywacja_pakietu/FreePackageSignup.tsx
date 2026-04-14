@@ -6,9 +6,6 @@ import styles from './styles.module.css';
 export default function FreePackageSignup() {
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
-  const [website, setWebsite] = useState('');
-  const [phone, setPhone] = useState('');
-  const [description, setDescription] = useState('');
   const [sent, setSent] = useState(false);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -28,9 +25,9 @@ export default function FreePackageSignup() {
       </ol>
 
       <div className={styles.wordOption}>
-        <p className={styles.muted}>Opcja 2: Formularz zgłoszeniowy Word</p>
+        <p className={styles.muted}>Opcja 2: Formularz zgłoszeniowy Word (pakiet FREE)</p>
         <a href="/formularz_zgloszeniowy_firmy.docx" download className={styles.wordButton}>
-          Pobierz formularz zgłoszeniowy (Word)
+          Pobierz formularz zgłoszeniowy FREE (Word)
         </a>
         <p className={styles.mailHint}>
           Po wypełnieniu wyślij plik na adres:{' '}
@@ -48,21 +45,6 @@ export default function FreePackageSignup() {
         <label>
           Email kontaktowy
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
-
-        <label>
-          Strona www
-          <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://..." />
-        </label>
-
-        <label>
-          Telefon
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} />
-        </label>
-
-        <label className={styles.fullWidth}>
-          Krótki opis firmy
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} />
         </label>
 
         <button type="submit" className={styles.freeSubmitBtn}>Wyślij zgłoszenie FREE</button>
