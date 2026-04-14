@@ -658,7 +658,7 @@ export async function getAdminCompanies() {
       monthlyInquiryCount: producenci.monthlyInquiryCount,
     })
     .from(producenci)
-    .orderBy(asc(producenci.nazwa));
+    .orderBy(asc(producenci.isActive), asc(producenci.nazwa));
 }
 
 export async function getCompanyById(id: number) {
