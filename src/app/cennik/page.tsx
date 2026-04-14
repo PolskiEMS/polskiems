@@ -22,8 +22,9 @@ const packages = [
     features: [
       'Większa widoczność firmy w katalogu',
       'Możliwość otrzymywania do 10 zapytań miesięcznie',
-      'Logo + opis + strona www + nr telefonu',
-      'Wyróżnienie w katalogu'
+      'Pełne dane kontaktowe',
+      '🔥 Wyróżnienie w katalogu',
+      '📈 Miesięczny raport skuteczności',
     ]
   },
   {
