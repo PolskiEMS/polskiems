@@ -297,24 +297,31 @@ function drawMiniInfoBox(
   bg = "#f8fafc",
   border = "#e5e7eb"
 ) {
+  const paddingX = 12;
+  const titleY = y + 10;
+  const textY = y + 27;
+  const textWidth = w - paddingX * 2;
+
   doc.roundedRect(x, y, w, h, 10).fillAndStroke(bg, border);
 
   doc
     .fillColor(accentColor)
     .font("Roboto-Bold")
-    .fontSize(9.6)
-    .text(title, x + 10, y + 10, {
-      width: w - 20,
+    .fontSize(9.2)
+    .text(title, x + paddingX, titleY, {
+      width: textWidth,
       align: "left",
+      lineBreak: false,
+      ellipsis: true,
     });
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
-    .fontSize(8.8)
-    .text(text, x + 10, y + 26, {
-      width: w - 20,
-      height: h - 34,
+    .fontSize(8.3)
+    .text(text, x + paddingX, textY, {
+      width: textWidth,
+      height: h - 32,
       align: "left",
       ellipsis: true,
     });
@@ -385,7 +392,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
   y += 28;
 
   const boxW = 155;
-  const boxH = 54;
+  const boxH = 60;
   const gap = 15;
 
   drawMiniInfoBox(
@@ -395,7 +402,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     boxW,
     boxH,
     "Opis profilu",
-    "Doprecyzuj zakres usług i specjalizację firmy.",
+    "Doprecyzuj zakres usług.",
     "#1d4ed8",
     "#f8fbff",
     "#dbeafe"
@@ -408,7 +415,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     boxW,
     boxH,
     "CTA",
-    "Dodaj krótką zachętę do kontaktu lub zapytania.",
+    "Dodaj krótką zachętę do kontaktu.",
     "#1d4ed8",
     "#f8fbff",
     "#dbeafe"
@@ -421,7 +428,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     boxW,
     boxH,
     "Dane kontaktowe",
-    "Sprawdź aktualność WWW i adresu email.",
+    "Sprawdź WWW i email.",
     "#1d4ed8",
     "#f8fbff",
     "#dbeafe"
@@ -442,7 +449,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     .font("Roboto")
     .fontSize(8.8)
     .text(
-      "Odblokuj score profilu, insighty i bardziej szczegółowe rekomendacje.",
+      "Odblokuj wynik profilu, wnioski i szczegółowe rekomendacje.",
       62,
       y + 24,
       {
@@ -463,7 +470,7 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     .font("Roboto")
     .fontSize(9.8)
     .text(
-      "Premium zawiera rozszerzoną analizę skuteczności profilu oraz dodatkowe insighty i rekomendacje.",
+      "Premium zawiera rozszerzoną analizę skuteczności profilu oraz dodatkowe wnioski i rekomendacje.",
       50,
       y,
       {
@@ -498,9 +505,9 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
   const leadPotential =
     data.totalCtrPct >= 10 ? "Wysoki" : data.totalCtrPct > 0 ? "Średni" : "Niski";
 
-  const insightBoxW = 155;
-  const insightGap = 15;
-  const insightBoxH = 52;
+  const insightBoxW = 158;
+  const insightGap = 10;
+  const insightBoxH = 60;
 
   drawMiniInfoBox(
     doc,
@@ -537,7 +544,7 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     "Wniosek",
     data.totalCtrPct < 4
       ? "Największa przestrzeń do poprawy dotyczy CTA i oferty."
-      : "Profil osiąga poprawne wyniki i ma potencjał wzrostu.",
+      : "Profil ma poprawne wyniki i potencjał wzrostu.",
     "#6d28d9",
     "#faf5ff",
     "#ddd6fe"
@@ -549,35 +556,44 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
   y += 24;
 
   const recommendation =
-    !data.companyWebsite || !data.companyEmail
-      ? "Uzupełnij dane kontaktowe, aby zwiększyć wiarygodność profilu."
-      : data.totalCtrPct >= 8
-      ? "Wyniki są dobre. Testuj nowe warianty oferty i utrzymuj aktualność profilu."
-      : "Wzmocnij komunikat oferty, dodaj mocniejsze CTA i rozbuduj opis usług.";
+  !data.companyWebsite || !data.companyEmail
+    ? "Uzupełnij dane kontaktowe, aby zwiększyć wiarygodność profilu."
+    : data.totalCtrPct >= 8
+    ? "Wyniki są dobre. Testuj nowe warianty oferty i aktualizuj profil."
+    : "Wzmocnij komunikat oferty, dodaj CTA i rozbuduj opis usług.";
 
-  const recommendationTextWidth = data.contentWidth - 24;
+const recommendationTextWidth = data.contentWidth - 28;
 
-  doc.font("Roboto").fontSize(9.8);
-  const recommendationTextHeight = doc.heightOfString(recommendation, {
-    width: recommendationTextWidth,
+doc.font("Roboto").fontSize(9.6);
+const recommendationTextHeight = doc.heightOfString(recommendation, {
+  width: recommendationTextWidth,
+  align: "left",
+});
+
+const recommendationBoxHeight = Math.max(56, recommendationTextHeight + 30);
+
+doc
+  .roundedRect(50, y, data.contentWidth, recommendationBoxHeight, 10)
+  .fillAndStroke("#faf5ff", "#ddd6fe");
+
+doc
+  .fillColor("#6d28d9")
+  .font("Roboto-Bold")
+  .fontSize(9.5)
+  .text("Rekomendacja:", 62, y + 10, {
+    width: 120,
     align: "left",
   });
 
-  const recommendationBoxHeight = Math.max(52, recommendationTextHeight + 24);
-
-  doc
-    .roundedRect(50, y, data.contentWidth, recommendationBoxHeight, 10)
-    .fillAndStroke("#faf5ff", "#ddd6fe");
-
-  doc
-    .fillColor("#4b5563")
-    .font("Roboto")
-    .fontSize(9.8)
-    .text(recommendation, 62, y + 12, {
-      width: recommendationTextWidth,
-      align: "left",
-    });
-}
+doc
+  .fillColor("#4b5563")
+  .font("Roboto")
+  .fontSize(9.4)
+  .text(recommendation, 62, y + 24, {
+    width: recommendationTextWidth,
+    align: "left",
+  });
+  
 export async function GET(req: NextRequest) {
   try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
