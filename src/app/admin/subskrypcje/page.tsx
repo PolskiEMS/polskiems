@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { getAdminSubscriptions } from "@/lib/actions";
+import {
+  getAdminSubscriptions,
+  updateCompanyPackageValidityAction,
+} from "@/lib/actions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +30,7 @@ export default async function AdminSubscriptionsPage() {
                   <th>Limit zapytań</th>
                   <th>Ważny do</th>
                   <th>Status</th>
+                  <th>Zmień okres</th>
                 </tr>
               </thead>
               <tbody>
@@ -41,6 +45,23 @@ export default async function AdminSubscriptionsPage() {
                     <td>{company.monthlyInquiryLimit ?? 0}</td>
                     <td>{company.packageValidUntil || "-"}</td>
                     <td>{company.isActive ? "Aktywna" : "Nieaktywna"}</td>
+                    <td>
+                      <form
+                        action={updateCompanyPackageValidityAction}
+                        className={styles.periodForm}
+                      >
+                        <input type="hidden" name="companyId" value={company.id} />
+                        <input
+                          type="date"
+                          name="packageValidUntil"
+                          defaultValue={company.packageValidUntil?.split(" ")[0] || ""}
+                          className={styles.periodInput}
+                        />
+                        <button type="submit" className={styles.periodBtn}>
+                          Zapisz
+                        </button>
+                      </form>
+                    </td>
                   </tr>
                 ))}
               </tbody>

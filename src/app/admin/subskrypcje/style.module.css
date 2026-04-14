@@ -48,6 +48,30 @@
   white-space: nowrap;
 }
 
+.periodForm {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.periodInput {
+  min-width: 150px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.periodBtn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+}
+
 .bottomBack {
   margin-top: 24px;
 }

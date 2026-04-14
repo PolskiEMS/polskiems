@@ -24,7 +24,7 @@ function getFeaturedLabel(featured: boolean | null | undefined) {
 }
 
 function getStatusLabel(isActive: boolean | null | undefined) {
-  return isActive ? "Aktywna" : "Nieaktywna";
+  return isActive ? "Aktywna" : "Oczekuje akceptacji";
 }
 
 function getLeadUsageLabel(
@@ -39,6 +39,7 @@ function getLeadUsageLabel(
 
 export default async function AdminCompaniesPage() {
   const companies = await getAdminCompanies();
+  const pendingCompanies = companies.filter((company) => !company.isActive);
 
   return (
     <div className={styles.page}>
@@ -50,6 +51,12 @@ export default async function AdminCompaniesPage() {
             Dodaj firmę
           </Link>
         </div>
+
+        {pendingCompanies.length > 0 && (
+          <div className={styles.pendingBox}>
+            <strong>Nowe zgłoszenia do akceptacji:</strong> {pendingCompanies.length}
+          </div>
+        )}
 
         <div className={styles.tableWrap}>
           <table className={styles.table}>

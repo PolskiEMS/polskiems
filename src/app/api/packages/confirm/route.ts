@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
   await db
     .update(producenci)
     .set({
+      isActive: true,
       packageType: order.packageType,
       featured: true,
       monthlyInquiryLimit: PACKAGE_LIMIT[order.packageType],
