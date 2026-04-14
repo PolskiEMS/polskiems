@@ -17,11 +17,12 @@ const packages = [
     key: 'standard',
     name: 'STANDARD',
     ctaLabel: 'Wybierz Standard',
+    badge: 'Najczęściej wybierany',
     price: '199 zł / mies.',
     features: [
       'Większa widoczność firmy w katalogu',
       'Możliwość otrzymywania do 10 zapytań miesięcznie',
-      'Logo + opis + strona www',
+      'Logo + opis + strona www + nr telefonu',
       'Wyróżnienie w katalogu'
     ]
   },
@@ -29,12 +30,14 @@ const packages = [
     key: 'premium',
     name: 'PREMIUM',
     ctaLabel: 'Wybierz Premium',
+    badge: 'Dla poważnych Firm',
     price: '299 zł / mies.',
     features: [
       '🔥 Nielimitowane zapytania ofertowe',
       '🥇 TOP pozycja w katalogu',
       'Priorytetowa obsługa leadów',
-      'Wyróżnienie w katalogu (2–3x więcej wyświetleń)'
+      'Wyróżnienie w katalogu (2–3x więcej wyświetleń)',
+      'Pełna wizytówka: opis + strona www + nr telefonu'
     ]
   }
 ];
@@ -79,6 +82,7 @@ const CennikPage = () => {
           >
             <div className={styles.packageHeader}>
               <h2>{item.name}</h2>
+              {'badge' in item && item.badge && <span className={styles.packageBadge}>{item.badge}</span>}
             </div>
             <div className={styles.price}>{item.price}</div>
             <ul>

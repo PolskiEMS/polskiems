@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import { and, eq, gte, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { companyEvents, producenci } from "@/db/schema";
+import { companyEvents, inquiryRecipients, producenci } from "@/db/schema";
 import { sendMonthlyReportEmail } from "@/lib/mail";
 
 export const runtime = "nodejs";
@@ -17,9 +17,10 @@ function getPeriodLabel() {
 function createPdfBuffer(input: {
   companyName: string;
   periodLabel: string;
+  packageType: "standard" | "premium";
   views: number;
   websiteClicks: number;
-  emailClicks: number;
+  inquiriesCount: number;
 }) {
   return new Promise<Buffer>((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });
@@ -33,16 +34,34 @@ function createPdfBuffer(input: {
     doc.moveDown(0.8);
     doc.fontSize(12).text(`Firma: ${input.companyName}`);
     doc.text(`Okres: ${input.periodLabel}`);
+    doc.text(`Pakiet: ${input.packageType.toUpperCase()}`);
 
     doc.moveDown(1.2);
-    doc.fontSize(14).text("Podsumowanie");
+    const conversionRate = input.views > 0
+      ? `${((input.inquiriesCount / input.views) * 100).toFixed(2)}%`
+      : "0.00%";
+
+    if (input.packageType === "premium") {
+      doc.fontSize(14).text("📈 Zaawansowana analityka + raport miesięczny");
+      doc.moveDown(0.5);
+      doc.fontSize(12).text(`Wyświetlenia i kliknięcia: ${input.views} / ${input.websiteClicks}`);
+      doc.text(`Liczba zapytań i konwersja: ${input.inquiriesCount} / ${conversionRate}`);
+      doc.moveDown(0.8);
+      doc.fontSize(12).text("Rekomendacje optymalizacji profilu:");
+      doc.moveDown(0.3);
+      doc.fontSize(11).text("• Utrzymuj aktualne dane kontaktowe i ofertę.");
+      doc.text("• Wyróżniaj konkretne realizacje oraz przewagi technologiczne.");
+      doc.text("• Testuj różne opisy oferty, aby zwiększyć liczbę zapytań.");
+    } else {
+      doc.fontSize(14).text("📊 Miesięczny raport skuteczności profilu");
+      doc.moveDown(0.5);
+      doc.fontSize(12).text(`Liczba wyświetleń: ${input.views}`);
+      doc.text(`Liczba zapytań: ${input.inquiriesCount}`);
+      doc.text(`Zainteresowanie ofertą: ${conversionRate}`);
+    }
+
     doc.moveDown(0.5);
-
-    doc.fontSize(12).text(`Wyświetlenia profilu: ${input.views}`);
-    doc.text(`Kliknięcia strony WWW: ${input.websiteClicks}`);
-    doc.text(`Kliknięcia e-mail: ${input.emailClicks}`);
-
-    doc.moveDown(1);
+    doc.moveDown(0.7);
     doc.fontSize(11).fillColor("#666").text("Raport wygenerowany automatycznie przez PolskiEMS.");
 
     doc.end();
@@ -86,7 +105,6 @@ export async function POST(req: NextRequest) {
       .select({
         views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
         websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
-        emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
       })
       .from(companyEvents)
       .where(
@@ -96,14 +114,28 @@ export async function POST(req: NextRequest) {
         )
       );
 
-    const stats = statsRows[0] || { views: 0, websiteClicks: 0, emailClicks: 0 };
+    const inquiriesRows = await db
+      .select({
+        inquiriesCount: sql<number>`COUNT(*)`,
+      })
+      .from(inquiryRecipients)
+      .where(
+        and(
+          eq(inquiryRecipients.companyId, company.id),
+          gte(inquiryRecipients.sentAt, sinceSql)
+        )
+      );
+
+    const stats = statsRows[0] || { views: 0, websiteClicks: 0 };
+    const inquiriesCount = Number(inquiriesRows[0]?.inquiriesCount ?? 0);
 
     const pdfBuffer = await createPdfBuffer({
       companyName: company.nazwa,
       periodLabel: getPeriodLabel(),
+      packageType: company.packageType as "standard" | "premium",
       views: Number(stats.views ?? 0),
       websiteClicks: Number(stats.websiteClicks ?? 0),
-      emailClicks: Number(stats.emailClicks ?? 0),
+      inquiriesCount,
     });
 
     await sendMonthlyReportEmail({
