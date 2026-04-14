@@ -11,9 +11,19 @@ type PackageType = "free" | PaidPackage;
 type Provider = "stripe" | "przelewy24";
 type BillingCycleMonths = 1 | 3 | 6 | 12;
 
-const PACKAGE_PRICE: Record<PaidPackage, number> = {
-  standard: 199,
-  premium: 299,
+const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
+  standard: {
+    1: 199,
+    3: 549,
+    6: 999,
+    12: 1799,
+  },
+  premium: {
+    1: 299,
+    3: 849,
+    6: 1599,
+    12: 2999,
+  },
 };
 
 type PackageCheckoutProps = {
@@ -61,8 +71,13 @@ export default function PackageCheckout({
   const [isLoading, setIsLoading] = useState(false);
 
   const total = useMemo(
-    () => PACKAGE_PRICE[selectedPackage] * billingCycleMonths,
+    () => PACKAGE_PRICE_TOTAL[selectedPackage][billingCycleMonths],
     [selectedPackage, billingCycleMonths]
+  );
+
+  const monthlyAverage = useMemo(
+    () => Math.round((total / billingCycleMonths) * 100) / 100,
+    [total, billingCycleMonths]
   );
 
   async function handleCheckout() {
@@ -175,8 +190,8 @@ export default function PackageCheckout({
             value={selectedPackage}
             onChange={(e) => setSelectedPackage(e.target.value as PaidPackage)}
           >
-            <option value="standard">STANDARD — 199 zł / mies.</option>
-            <option value="premium">PREMIUM — 299 zł / mies.</option>
+            <option value="standard">STANDARD — od 149.92 zł / mies.</option>
+            <option value="premium">PREMIUM — od 249.92 zł / mies.</option>
           </select>
         </label>
 
@@ -187,9 +202,9 @@ export default function PackageCheckout({
             onChange={(e) => setBillingCycleMonths(Number(e.target.value) as BillingCycleMonths)}
           >
             <option value={1}>1 miesiąc</option>
-            <option value={3}>3 miesiące</option>
-            <option value={6}>6 miesięcy</option>
-            <option value={12}>12 miesięcy</option>
+            <option value={3}>3 miesiące (oszczędzasz)</option>
+            <option value={6}>6 miesięcy (większa zniżka)</option>
+            <option value={12}>12 miesięcy (najlepsza cena)</option>
           </select>
         </label>
 
@@ -342,6 +357,8 @@ export default function PackageCheckout({
       <div className={styles.checkoutSummary}>
         Podsumowanie: <strong>{selectedPackage.toUpperCase()}</strong> —{" "}
         <strong>{total} zł brutto / {billingCycleMonths} mies.</strong>
+        <br />
+        Średnia miesięczna: <strong>{monthlyAverage.toFixed(2)} zł / mies.</strong>
       </div>
 
       <div className={styles.checkoutActions}>

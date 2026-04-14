@@ -20,6 +20,7 @@ const packages = [
     badge: 'Najczęściej wybierany',
     price: '199 zł / mies.',
     features: [
+      'Cennik okresów: 1 mies. 199 zł, 3 mies. 549 zł, 6 mies. 999 zł, 12 mies. 1799 zł',
       'Większa widoczność firmy w katalogu',
       'Pełne dane kontaktowe',
       '🔥 Do 10 zapytań ofertowych miesięcznie',
@@ -34,6 +35,7 @@ const packages = [
     badge: 'Dla poważnych Firm',
     price: '299 zł / mies.',
     features: [
+      'Cennik okresów: 1 mies. 299 zł, 3 mies. 849 zł, 6 mies. 1599 zł, 12 mies. 2999 zł',
       '🔥 Nielimitowane zapytania ofertowe',
       '🥇 TOP pozycja w katalogu',
       '🔥 Priorytetowa obsługa leadów',

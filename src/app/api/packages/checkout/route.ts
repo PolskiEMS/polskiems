@@ -8,9 +8,19 @@ export const runtime = "nodejs";
 type PaidPackage = "standard" | "premium";
 type BillingCycleMonths = 1 | 3 | 6 | 12;
 
-const PACKAGE_PRICE_PER_MONTH: Record<PaidPackage, number> = {
-  standard: 199,
-  premium: 299,
+const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
+  standard: {
+    1: 199,
+    3: 549,
+    6: 999,
+    12: 1799,
+  },
+  premium: {
+    1: 299,
+    3: 849,
+    6: 1599,
+    12: 2999,
+  },
 };
 
 function isPackageType(value: string): value is PaidPackage {
@@ -100,7 +110,7 @@ export async function POST(req: NextRequest) {
     email: companyEmail,
     telefon: companyPhone || null,
     opis: companyDescription || null,
-    isActive: true,
+    isActive: false,
     featured: false,
     packageType: "free",
     monthlyInquiryLimit: 0,
@@ -109,7 +119,7 @@ export async function POST(req: NextRequest) {
   });
 
   const companyId = Number((companyInsertResult as any).insertId);
-  const amountGross = PACKAGE_PRICE_PER_MONTH[packageType] * billingCycleMonths;
+  const amountGross = PACKAGE_PRICE_TOTAL[packageType][billingCycleMonths];
 
   const insertResult = await db.insert(packageOrders).values({
     companyId,
