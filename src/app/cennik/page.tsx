@@ -36,8 +36,8 @@ const packages = [
       '🔥 Nielimitowane zapytania ofertowe',
       '🥇 TOP pozycja w katalogu',
       '🔥 Priorytetowa obsługa leadów',
-      '✅ Wyróżnienie w katalogu (2–3x więcej wyświetleń)'
-      '📈 Zaawansowana analityka + raport miesięczny'
+      '✅ Wyróżnienie w katalogu (2–3x więcej wyświetleń)',
+      '📈 Zaawansowana analityka + raport miesięczny',
     ]
   }
 ];
