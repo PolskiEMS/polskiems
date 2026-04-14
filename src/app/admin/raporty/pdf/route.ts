@@ -593,9 +593,10 @@ doc
     width: recommendationTextWidth,
     align: "left",
   });
+}
   
 export async function GET(req: NextRequest) {
-  try {
+    try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
     const days = Number(req.nextUrl.searchParams.get("days") ?? 30);
 
@@ -690,7 +691,7 @@ export async function GET(req: NextRequest) {
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9\-ąćęłńóśźż]/gi, "");
 
-    return new Response(pdfBuffer, {
+    return new Response(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
@@ -705,4 +706,4 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+ }
