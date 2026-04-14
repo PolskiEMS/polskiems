@@ -45,7 +45,7 @@ function drawFooter(doc: any, contentWidth: number, now: Date) {
     .text(
       `Raport wygenerowany automatycznie | PolskiEMS.pl | ${formatDate(now)}`,
       50,
-      800,
+      782,
       {
         width: contentWidth,
         align: "center",
@@ -472,13 +472,13 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
       }
     );
 
-  y += 30;
+  y += 28;
 
   drawKpiCardsPremium(doc, data, y);
-  y += 86;
+  y += 82;
 
   drawSectionTitle(doc, "Aktywność i skuteczność", y, "#6d28d9");
-  y += 28;
+  y += 26;
 
   drawActivityChart(
     doc,
@@ -490,17 +490,17 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     y
   );
 
-  y += 92;
+  y += 86;
 
   drawSectionTitle(doc, "Insighty Premium", y, "#6d28d9");
-  y += 28;
+  y += 24;
 
   const leadPotential =
     data.totalCtrPct >= 10 ? "Wysoki" : data.totalCtrPct > 0 ? "Średni" : "Niski";
 
   const insightBoxW = 155;
   const insightGap = 15;
-  const insightBoxH = 56;
+  const insightBoxH = 52;
 
   drawMiniInfoBox(
     doc,
@@ -543,32 +543,41 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     "#ddd6fe"
   );
 
-  y += 74;
+  y += 66;
 
   drawSectionTitle(doc, "AI rekomendacja", y, "#6d28d9");
-  y += 28;
+  y += 24;
 
   const recommendation =
     !data.companyWebsite || !data.companyEmail
-      ? "Uzupełnij wszystkie dane kontaktowe, aby zwiększyć wiarygodność i szansę na kontakt."
+      ? "Uzupełnij dane kontaktowe, aby zwiększyć wiarygodność profilu."
       : data.totalCtrPct >= 8
-      ? "Wyniki są dobre. Warto testować nowe wersje oferty i utrzymywać aktualność profilu."
-      : "Przetestuj bardziej konkretne komunikaty oferty, mocniejsze CTA i rozbudowany opis usług.";
+      ? "Wyniki są dobre. Testuj nowe warianty oferty i utrzymuj aktualność profilu."
+      : "Wzmocnij komunikat oferty, dodaj mocniejsze CTA i rozbuduj opis usług.";
 
-  doc.roundedRect(50, y, data.contentWidth, 58, 10).fillAndStroke("#faf5ff", "#ddd6fe");
+  const recommendationTextWidth = data.contentWidth - 24;
+
+  doc.font("Roboto").fontSize(9.8);
+  const recommendationTextHeight = doc.heightOfString(recommendation, {
+    width: recommendationTextWidth,
+    align: "left",
+  });
+
+  const recommendationBoxHeight = Math.max(52, recommendationTextHeight + 24);
+
+  doc
+    .roundedRect(50, y, data.contentWidth, recommendationBoxHeight, 10)
+    .fillAndStroke("#faf5ff", "#ddd6fe");
 
   doc
     .fillColor("#4b5563")
     .font("Roboto")
     .fontSize(9.8)
-    .text(recommendation, 62, y + 16, {
-      width: data.contentWidth - 24,
-      height: 28,
-      ellipsis: true,
+    .text(recommendation, 62, y + 12, {
+      width: recommendationTextWidth,
       align: "left",
     });
 }
-
 export async function GET(req: NextRequest) {
   try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
