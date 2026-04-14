@@ -492,7 +492,7 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
 
   y += 86;
 
-  drawSectionTitle(doc, "Insighty Premium", y, "#6d28d9");
+  drawSectionTitle(doc, "Wnioski Premium", y, "#6d28d9");
   y += 24;
 
   const leadPotential =
