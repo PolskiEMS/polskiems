@@ -68,6 +68,8 @@ export async function GET(req: NextRequest) {
       const reportRangeLabel = `${formatDate(start)} – ${formatDate(now)}`;
 
       const companyName = String(report.firma ?? "Firma");
+      const packageType = String(report.packageType ?? "free");
+      const isPremium = packageType === "premium";
       const companyWebsite = report.www ? String(report.www) : null;
       const companyEmail = report.email ? String(report.email) : null;
       const companyPhone = report.telefon ? String(report.telefon) : null;
@@ -104,7 +106,13 @@ export async function GET(req: NextRequest) {
         .fontSize(11)
         .text(`Zakres raportu: ${reportRangeLabel}`, 200, 114);
 
-      let infoY = 132;
+      doc
+        .fillColor("#6b7280")
+        .font("Roboto")
+        .fontSize(11)
+        .text(`Pakiet: ${packageType.toUpperCase()}`, 200, 128);
+
+      let infoY = 146;
 
       const addCompanyLine = (label: string, value?: string | null) => {
         if (!value) return;
@@ -233,62 +241,108 @@ export async function GET(req: NextRequest) {
 
       currentY += 145;
 
-      doc
-        .fillColor("#111827")
-        .font("Roboto-Bold")
-        .fontSize(15)
-        .text("Interpretacja", 50, currentY);
+      if (isPremium) {
+        doc
+          .fillColor("#111827")
+          .font("Roboto-Bold")
+          .fontSize(15)
+          .text("Zaawansowana analityka (Premium)", 50, currentY);
 
-      currentY += 24;
+        currentY += 24;
 
-      const interpretation =
-        websiteCtrPct >= 10 || emailCtrPct >= 10
-          ? "Profil firmy generuje dobre zainteresowanie i wysoki współczynnik przejścia do danych kontaktowych lub strony WWW."
-          : websiteCtrPct > 0 || emailCtrPct > 0
-          ? "Profil firmy generuje ruch, ale jest przestrzeń do poprawy opisu, logo lub widoczności danych kontaktowych."
-          : "Profil firmy ma wyświetlenia, ale nie generuje jeszcze przejść do strony WWW ani kontaktu. Warto poprawić prezentację profilu firmy.";
+        const engagementScore = Math.round(
+          Math.min(
+            100,
+            (websiteCtrPct * 5 + emailCtrPct * 5) +
+            Math.min(30, views / 20)
+          )
+        );
 
-      doc
-        .fillColor("#4b5563")
-        .font("Roboto")
-        .fontSize(10.5)
-        .text(interpretation, 50, currentY, {
-          width: contentWidth,
-          align: "left",
-        });
+        const leadPotential =
+          websiteCtrPct >= 10 || emailCtrPct >= 10
+            ? "Wysoki potencjał leadowy"
+            : websiteCtrPct > 0 || emailCtrPct > 0
+            ? "Średni potencjał leadowy"
+            : "Niski potencjał leadowy";
 
-      currentY += 70;
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(`Wskaźnik zaangażowania: ${engagementScore}/100`, 50, currentY, {
+            width: contentWidth,
+            align: "left",
+          });
 
-      let recommendation =
-        "Profil firmy jest poprawnie uzupełniony i warto utrzymywać aktualność danych.";
+        currentY += 20;
 
-      if (!companyWebsite || !companyEmail) {
-        recommendation =
-          "Warto uzupełnić profil firmy o kompletne dane kontaktowe i stronę WWW. Pełniejszy profil zwiększa wiarygodność i szansę na kontakt od klientów.";
-      } else if (views > 0 && websiteClicks === 0 && emailClicks === 0) {
-        recommendation =
-          "Profil firmy generuje wyświetlenia, ale niski poziom kliknięć sugeruje potrzebę poprawy opisu, oferty lub atrakcyjności prezentacji firmy w katalogu.";
-      } else if (websiteCtrPct >= 10 || emailCtrPct >= 10) {
-        recommendation =
-          "Profil firmy generuje dobre zainteresowanie. Warto utrzymać aktualne dane i rozważyć dodatkowe wyróżnienie profilu w katalogu.";
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(`Ocena potencjału kontaktów: ${leadPotential}`, 50, currentY, {
+            width: contentWidth,
+            align: "left",
+          });
+
+        currentY += 20;
+
+        const premiumRecommendation =
+          !companyWebsite || !companyEmail
+            ? "Uzupełnij wszystkie dane kontaktowe. W pakiecie Premium pełny profil znacząco zwiększa konwersję."
+            : websiteCtrPct >= 10 || emailCtrPct >= 10
+            ? "Wyniki są bardzo dobre. Warto utrzymać obecny kierunek i testować kolejne warianty oferty."
+            : "Warto przetestować bardziej konkretne komunikaty oferty i mocniejsze CTA, aby zwiększyć CTR.";
+
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(`Rekomendacja Premium: ${premiumRecommendation}`, 50, currentY, {
+            width: contentWidth,
+            align: "left",
+          });
+      } else {
+        doc
+          .fillColor("#111827")
+          .font("Roboto-Bold")
+          .fontSize(15)
+          .text("Raport statystyczny (Standard)", 50, currentY);
+
+        currentY += 24;
+
+        const standardSummary =
+          websiteCtrPct >= 10 || emailCtrPct >= 10
+            ? "Profil notuje dobre wyniki statystyczne i stabilne zainteresowanie."
+            : websiteCtrPct > 0 || emailCtrPct > 0
+            ? "Profil generuje aktywność, ale są rezerwy do poprawy skuteczności."
+            : "Profil ma wyświetlenia, ale nie generuje przejść do kontaktu lub WWW.";
+
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(standardSummary, 50, currentY, {
+            width: contentWidth,
+            align: "left",
+          });
+
+        currentY += 38;
+
+        doc
+          .fillColor("#4b5563")
+          .font("Roboto")
+          .fontSize(10.5)
+          .text(
+            "Aby uzyskać zaawansowaną analitykę i dodatkowe rekomendacje, aktywuj pakiet Premium.",
+            50,
+            currentY,
+            {
+              width: contentWidth,
+              align: "left",
+            }
+          );
       }
-
-      doc
-        .fillColor("#111827")
-        .font("Roboto-Bold")
-        .fontSize(15)
-        .text("Rekomendacja", 50, currentY);
-
-      currentY += 24;
-
-      doc
-        .fillColor("#4b5563")
-        .font("Roboto")
-        .fontSize(10.5)
-        .text(recommendation, 50, currentY, {
-          width: contentWidth,
-          align: "left",
-        });
 
       doc
         .fillColor("#9ca3af")

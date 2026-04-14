@@ -80,6 +80,27 @@ export async function getDashboardStats(days = 30) {
   };
 }
 
+export async function deactivateExpiredPaidCompanies() {
+  const db = getDb();
+
+  await db
+    .update(producenci)
+    .set({
+      isActive: false,
+      packageType: "free",
+      featured: false,
+      monthlyInquiryLimit: 0,
+      monthlyInquiryCount: 0,
+      packageValidUntil: null,
+    })
+    .where(
+      sql`${producenci.packageType} IN ('standard', 'premium')
+          AND ${producenci.packageValidUntil} IS NOT NULL
+          AND ${producenci.packageValidUntil} < NOW()
+          AND ${producenci.isActive} = 1`
+    );
+}
+
 export async function getPageViewsStats(days = 30) {
   const db = getDb();
 
@@ -214,6 +235,7 @@ export async function getCompanyRelations(companyId: number) {
 }
 
 export const getAllProducers = async () => {
+  await deactivateExpiredPaidCompanies();
   const db = getDb();
   return await db
     .select({
@@ -256,6 +278,7 @@ type Filters = {
 };
 
 export async function getFeaturedProducers(limit = 6) {
+  await deactivateExpiredPaidCompanies();
   const db = getDb();
 
   return await db
@@ -281,6 +304,7 @@ export async function getFeaturedProducers(limit = 6) {
 }
 
 export async function getFilteredProducers(filters: Filters) {
+  await deactivateExpiredPaidCompanies();
   const db = getDb();
   const { regions = [], requirements = [], scales = [] } = filters;
 
@@ -545,6 +569,7 @@ export async function getCompanyReport(companyId: number, days = 30) {
     .select({
       companyId: producenci.id,
       firma: producenci.nazwa,
+      packageType: producenci.packageType,
       www: producenci.www,
       email: producenci.email,
       telefon: producenci.telefon,
@@ -583,6 +608,7 @@ export async function getCompanyReport(companyId: number, days = 30) {
     .groupBy(
       producenci.id,
       producenci.nazwa,
+      producenci.packageType,
       producenci.www,
       producenci.email,
       producenci.telefon
@@ -593,6 +619,7 @@ export async function getCompanyReport(companyId: number, days = 30) {
 
 
 export async function getAdminSubscriptions() {
+  await deactivateExpiredPaidCompanies();
   const db = getDb();
 
   const companies = await db
@@ -640,6 +667,31 @@ export async function getAdminSubscriptions() {
     .limit(200);
 
   return { companies, orders };
+}
+
+export async function updateCompanyPackageValidityAction(formData: FormData) {
+  "use server";
+
+  const db = getDb();
+  const companyId = Number(formData.get("companyId"));
+  const packageValidUntilRaw = String(formData.get("packageValidUntil") || "").trim();
+
+  if (!Number.isFinite(companyId) || companyId <= 0) {
+    throw new Error("Nieprawidłowy identyfikator firmy");
+  }
+
+  const packageValidUntil = packageValidUntilRaw
+    ? `${packageValidUntilRaw} 23:59:59`
+    : null;
+
+  await db
+    .update(producenci)
+    .set({
+      packageValidUntil,
+    })
+    .where(eq(producenci.id, companyId));
+
+  revalidatePath("/admin/subskrypcje");
 }
 
 export async function getAdminCompanies() {
