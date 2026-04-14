@@ -35,9 +35,9 @@ const packages = [
     features: [
       '🔥 Nielimitowane zapytania ofertowe',
       '🥇 TOP pozycja w katalogu',
-      'Priorytetowa obsługa leadów',
-      'Wyróżnienie w katalogu (2–3x więcej wyświetleń)',
-      'Pełna wizytówka: opis + strona www + nr telefonu'
+      '🔥 Priorytetowa obsługa leadów',
+      '✅ Wyróżnienie w katalogu (2–3x więcej wyświetleń)'
+      '📈 Zaawansowana analityka + raport miesięczny'
     ]
   }
 ];
