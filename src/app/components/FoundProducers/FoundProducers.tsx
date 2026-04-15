@@ -22,6 +22,7 @@ const SearchContent = () => {
   const [producers, setProducers] = useState<Producer[]>([]);
   const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const searchParams = useSearchParams();
 
   const regions = searchParams.getAll('regions');
@@ -67,16 +68,31 @@ const SearchContent = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const getProducerKey = (producer: Producer, index: number) =>
+    String(producer.id ?? `${producer.nazwa}-${index}`);
+
+  const toggleDescription = (key: string) => {
+    setExpandedDescriptions((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   return (
     <div className={styles.page}>
       {!isLoading ? (
         <div>
           {producers.length > 0 && (
             <div className={styles.producers}>
-              {producers.map((producer, i) => (
+              {producers.map((producer, i) => {
+                const key = getProducerKey(producer, i);
+                const isExpanded = Boolean(expandedDescriptions[key]);
+                const hasLongDescription = (producer.opis?.trim().length ?? 0) > 110;
+
+                return (
                 <motion.div
                   className={`${styles.producerBlock} ${producer.featured ? styles.featuredBlock : ''}`}
-                  key={producer.id ?? i}
+                  key={key}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
@@ -90,6 +106,7 @@ const SearchContent = () => {
                       src={`/images/producers/${producer.nazwa}.jpg`}
                       width={210}
                       height={210}
+                      className={styles.producerImage}
                       alt={`Producent ${producer.nazwa}`}
                     />
 
@@ -100,7 +117,19 @@ const SearchContent = () => {
                     <h2>{producer.nazwa}</h2>
 
                     <div className={styles.bottom}>
-                      <p>{producer.opis}</p>
+                      <p className={`${styles.description} ${isExpanded ? styles.expandedDescription : ''}`}>
+                        {producer.opis}
+                      </p>
+
+                      {hasLongDescription && (
+                        <button
+                          type="button"
+                          className={styles.toggleDescriptionBtn}
+                          onClick={() => toggleDescription(key)}
+                        >
+                          {isExpanded ? 'Pokaż mniej' : 'Pokaż więcej'}
+                        </button>
+                      )}
 
                       <div className={styles.btnRow}>
                         {producer.email && (
@@ -110,13 +139,13 @@ const SearchContent = () => {
                               if (producer.id) trackCompanyEvent(producer.id, 'email_click');
                             }}
                           >
-                            <button className={styles.contactMeBtn}>Skontaktuj się</button>
+                            <button className={styles.contactMeBtn}>Kontakt</button>
                           </a>
                         )}
 
                         {producer.id && (
                           <Link href={`/zapytania-ofertowe?companyId=${producer.id}`}>
-                            <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+                            <button className={styles.contactMeBtn}>Wycena</button>
                           </Link>
                         )}
 
@@ -129,14 +158,17 @@ const SearchContent = () => {
                               if (producer.id) trackCompanyEvent(producer.id, 'website_click');
                             }}
                           >
-                            <button className={styles.contactMeBtn}>Strona firmy</button>
+                            <button className={`${styles.contactMeBtn} ${styles.ghostBtn}`}>
+                              WWW
+                            </button>
                           </a>
                         )}
                       </div>
                     </div>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </div>
           )}
 
