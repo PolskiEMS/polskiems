@@ -22,7 +22,7 @@ const Kontakt = () => {
             </li>
             <li>
               <span>Telefon</span>
-              <a href="tel:+48733811482">+48 733 811 482</a>
+              <a href="tel:+48733811482">+48 728 924 367 </a>
             </li>
             <li>
               <span>Czas odpowiedzi</span>

@@ -38,6 +38,10 @@ type ReportPdfData = {
 };
 
 function drawFooter(doc: any, contentWidth: number, now: Date) {
+  doc.switchToPage(doc.bufferedPageRange().count - 1);
+
+  const bottomY = doc.page.height - 40;
+
   doc
     .fillColor("#9ca3af")
     .font("Roboto")
@@ -45,7 +49,7 @@ function drawFooter(doc: any, contentWidth: number, now: Date) {
     .text(
       `Raport wygenerowany automatycznie | PolskiEMS.pl | ${formatDate(now)}`,
       50,
-      782,
+      bottomY,
       {
         width: contentWidth,
         align: "center",
