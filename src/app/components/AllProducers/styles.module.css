@@ -186,7 +186,6 @@
         grid-template-areas:
             "image badge"
             "image title"
-            "image region"
             "desc desc"
             "actions actions";
         gap: 8px 12px;
@@ -208,16 +207,6 @@
         justify-self: start;
         font-size: 11px;
         padding: 5px 10px;
-    }
-
-    .regionBadge {
-        grid-area: region;
-        margin-top: 0;
-        padding: 4px 9px;
-        font-size: 0.77em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .producers h2 {
