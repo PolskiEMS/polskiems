@@ -272,8 +272,10 @@ export const getAllProducers = async () => {
       packageType: producenci.packageType,
       monthlyInquiryLimit: producenci.monthlyInquiryLimit,
       monthlyInquiryCount: producenci.monthlyInquiryCount,
+      wojewodztwo: wojewodztwa.nazwa,
     })
     .from(producenci)
+    .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id))
     .where(sql`${producenci.isActive} = 1`)
     .orderBy(
       desc(sql`CASE

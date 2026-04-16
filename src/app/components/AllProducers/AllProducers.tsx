@@ -10,6 +10,7 @@ type Producer = {
   id?: number;
   nazwa: string;
   opis?: string | null;
+  wojewodztwo?: string | null;
   email?: string | null;
   www?: string | null;
   featured?: boolean | null;
@@ -22,7 +23,13 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
       <div className={styles.producers}>
         {producers.map((producer, i) => (
           <motion.div
-            className={`${styles.producerBlock} ${producer.featured ? styles.featuredBlock : ''}`}
+            className={`${styles.producerBlock} ${
+              producer.packageType === 'premium'
+                ? styles.premiumBlock
+                : producer.packageType === 'standard'
+                  ? styles.standardBlock
+                  : ''
+            }`}
             key={producer.id ?? i}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -48,6 +55,9 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
               <div className={styles.bottom}>
                 <p>{producer.opis}</p>
+                {producer.wojewodztwo && (
+                  <p className={styles.regionBadge}>{producer.wojewodztwo}</p>
+                )}
 
                 <div className={styles.btnRow}>
                   {producer.email && (
