@@ -954,6 +954,26 @@ export async function updateCompanyAction(formData: FormData) {
   redirect("/admin/firmy");
 }
 
+export async function approveCompanyAction(formData: FormData) {
+  "use server";
+  const db = getDb();
+
+  const id = Number(formData.get("id"));
+
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error("Nieprawidłowe ID firmy");
+  }
+
+  await db
+    .update(producenci)
+    .set({
+      isActive: true,
+    })
+    .where(eq(producenci.id, id));
+
+  revalidatePath("/admin/firmy");
+}
+
 export async function getAllRegion() {
   const db = getDb();
 
