@@ -69,13 +69,6 @@ const activationFlow = [
   }
 ];
 
-const paidPackageBenefits = [
-  'większą widoczność firmy w katalogu',
-  'możliwość otrzymywania zapytań ofertowych',
-  'lepszą ekspozycję oferty',
-  'szybszy kontakt z potencjalnymi klientami'
-];
-
 const CennikPage = () => {
   return (
     <div className={styles.page}>
@@ -119,11 +112,11 @@ const CennikPage = () => {
       </section>
 
       <section className={styles.benefitsSection}>
-        <h3>Co zyskujesz z płatnym pakietem?</h3>
+        <h3>Dlaczego firmy wybierają PolskiEMS?</h3>
         <ul className={styles.benefitsList}>
-          {paidPackageBenefits.map((benefit) => (
-            <li key={benefit}>{benefit}</li>
-          ))}
+          <li>Jeden katalog, w którym klienci łatwo porównują producentów i szybko znajdują właściwego partnera.</li>
+          <li>Przejrzyste pakiety, które można skalować wraz z rozwojem firmy — od FREE do PREMIUM.</li>
+          <li>Prosty proces aktywacji i szybkie uruchomienie profilu bez zbędnych formalności.</li>
         </ul>
       </section>
 
