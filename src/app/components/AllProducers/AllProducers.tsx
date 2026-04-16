@@ -53,6 +53,10 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
               <h2>{producer.nazwa}</h2>
 
+              {producer.wojewodztwo && (
+                <p className={styles.regionBadge}>Województwo: {producer.wojewodztwo}</p>
+              )}
+
               <div className={styles.bottom}>
                 <p>{producer.opis}</p>
                 {producer.wojewodztwo && (
