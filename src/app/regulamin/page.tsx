@@ -2,110 +2,149 @@ import Link from 'next/link';
 import styles from './styles.module.css'
 
 const Regulamin = () => {
-    return (
-        <div className={styles.page}>
-            <h1 className={styles.title}>Regulamin</h1>
-            
-            <div className={styles.content}>
+  return (
+    <div className={styles.page}>
+      <h1 className={styles.title}>Regulamin</h1>
+
+      <div className={styles.content}>
         <section>
-        <h3>§1. Informacje ogólne</h3>
-        <p>
-          Niniejszy regulamin określa zasady korzystania ze strony internetowej
-          polskiems.pl, prowadzonej przez Michała Kowalskiego.
-        </p>
-        <p>
-          <strong>Kontakt:</strong><br />
-          e-mail: info@polskiems.pl<br />
-          tel.: 728 924 367
-        </p>
+          <h3>§1. Postanowienia ogólne</h3>
+          <p>
+            Niniejszy regulamin określa zasady korzystania z serwisu internetowego
+            polskiems.pl, którego administratorem jest Michał Kowalski.
+          </p>
+          <p>
+            <strong>Kontakt:</strong>
+            <br />
+            e-mail: info@polskiems.pl
+            <br />
+            tel.: +48 728 924 367
+          </p>
+          <p>
+            Serwis ma charakter informacyjno-branżowy i służy prezentacji firm z
+            sektora Electronic Manufacturing Services (EMS), a także umożliwia
+            przesyłanie zapytań ofertowych do producentów.
+          </p>
+          <p>
+            Data wejścia w życie niniejszej wersji regulaminu: 15 kwietnia 2026 r.
+          </p>
+        </section>
 
-        <p>
-          Serwis ma charakter informacyjno-branżowy i prezentuje firmy działające
-          w sektorze Electronic Manufacturing Services (EMS).
-        </p>
+        <section>
+          <h3>§2. Zakres usług serwisu</h3>
+          <p>
+            Korzystanie z serwisu przez użytkowników wyszukujących firmy nie wymaga
+            zakładania konta.
+          </p>
+          <p>
+            Serwis umożliwia w szczególności: przeglądanie katalogu firm,
+            wyszukiwanie producentów według kryteriów, przejście do danych
+            kontaktowych firm oraz przesłanie zapytania ofertowego.
+          </p>
+          <p>
+            Zgłoszenie firmy do katalogu może nastąpić przez kontakt z
+            Administratorem lub przez przekazanie formularza zgłoszeniowego.
+          </p>
+        </section>
 
-        <p>
-          Obecnie zgłoszenie firmy do katalogu jest bezpłatne.
-        </p>
-      </section>
+        <section>
+          <h3>§3. Zasady publikacji i aktualizacji profili firm</h3>
+          <p>
+            Dane prezentowane w katalogu mogą pochodzić od samych firm lub z
+            publicznie dostępnych źródeł (np. strony WWW firm, CEIDG, KRS).
+          </p>
+          <p>
+            Administrator dokłada należytej staranności, aby publikowane dane były
+            rzetelne, jednak nie gwarantuje ich pełnej aktualności i kompletności.
+          </p>
+          <p>
+            Firma ma prawo w dowolnym momencie zgłosić sprostowanie, uzupełnienie
+            albo usunięcie swojego profilu, kontaktując się z Administratorem.
+          </p>
+        </section>
 
-      <section>
-        <h3>§2. Warunki korzystania z serwisu</h3>
-        <p>
-          Strona nie wymaga rejestracji konta. Dodanie firmy do katalogu może
-          nastąpić poprzez formularz kontaktowy lub na podstawie publicznie
-          dostępnych danych.
-        </p>
-      </section>
+        <section>
+          <h3>§4. Pakiety i widoczność firm</h3>
+          <p>
+            Serwis może oferować różne pakiety obecności firmy (w tym bezpłatne i
+            płatne), które wpływają na zakres widoczności profilu i dodatkowe
+            funkcje promocyjne.
+          </p>
+          <p>
+            Kolejność prezentacji firm może zależeć m.in. od rodzaju pakietu,
+            oznaczeń promocyjnych, kryteriów filtrowania, kompletności profilu oraz
+            parametrów technicznych systemu.
+          </p>
+          <p>
+            Szczegółowe warunki pakietów, w tym cena i okres obowiązywania, są
+            wskazywane w serwisie przed aktywacją wybranej opcji.
+          </p>
+        </section>
 
-      <section>
-        <h3>§3. Publikacja danych firm</h3>
-        <p>
-          Dane firm prezentowane w katalogu mogą pochodzić z publicznie
-          dostępnych źródeł, w szczególności ze stron internetowych firm,
-          rejestrów publicznych (CEIDG, KRS) oraz innych ogólnodostępnych baz
-          informacji gospodarczych.
-        </p>
+        <section>
+          <h3>§5. Zasady korzystania przez użytkowników</h3>
+          <p>
+            Użytkownik zobowiązuje się korzystać z serwisu zgodnie z prawem,
+            dobrymi obyczajami i niniejszym regulaminem.
+          </p>
+          <p>
+            Zabronione jest dostarczanie treści bezprawnych, podejmowanie prób
+            zakłócania pracy serwisu, nadużywanie formularzy kontaktowych oraz
+            automatyczne pozyskiwanie danych w sposób naruszający interes
+            Administratora lub firm prezentowanych w katalogu.
+          </p>
+        </section>
 
-        <p>
-          Nazwy firm, logotypy oraz inne oznaczenia mogą stanowić znaki towarowe
-          odpowiednich podmiotów i są wykorzystywane wyłącznie w celach
-          informacyjnych oraz identyfikacyjnych.
-        </p>
+        <section>
+          <h3>§6. Dane osobowe, pliki cookies i statystyki</h3>
+          <p>
+            Administrator przetwarza dane osobowe zgodnie z obowiązującymi
+            przepisami prawa, w szczególności RODO.
+          </p>
+          <p>
+            Dane przekazane przez formularze (np. dane kontaktowe i treść zapytania)
+            są przetwarzane wyłącznie w celu obsługi zgłoszenia i kontaktu z
+            użytkownikiem lub firmą.
+          </p>
+          <p>
+            Serwis może wykorzystywać pliki cookies oraz narzędzia statystyczne do
+            celów analitycznych, bezpieczeństwa i poprawy jakości usług, w tym do
+            pomiaru wyświetleń stron i interakcji użytkowników.
+          </p>
+        </section>
 
-        <p>
-          Właściciel firmy może w każdym czasie zgłosić aktualizację danych,
-          uzupełnienie profilu lub żądanie jego usunięcia poprzez kontakt z
-          Administratorem.
-        </p>
-      </section>
+        <section>
+          <h3>§7. Odpowiedzialność</h3>
+          <p>
+            Administrator nie odpowiada za decyzje biznesowe podejmowane na
+            podstawie informacji dostępnych w katalogu ani za działania podmiotów
+            trzecich, do których odnośniki znajdują się w serwisie.
+          </p>
+          <p>
+            Administrator zastrzega możliwość czasowej niedostępności serwisu, w
+            szczególności z przyczyn technicznych, serwisowych lub związanych z
+            bezpieczeństwem.
+          </p>
+        </section>
 
-      <section>
-        <h3>§4. Zasady wyświetlania firm</h3>
-        <p>
-          Kolejność wyświetlania firm może zależeć od przyjętego systemu
-          sortowania, daty dodania profilu, kryteriów wyszukiwania lub innych
-          parametrów technicznych.
-        </p>
-      </section>
+        <section>
+          <h3>§8. Zmiany regulaminu i postanowienia końcowe</h3>
+          <p>
+            Administrator może aktualizować regulamin, publikując nową wersję na
+            stronie. Zmiany obowiązują od dnia wskazanego przy nowej wersji
+            regulaminu.
+          </p>
+          <p>
+            W sprawach nieuregulowanych zastosowanie mają przepisy prawa polskiego.
+          </p>
+        </section>
 
-      <section>
-        <h3>§5. Odpowiedzialność</h3>
-        <p>
-          Administrator dokłada należytej staranności w zakresie rzetelności
-          prezentowanych informacji, jednak nie ponosi odpowiedzialności za ich
-          aktualność ani kompletność.
-        </p>
-      </section>
-
-      <section>
-        <h3>§6. Dane i prywatność</h3>
-        <p>
-          Serwis może przetwarzać dane przekazane dobrowolnie przez użytkowników
-          w formularzu kontaktowym wyłącznie w celu realizacji zapytania.
-        </p>
-      </section>
-
-      <section>
-        <h3>§7. Zmiany regulaminu</h3>
-        <p>
-          Administrator zastrzega sobie prawo do zmiany regulaminu. Aktualna
-          wersja regulaminu publikowana jest na stronie internetowej.
-        </p>
-      </section>
-
-      <section>
-        <h3>§8. Postanowienia końcowe</h3>
-        <p>
-          W sprawach nieuregulowanych niniejszym regulaminem zastosowanie mają
-          przepisy prawa polskiego.
-        </p>
-      </section>
-            <Link href={'formularz_zgloszeniowy_firmy.docx'}>
-                <button className={styles.chceZnalezcSie}>
-                Chcę znaleźć się na stronie</button>
-                </Link>
-        </div>
+        <Link href={"formularz_zgloszeniowy_firmy.docx"}>
+          <button className={styles.chceZnalezcSie}>
+            Chcę znaleźć się na stronie
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

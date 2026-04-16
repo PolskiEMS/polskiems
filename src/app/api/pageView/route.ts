@@ -23,10 +23,13 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const page = normalizePageKey(String(body?.page ?? ""));
-    const visitorId = String(body?.visitorId ?? "").trim();
+    const visitorIdRaw = String(body?.visitorId ?? "").trim();
+    const visitorId =
+      visitorIdRaw ||
+      `anon-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     const referrer = body?.referrer ? String(body.referrer) : null;
 
-    if (!page || !visitorId) {
+    if (!page) {
       return NextResponse.json(
         { ok: false, error: "Brak wymaganych danych." },
         { status: 400 }
