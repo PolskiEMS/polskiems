@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
@@ -55,6 +55,12 @@ export const metadata: Metadata = {
     images: ["/images/logo.png"]
   },
   // metadataBase: new URL("https://twoja-strona.pl")
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 

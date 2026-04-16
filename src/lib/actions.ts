@@ -104,20 +104,22 @@ export async function deactivateExpiredPaidCompanies() {
 export async function getPageViewsStats(days = 30) {
   const db = getDb();
 
-  const rows = await db.execute(sql`
-    SELECT page, COUNT(*) AS views
-    FROM page_views
-    WHERE created_at >= NOW() - INTERVAL ${sql.raw(String(days))} DAY
-    GROUP BY page
-  `);
+  const rows = await db
+    .select({
+      page: pageViews.page,
+      views: sql<number>`COUNT(*)`,
+    })
+    .from(pageViews)
+    .where(
+      sql`${pageViews.createdAt} >= NOW() - INTERVAL ${sql.raw(String(days))} DAY`
+    )
+    .groupBy(pageViews.page);
 
   const result = {
     home: 0,
     "all-producers": 0,
     search: 0,
   };
-
-  const data = rows as unknown as Array<{ page: string; views: number }>;
 
   const normalizePageKey = (pageRaw: string) => {
     const page = (pageRaw || "").trim().toLowerCase();
@@ -136,7 +138,7 @@ export async function getPageViewsStats(days = 30) {
     return null;
   };
   
-  for (const row of data) {
+  for (const row of rows) {
     const normalizedPage = normalizePageKey(row.page);
     if (normalizedPage) {
       result[normalizedPage as keyof typeof result] += Number(row.views);

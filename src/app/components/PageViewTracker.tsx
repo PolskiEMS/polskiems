@@ -3,48 +3,65 @@
 import { useEffect, useRef } from "react";
 
 const VIEW_INTERVAL_MS = 30 * 60 * 1000; // 30 min throttle per page
+const VISITOR_ID_KEY = "polskiems_visitor_id";
 
 function getVisitorId() {
-  const key = "polskiems_visitor_id";
-  let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
+  try {
+    let id = localStorage.getItem(VISITOR_ID_KEY);
+    if (!id) {
+      id =
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `anon-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      localStorage.setItem(VISITOR_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return `anon-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
   }
-  return id;
 }
 
 export default function PageViewTracker({ page }: { page: string }) {
   const pageRef = useRef(page); // Zapisz page per instancja
 
   useEffect(() => {
-    const visitorId = getVisitorId();
     const now = Date.now();
     const throttleKey = `polskiems_${pageRef.current}_last_view`;
-    const lastView = Number(localStorage.getItem(throttleKey) || "0");
+    const visitorId = getVisitorId();
+    let lastView = 0;
 
-    console.log(`[Tracker] Page: ${pageRef.current}, Visitor: ${visitorId.slice(0,8)}..., Last: ${new Date(lastView).toLocaleTimeString()}, Eligible: ${now - lastView >= VIEW_INTERVAL_MS}`);
+    try {
+      lastView = Number(localStorage.getItem(throttleKey) || "0");
+    } catch {
+      lastView = 0;
+    }
 
     if (now - lastView < VIEW_INTERVAL_MS) {
-      console.log("[Tracker] Skipped - throttled");
       return;
     }
 
     fetch("/api/pageView", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      keepalive: true,
       body: JSON.stringify({
         page: pageRef.current,
         visitorId,
+        referrer:
+          typeof document !== "undefined" && document.referrer
+            ? document.referrer
+            : null,
       }),
     })
       .then((res) => {
         if (!res.ok) {
-          console.warn(`Page view request failed: ${res.status}`);
           return;
         }
-        localStorage.setItem(throttleKey, String(now));
-        console.log("[Tracker] Sent OK");
+        try {
+          localStorage.setItem(throttleKey, String(now));
+        } catch {
+          // Brak localStorage (np. privacy mode) — pomijamy throttle w pamięci przeglądarki.
+        }
       })
       .catch((error) => {
         console.error("[Tracker] Failed:", error);
