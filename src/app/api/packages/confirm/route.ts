@@ -6,7 +6,7 @@ import { packageOrders, producenci } from "@/db/schema";
 export const runtime = "nodejs";
 
 const PACKAGE_LIMIT: Record<"standard" | "premium", number> = {
-  standard: 10,
+  standard: 20,
   premium: 999999,
 };
 
