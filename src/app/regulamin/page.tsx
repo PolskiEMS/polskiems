@@ -25,9 +25,7 @@ const Regulamin = () => {
             sektora Electronic Manufacturing Services (EMS), a także umożliwia
             przesyłanie zapytań ofertowych do producentów.
           </p>
-          <p>
-            Data wejścia w życie niniejszej wersji regulaminu: 15 kwietnia 2026 r.
-          </p>
+   
         </section>
 
         <section>
