@@ -3,6 +3,7 @@ export const SERVICES = [
   "Dostarcza PCB",
   "Kupuje komponenty",
   "Montaż SMD",
+  "Montaż SMT",
   "Montaż THT",
   "Inspekcja",
   "Test Flying Probe",
