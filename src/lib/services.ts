@@ -8,7 +8,7 @@ export const SERVICES = [
   "Inspekcja",
   "Test Flying Probe",
   "Test funkcjonalny",
-  "Montaż obudowe",
+  "Montaż obudowy",
   "Montaż produktu finalnego",
   "Conformal Coating",
   "Mycie płytek",

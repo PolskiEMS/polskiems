@@ -995,13 +995,13 @@ function getPackageConfig(packageType: string) {
     case "free":
       return {
         packageType: "free",
-        monthlyInquiryLimit: 0,
+        monthlyInquiryLimit: 5,
       };
 
     case "standard":
       return {
         packageType: "standard",
-        monthlyInquiryLimit: 10,
+        monthlyInquiryLimit: 20,
       };
 
     case "premium":
@@ -1013,7 +1013,7 @@ function getPackageConfig(packageType: string) {
     default:
       return {
         packageType: "free",
-        monthlyInquiryLimit: 0,
+        monthlyInquiryLimit: 5,
       };
   }
 }

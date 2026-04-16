@@ -28,7 +28,7 @@ const packages = [
       'Profesjonalny profil firmy',
       'Lepsza widoczność w katalogu',
       'Wyróżniona prezentacja oferty',
-      'Do 10 zapytań ofertowych miesięcznie',
+      'Do 20 zapytań ofertowych miesięcznie',
       'Miesięczny raport statystyk',
     ]
   },
