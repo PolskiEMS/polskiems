@@ -107,6 +107,30 @@
   background: rgba(255, 255, 255, 0.22);
 }
 
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.approveBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(40, 167, 69, 0.7);
+  background: rgba(40, 167, 69, 0.28);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.approveBtn:hover {
+  background: rgba(40, 167, 69, 0.4);
+}
+
 .cards {
   display: none;
 }
@@ -188,6 +212,10 @@
   }
 
   .editBtn {
+    width: 100%;
+  }
+
+  .approveBtn {
     width: 100%;
   }
 }

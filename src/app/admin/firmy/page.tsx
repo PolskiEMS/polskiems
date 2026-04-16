@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAdminCompanies } from "@/lib/actions";
+import { approveCompanyAction, getAdminCompanies } from "@/lib/actions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -103,12 +103,23 @@ export default async function AdminCompaniesPage() {
                   </td>
                   <td>{getStatusLabel(company.isActive)}</td>
                   <td>
-                    <Link
-                      href={`/admin/firmy/${company.id}`}
-                      className={styles.editBtn}
-                    >
-                      Edytuj
-                    </Link>
+                    <div className={styles.actionButtons}>
+                      {!company.isActive && (
+                        <form action={approveCompanyAction}>
+                          <input type="hidden" name="id" value={company.id} />
+                          <button type="submit" className={styles.approveBtn}>
+                            Akceptuj
+                          </button>
+                        </form>
+                      )}
+
+                      <Link
+                        href={`/admin/firmy/${company.id}`}
+                        className={styles.editBtn}
+                      >
+                        Edytuj
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -171,12 +182,23 @@ export default async function AdminCompaniesPage() {
               </div>
 
               <div className={styles.cardActions}>
-                <Link
-                  href={`/admin/firmy/${company.id}`}
-                  className={styles.editBtn}
-                >
-                  Edytuj
-                </Link>
+                <div className={styles.actionButtons}>
+                  {!company.isActive && (
+                    <form action={approveCompanyAction}>
+                      <input type="hidden" name="id" value={company.id} />
+                      <button type="submit" className={styles.approveBtn}>
+                        Akceptuj
+                      </button>
+                    </form>
+                  )}
+
+                  <Link
+                    href={`/admin/firmy/${company.id}`}
+                    className={styles.editBtn}
+                  >
+                    Edytuj
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
