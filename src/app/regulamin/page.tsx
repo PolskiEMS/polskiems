@@ -25,6 +25,7 @@ const Regulamin = () => {
             sektora Electronic Manufacturing Services (EMS), a także umożliwia
             przesyłanie zapytań ofertowych do producentów.
           </p>
+   
         </section>
 
         <section>
