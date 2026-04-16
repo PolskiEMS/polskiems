@@ -210,6 +210,8 @@ export async function getCompanyStats(days = 30) {
 export async function getAllDzialaniaEms() {
   const db = getDb();
 
+  await db.execute(sql`INSERT IGNORE INTO dzialania_ems (nazwa) VALUES ("Montaż SMT")`);
+
   return await db
     .select({
       id: dzialaniaEms.id,
