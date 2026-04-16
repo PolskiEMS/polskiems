@@ -98,11 +98,19 @@
   background:rgba(255,255,255,0.3);
 }
 
-.featuredBlock {
-  border: 2px solid rgba(255, 215, 0, 0.75);
+.premiumBlock {
+  border: 4px solid rgba(255, 215, 0, 0.88);
   box-shadow:
-    0 0 0 2px rgba(255, 215, 0, 0.18),
+    0 0 0 2px rgba(255, 215, 0, 0.22),
     0 12px 28px rgba(0, 0, 0, 0.16);
+  position: relative;
+}
+
+.standardBlock {
+  border: 1.5px solid rgba(71, 154, 255, 0.8);
+  box-shadow:
+    0 0 0 1px rgba(71, 154, 255, 0.2),
+    0 10px 24px rgba(0, 0, 0, 0.14);
   position: relative;
 }
 
@@ -119,6 +127,19 @@
   margin: 14px auto 4px;
   width: fit-content;
   box-shadow: 0 8px 18px rgba(124, 58, 237, 0.25);
+}
+
+.regionBadge {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(10, 27, 56, 0.35);
+  border: 1px solid rgba(142, 197, 255, 0.35);
+  color: rgba(238, 245, 255, 0.95);
+  padding: 6px 12px;
+  border-radius: 999px;
+  width: fit-content;
+  font-size: 0.88em;
 }
 
 @media screen and (min-width: 1200px) {
@@ -148,18 +169,97 @@
     .producers {
         grid-template-columns: 1fr;
         padding: 10px;
+        row-gap: 14px;
     }
 
     .producerBlock {
-    min-height: unset;
-    height: auto;
-    padding-bottom: 28px;
-  }
+        min-height: unset;
+        height: auto;
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .divToMove {
+        transform: none;
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        grid-template-areas:
+            "image badge"
+            "image title"
+            "image region"
+            "desc desc"
+            "actions actions";
+        gap: 8px 12px;
+        align-items: start;
+    }
+
+    .producers img {
+        grid-area: image;
+        width: 96px;
+        height: 96px;
+        border-radius: 12px;
+        object-fit: cover;
+        margin: 0;
+    }
+
+    .featuredBadge {
+        grid-area: badge;
+        margin: 0;
+        justify-self: start;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .regionBadge {
+        grid-area: region;
+        margin-top: 0;
+        padding: 4px 9px;
+        font-size: 0.77em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .producers h2 {
+        grid-area: title;
+        margin-top: 0;
+        font-size: 1.1em;
+        text-align: left;
+        line-height: 1.35;
+    }
+
+    .bottom {
+        grid-area: desc;
+        width: 100%;
+        margin-top: 0;
+        padding-bottom: 0;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .producers p {
+        text-align: left;
+        font-size: 0.94em;
+        line-height: 1.5;
+    }
+
+    .btnRow {
+        grid-area: actions;
+        margin-top: 0;
+        width: 100%;
+        gap: 8px;
+        justify-content: flex-start;
+        flex-direction: column;
+    }
+
+    .btnRow a {
+        width: 100%;
+    }
 
     .contactMeBtn {
-        width: 250px;
+        margin-top: 0;
+        width: 100%;
+        min-height: 40px;
+        font-size: 0.95em;
     }
-    .buttons {
-    gap: 8px;
-  }
 }
