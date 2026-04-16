@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     isActive: false,
     featured: false,
     packageType: "free",
-    monthlyInquiryLimit: 0,
+    monthlyInquiryLimit: 5,
     monthlyInquiryCount: 0,
   });
 

@@ -12,7 +12,7 @@ const packages = [
       'Obecność firmy w katalogu',
       'Podstawowy profil firmy',
       'Dane kontaktowe i zakres usług',
-      'Możliwość otrzymywania zapytań',
+      'Do 5 zapytań ofertowych miesięcznie',
       'Start bez opłat miesięcznych',
     ]
   },

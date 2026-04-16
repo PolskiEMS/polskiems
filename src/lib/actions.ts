@@ -89,7 +89,7 @@ export async function deactivateExpiredPaidCompanies() {
       isActive: false,
       packageType: "free",
       featured: false,
-      monthlyInquiryLimit: 0,
+      monthlyInquiryLimit: 5,
       monthlyInquiryCount: 0,
       packageValidUntil: null,
     })
@@ -1113,7 +1113,7 @@ export async function sendInquiryAction(formData: FormData) {
 
   const inquiryId = Number((inquiryResult as any).insertId);
 
-  const recipientStatus = company.packageType === "free" ? "blocked" : "new";
+  const recipientStatus = "new";
 
   await db.insert(inquiryRecipients).values({
     inquiryId,
@@ -1174,18 +1174,15 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
   }
 
   if (row.status === "blocked") {
-    throw new Error("To zapytanie jest zablokowane dla pakietu Free");
-  }
-
-  if (row.packageType === "free") {
-    throw new Error("Pakiet Free nie może otrzymywać leadów");
+    throw new Error("To zapytanie jest zablokowane");
   }
 
   if (
-    row.packageType === "standard" &&
+    row.packageType !== "premium" &&
     row.monthlyInquiryCount >= row.monthlyInquiryLimit
   ) {
-    throw new Error("Miesięczny limit leadów dla pakietu Standard został osiągnięty");
+    const packageLabel = row.packageType === "free" ? "Free" : "Standard";
+    throw new Error(`Miesięczny limit leadów dla pakietu ${packageLabel} został osiągnięty`);
   }
 
   const sentAt = new Date().toISOString().slice(0, 19).replace("T", " ");
