@@ -112,6 +112,9 @@ const SearchContent = () => {
 
                     <div className={styles.bottom}>
                       <p>{producer.opis}</p>
+                      {producer.wojewodztwo && (
+                        <p className={styles.regionBadge}>{producer.wojewodztwo}</p>
+                      )}
 
                       <div className={styles.btnRow}>
                         {producer.email && (

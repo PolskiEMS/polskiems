@@ -209,6 +209,12 @@
         padding: 5px 10px;
     }
 
+    .regionBadge {
+        margin-top: 0;
+        padding: 4px 9px;
+        font-size: 0.77em;
+    }
+
     .producers h2 {
         grid-area: title;
         margin-top: 0;
