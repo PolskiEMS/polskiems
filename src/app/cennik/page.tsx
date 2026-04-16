@@ -36,7 +36,7 @@ const packages = [
     key: 'premium',
     name: 'PREMIUM',
     ctaLabel: 'Wybierz Premium',
-    badge: 'Dla poważnych Firm',
+    badge: 'Największa widoczność',
     price: '299 zł / msc.',
     description: 'Dla firm, które chcą wyróżnić się w katalogu, zwiększyć widoczność i korzystać z rozszerzonej analityki profilu.',
     features: [
