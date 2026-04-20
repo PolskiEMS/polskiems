@@ -64,8 +64,8 @@
 
 .input option,
 .select option {
-  background: #ffffff;
-  color: #1f2440;
+  background: #3b2a7c;
+  color: #ffffff;
 }
 
 .select option:checked {
@@ -80,12 +80,27 @@
 
 .select[multiple] {
   padding: 8px;
+  background: rgba(20, 10, 62, 0.65);
+  border-color: rgba(189, 169, 255, 0.45);
 }
 
 .select[multiple] option {
   border-radius: 8px;
   padding: 10px 12px;
   margin: 2px 0;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d3250;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.select[multiple] option:checked {
+  background: linear-gradient(135deg, #7659e8 0%, #5537b4 100%);
+  color: #ffffff;
+}
+
+.select[multiple] option:hover {
+  background: rgba(233, 227, 255, 0.95);
+  color: #28146b;
 }
 
 .textarea {

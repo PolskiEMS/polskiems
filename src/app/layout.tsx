@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "./components/Footer/Footer";
@@ -53,8 +52,9 @@ export const metadata: Metadata = {
     title: "Wyszukiwarka Producentów Elektroniki",
     description: "Znajdź producenta elektroniki dopasowanego do Twoich potrzeb.",
     images: ["/images/logo.png"]
+    
   },
-  // metadataBase: new URL("https://twoja-strona.pl")
+   metadataBase: new URL("https://polskiems.pl")
 };
 
 
