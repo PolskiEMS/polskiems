@@ -56,6 +56,11 @@ export default async function NewCompanyPage() {
             </div>
 
             <div className={styles.field}>
+              <label htmlFor="adres">Adres</label>
+              <input id="adres" name="adres" type="text" placeholder="ulica, kod, miasto" />
+            </div>
+
+            <div className={styles.field}>
               <label htmlFor="packageType">Pakiet</label>
               <select
                 id="packageType"

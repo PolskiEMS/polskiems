@@ -33,7 +33,7 @@ const Wyszukaj = async () => {
       <PageViewTracker page="all-producers" />
       <h1>Wszyscy Producenci</h1>
       <AllProducers producers={producers} />
-      <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+      <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
     </div>
   );
 }

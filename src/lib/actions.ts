@@ -265,6 +265,7 @@ export const getAllProducers = async () => {
       nazwa: producenci.nazwa,
       opis: producenci.opis,
       wojewodztwoId: producenci.wojewodztwoId,
+      adres: producenci.adres,
       telefon: producenci.telefon,
       email: producenci.email,
       www: producenci.www,
@@ -311,6 +312,7 @@ export async function getFeaturedProducers(limit = 6) {
       nazwa: producenci.nazwa,
       opis: producenci.opis,
       wojewodztwoId: producenci.wojewodztwoId,
+      adres: producenci.adres,
       telefon: producenci.telefon,
       email: producenci.email,
       www: producenci.www,
@@ -376,6 +378,7 @@ export async function getFilteredProducers(filters: Filters) {
       featured: producenci.featured,
       packageType: producenci.packageType,
       wojewodztwo: wojewodztwa.nazwa,
+      adres: producenci.adres,
     })
     .from(producenci)
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id));
@@ -746,6 +749,7 @@ export async function getCompanyById(id: number) {
       nazwa: producenci.nazwa,
       opis: producenci.opis,
       wojewodztwoId: producenci.wojewodztwoId,
+      adres: producenci.adres,
       telefon: producenci.telefon,
       email: producenci.email,
       www: producenci.www,
@@ -819,6 +823,7 @@ export async function createCompanyAction(formData: FormData) {
   const www = String(formData.get("www") || "");
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+  const adres = String(formData.get("adres") || "");
 
   const packageTypeRaw = String(formData.get("packageType") || "free");
 
@@ -846,6 +851,7 @@ export async function createCompanyAction(formData: FormData) {
     email: email.trim() || null,
     www: www.trim() || null,
     wojewodztwoId,
+    adres: adres.trim() || null,
     featured,
     isActive: true,
     packageType: packageConfig.packageType,
@@ -889,6 +895,7 @@ export async function updateCompanyAction(formData: FormData) {
   const isActive = formData.get("isActive") === "on";
   const wojewodztwoIdRaw = formData.get("wojewodztwoId");
   const wojewodztwoId = wojewodztwoIdRaw ? Number(wojewodztwoIdRaw) : null;
+  const adres = String(formData.get("adres") || "");
   
   const packageTypeRaw = String(formData.get("packageType") || "free");
   const resetInquiryCount = formData.get("resetInquiryCount") === "on";
@@ -947,6 +954,7 @@ export async function updateCompanyAction(formData: FormData) {
       email: email.trim() || null,
       www: www.trim() || null,
       wojewodztwoId,
+      adres: adres.trim() || null,
       featured,
       isActive,
       packageType: packageConfig.packageType,

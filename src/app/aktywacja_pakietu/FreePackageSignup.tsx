@@ -26,7 +26,7 @@ export default function FreePackageSignup() {
 
       <div className={styles.wordOption}>
         <p className={styles.muted}>Opcja 2: Formularz zgłoszeniowy Word (pakiet FREE)</p>
-        <a href="/formularz_zgloszeniowy_firmy.docx" download className={styles.wordButton}>
+        <a href="/api/formularz-v2" download className={styles.wordButton}>
           Pobierz formularz zgłoszeniowy FREE (Word)
         </a>
         <p className={styles.mailHint}>

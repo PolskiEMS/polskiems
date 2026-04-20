@@ -130,6 +130,17 @@ export default async function EditCompanyPage({ params }: PageProps) {
             </div>
 
             <div className={styles.field}>
+              <label htmlFor="adres">Adres</label>
+              <input
+                id="adres"
+                name="adres"
+                type="text"
+                defaultValue={company.adres || ""}
+                placeholder="ulica, kod, miasto"
+              />
+            </div>
+
+            <div className={styles.field}>
               <label htmlFor="packageType">Pakiet</label>
               <select
                 id="packageType"

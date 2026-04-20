@@ -142,6 +142,11 @@
   font-size: 0.88em;
 }
 
+.addressBadge {
+  composes: regionBadge;
+  margin-top: 2px;
+}
+
 @media screen and (min-width: 1200px) {
     .producers {
         grid-template-columns: repeat(3, 1fr);
@@ -209,7 +214,8 @@
         padding: 5px 10px;
     }
 
-    .regionBadge {
+    .regionBadge,
+    .addressBadge {
         margin-top: 0;
         padding: 4px 9px;
         font-size: 0.77em;

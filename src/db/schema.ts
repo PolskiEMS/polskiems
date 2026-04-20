@@ -30,6 +30,7 @@ export const producenci = mysqlTable("producenci", {
   nazwa: varchar("nazwa", { length: 255 }).notNull(),
   opis: text("opis"),
   wojewodztwoId: int("wojewodztwo_id").references(() => wojewodztwa.id),
+  adres: varchar("adres", { length: 255 }),
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
   www: varchar("www", { length: 255 }),

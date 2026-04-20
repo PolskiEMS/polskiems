@@ -44,7 +44,7 @@ const Onas = () => {
             </p>
           </div>
 
-          <Link href="/formularz_zgloszeniowy_firmy.docx" className={styles.ctaBtn}>
+          <Link href="/api/formularz-v2" className={styles.ctaBtn}>
             Chcę znaleźć się na stronie
           </Link>
         </div>
