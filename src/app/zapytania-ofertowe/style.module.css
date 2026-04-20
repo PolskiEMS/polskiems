@@ -1,6 +1,6 @@
 .page {
-  min-height: 100vh;
-  padding: 40px 20px 60px;
+  min-height: calc(100vh - 90px);
+  padding: 24px 20px 60px;
 }
 
 .container {
@@ -10,30 +10,31 @@
 
 .title {
   text-align: center;
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 28px;
+  color: #ffffff;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  margin-bottom: 20px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
 }
 
 .successBox {
   margin-bottom: 20px;
   padding: 14px 18px;
   border-radius: 12px;
-  border: 1px solid rgba(120, 255, 160, 0.45);
-  background: rgba(120, 255, 160, 0.12);
-  color: white;
+  border: 1px solid rgba(72, 173, 101, 0.5);
+  background: rgba(199, 255, 215, 0.95);
+  color: #113f1b;
   font-weight: 700;
 }
 
 .form {
   display: grid;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: #f7f8ff;
+  border: 1px solid #d7dcff;
   border-radius: 14px;
   padding: 24px;
-  color: white;
-  backdrop-filter: blur(6px);
+  color: #20264a;
+  box-shadow: 0 16px 36px rgba(15, 25, 80, 0.2);
 }
 
 .field {
@@ -42,65 +43,51 @@
   gap: 8px;
 }
 
+.field label {
+  font-weight: 600;
+  color: #252f62;
+}
+
+.field small {
+  font-size: 0.85rem;
+  color: #4b578f;
+}
+
 .input,
 .select,
 .textarea {
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid #b9c2f5;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: #ffffff;
+  color: #1a2148;
   padding: 12px 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input:focus,
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.input option,
-.select option {
-  background: #3b2a7c;
-  color: #ffffff;
-}
-
-.select option:checked {
-  background: linear-gradient(135deg, #6f58d9 0%, #5537b4 100%);
-  color: #ffffff;
-}
-
-.select option:hover {
-  background: #ede9ff;
-  color: #28146b;
+  border-color: #5e6de4;
+  box-shadow: 0 0 0 3px rgba(94, 109, 228, 0.2);
 }
 
 .select[multiple] {
-  padding: 8px;
-  background: rgba(20, 10, 62, 0.65);
-  border-color: rgba(189, 169, 255, 0.45);
+  min-height: 220px;
+  padding: 6px;
 }
 
 .select[multiple] option {
   border-radius: 8px;
   padding: 10px 12px;
   margin: 2px 0;
-  background: rgba(255, 255, 255, 0.9);
-  color: #2d3250;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: #eef1ff;
+  color: #20264a;
 }
 
 .select[multiple] option:checked {
   background: linear-gradient(135deg, #7659e8 0%, #5537b4 100%);
   color: #ffffff;
-}
-
-.select[multiple] option:hover {
-  background: rgba(233, 227, 255, 0.95);
-  color: #28146b;
 }
 
 .textarea {
@@ -113,11 +100,35 @@
 }
 
 .submitBtn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   padding: 12px 18px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid #4f5dd8;
+  background: linear-gradient(135deg, #6272f0 0%, #4d39b6 100%);
   color: white;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submitBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(52, 53, 145, 0.35);
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 12px;
+  }
+
+  .form {
+    padding: 16px;
+  }
+
+  .select[multiple] {
+    min-height: 180px;
+  }
 }
