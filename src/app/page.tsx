@@ -17,7 +17,7 @@ export default async function Home() {
         <Link href={'/wyszukaj'}><button>Wyszukaj</button></Link>
         <Link href={'/wszyscy-producenci'}><button>Wszyscy Producenci</button></Link>
       </div>
-      <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+      <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
 
       {featuredProducers.length > 0 && (
         <section className={styles.recommendedSection}>

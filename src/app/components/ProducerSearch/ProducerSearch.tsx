@@ -91,7 +91,7 @@ const ProducerSearch = () => {
                             }
                         }} className={styles.searchBtn}><button>Wyszukaj</button></Link>
                         <Link href={'/wszyscy-producenci'} className={styles.allProducentsBtn}><button>Wszyscy Producenci</button></Link>
-                        <Link href={'formularz_zgloszeniowy_firmy.docx'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+                        <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
                     </div>
                 }
             </div>

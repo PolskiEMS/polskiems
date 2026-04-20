@@ -176,7 +176,7 @@ export default function PackageCheckout({
         Jeśli firma już istnieje, system pokaże komunikat i poprosi o uzupełnienie
         danych przez formularz zgłoszeniowy{" "}
         <Link
-          href="/formularz_zgloszeniowy_firmy.docx"
+          href="/api/formularz-v2"
           className={styles.inlineLink}
         >
           Pobierz formularz

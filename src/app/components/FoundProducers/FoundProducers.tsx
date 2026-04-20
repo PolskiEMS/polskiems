@@ -13,6 +13,7 @@ type Producer = {
   nazwa: string;
   opis?: string | null;
   wojewodztwo?: string | null;
+  adres?: string | null;
   email?: string | null;
   www?: string | null;
   featured?: boolean | null;
@@ -110,6 +111,9 @@ const SearchContent = () => {
                       <p>{producer.opis}</p>
                       {producer.wojewodztwo && (
                         <p className={styles.regionBadge}>Województwo: {producer.wojewodztwo}</p>
+                      )}
+                      {producer.adres && (
+                        <p className={styles.addressBadge}>Adres: {producer.adres}</p>
                       )}
 
                       <div className={styles.btnRow}>

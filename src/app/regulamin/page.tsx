@@ -136,7 +136,7 @@ const Regulamin = () => {
           </p>
         </section>
 
-        <Link href={"formularz_zgloszeniowy_firmy.docx"}>
+        <Link href={"/api/formularz-v2"}>
           <button className={styles.chceZnalezcSie}>
             Chcę znaleźć się na stronie
           </button>
