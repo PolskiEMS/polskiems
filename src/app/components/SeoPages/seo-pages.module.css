@@ -1,0 +1,126 @@
+.page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.hero {
+  background: linear-gradient(140deg, rgba(24, 34, 79, 0.82), rgba(41, 29, 87, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  padding: 34px;
+  backdrop-filter: blur(8px);
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.12;
+  margin-bottom: 16px;
+}
+
+.lead {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.75;
+  font-size: 1.08rem;
+}
+
+.lead + .lead {
+  margin-top: 12px;
+}
+
+.ctaRow {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  min-width: 220px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.primaryBtn {
+  background: rgb(7, 114, 255);
+}
+
+.primaryBtn:hover {
+  background: rgb(0, 80, 189);
+}
+
+.secondaryBtn {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.secondaryBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.contentCard {
+  margin-top: 26px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 18px;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.section h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.section p {
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+
+.infoGrid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.infoBox {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.infoBox h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.infoBox p {
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .hero,
+  .contentCard {
+    padding: 20px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+  }
+}
