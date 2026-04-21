@@ -24,6 +24,7 @@ const navGroups: NavGroup[] = [
       { href: "/produkcja-pcb-polska", label: "Produkcja PCB w Polsce" },
       { href: "/montaz-smt-polska", label: "Montaż SMT w Polsce" },
       { href: "/montaz-tht-polska", label: "Montaż THT w Polsce" },
+      { href: "/produkcja-prototypowa-elektroniki", label: "Produkcja prototypowa elektroniki" },
     ],
   },
   {
@@ -39,10 +40,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Współpraca",
     children: [
-      { href: "/montaz-elektroniki-w-polsce", label: "Montaż elektroniki w Polsce" },
-      { href: "/kontraktowy-montaz-elektroniki", label: "Kontraktowy montaż elektroniki" },
       { href: "/jak-wybrac-firme-ems", label: "Jak wybrać firmę EMS" },
-      { href: "/produkcja-prototypowa-elektroniki", label: "Produkcja prototypowa elektroniki" },
     ],
   },
 ];
