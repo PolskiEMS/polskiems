@@ -22,8 +22,8 @@ export default function MontazsmtpolskaPage() {
         </p>
 
         <div className={styles.ctaRow}>
-          <Link href="/wyszukaj">
-            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          <Link href="/producenci?requirements=Montaż+SMT">
+            <button className={styles.primaryBtn}>Wyszukaj producenta SMT</button>
           </Link>
           <Link href="/wszyscy-producenci">
             <button className={styles.secondaryBtn}>Wszyscy producenci</button>

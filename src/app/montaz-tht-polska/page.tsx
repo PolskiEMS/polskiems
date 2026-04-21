@@ -22,8 +22,8 @@ return (
         </p>
 
         <div className={styles.ctaRow}>
-          <Link href="/wyszukaj">
-            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          <Link href="/producenci?requirements=Montaż+THT">
+            <button className={styles.primaryBtn}>Wyszukaj producenta THT</button>
           </Link>
           <Link href="/wszyscy-producenci">
             <button className={styles.secondaryBtn}>Wszyscy producenci</button>

@@ -21,8 +21,8 @@ export const metadata: Metadata = {
         </p>
 
         <div className={styles.ctaRow}>
-          <Link href="/wyszukaj">
-            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          <Link href="/producenci?requirements=Dostarcza+PCB">
+            <button className={styles.primaryBtn}>Wyszukaj producenta PCB</button>
           </Link>
           <Link href="/wszyscy-producenci">
             <button className={styles.secondaryBtn}>Wszyscy producenci</button>
