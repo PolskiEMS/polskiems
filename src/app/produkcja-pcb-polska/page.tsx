@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import SeoPageTemplateA from "../components/SeoPages/SeoPageTemplateA";
+import { seoPagesData } from "../seo-pages-data";
+import styles from "./styles.module.css";
 import Link from "next/link";
-import styles from "../seo-page.module.css";
+
+const pageData = seoPagesData["produkcja-pcb-polska"];
 
 export const metadata: Metadata = {
-  title: "Produkcja PCB w Polsce",
+  title: "Produkcja PCB w Polsce | Producenci EMS | PolskiEMS",
   description:
-    "Znajdź firmy oferujące produkcję PCB i usługi EMS w Polsce. Przeglądaj producentów elektroniki i wybierz odpowiedniego partnera.",
+    "Porównaj firmy oferujące produkcję PCB w Polsce. Sprawdź dostawców EMS, ich możliwości technologiczne i wybierz partnera do prototypów lub serii.",
 };
 
     export default function ProdukcjapcbpolskaPage() {
