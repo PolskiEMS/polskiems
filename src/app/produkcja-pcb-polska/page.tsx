@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import SeoPageTemplateA from "../components/SeoPages/SeoPageTemplateA";
-import { seoPagesData } from "../seo-pages-data";
-import styles from "./styles.module.css";
+import styles from "../seo-page.module.css";
 import Link from "next/link";
-
-const pageData = seoPagesData["produkcja-pcb-polska"];
 
 export const metadata: Metadata = {
   title: "Produkcja PCB w Polsce | Producenci EMS | PolskiEMS",
@@ -12,7 +8,7 @@ export const metadata: Metadata = {
     "Porównaj firmy oferujące produkcję PCB w Polsce. Sprawdź dostawców EMS, ich możliwości technologiczne i wybierz partnera do prototypów lub serii.",
 };
 
-    export default function ProdukcjapcbpolskaPage() {
+export default function ProdukcjapcbpolskaPage() {
 
   return (
     <div className={styles.page}>
@@ -50,4 +46,4 @@ export const metadata: Metadata = {
       </section>
     </div>
   );
-};
+}

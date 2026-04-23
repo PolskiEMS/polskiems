@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import SeoPageTemplateA from "../components/SeoPages/SeoPageTemplateA";
-import { seoPagesData } from "../seo-pages-data";
-import styles from "./styles.module.css";
+import styles from "../seo-page.module.css";
 import Link from "next/link";
-
-const pageData = seoPagesData["montaz-tht-polska"];
 
 export const metadata: Metadata = {
   title: "Montaż THT w Polsce | Producenci elektroniki | PolskiEMS",
@@ -12,9 +8,8 @@ export const metadata: Metadata = {
     "Szukasz montażu THT w Polsce? Sprawdź producentów EMS, porównaj kompetencje technologiczne i wybierz partnera do projektów wymagających trwałych połączeń.",
 };
 
-export default function MontazthtpolskaPage () {
-
-return (
+export default function MontazthtpolskaPage() {
+  return (
     <div className={styles.page}>
       <section className={styles.hero}>
         <h1>Montaż THT w Polsce</h1>
@@ -46,5 +41,4 @@ return (
 
     </div>
   );
-  
-};
+}
