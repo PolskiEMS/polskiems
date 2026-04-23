@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import styles from "../seo-page.module.css";
-import Link from "next/link";
+import ServiceLandingPage from "../components/SeoPages/ServiceLandingPage";
 
 export const metadata: Metadata = {
   title: "Montaż SMT w Polsce | Firmy EMS | PolskiEMS",
@@ -9,40 +8,52 @@ export const metadata: Metadata = {
 };
 
 export default function MontazsmtpolskaPage() {
-
   return (
-    <div className={styles.page}>
-      <section className={styles.hero}>
-        <h1>Montaż SMT w Polsce</h1>
-        <p>
-          Na tej stronie znajdziesz firmy oferujące montaż SMT w Polsce. Jeśli
-          szukasz partnera do produkcji elektroniki, prototypów lub większych serii,
-          możesz szybko przejrzeć producentów działających w branży EMS.
-        </p>
-
-        <div className={styles.ctaRow}>
-          <Link href="/producenci?requirements=Montaż+SMT">
-            <button className={styles.primaryBtn}>Wyszukaj producenta SMT</button>
-          </Link>
-          <Link href="/wszyscy-producenci">
-            <button className={styles.secondaryBtn}>Wszyscy producenci</button>
-          </Link>
-        </div>
-      </section>
-
-      <section className={styles.textBlock}>
-        <h2>Dlaczego montaż SMT jest ważny?</h2>
-        <p>
-          Montaż SMT jest jedną z najczęściej wykorzystywanych technologii w
-          nowoczesnej produkcji elektroniki. Pozwala realizować zarówno małe serie,
-          jak i duże wolumeny, przy zachowaniu wysokiej powtarzalności i jakości.
-        </p>
-        <p>
-          W katalogu PolskiEMS.pl możesz porównać firmy, które deklarują montaż SMT,
-          a następnie skontaktować się z wybranym producentem elektroniki.
-        </p>
-      </section>
-
-    </div>
+    <ServiceLandingPage
+      title="Montaż SMT w Polsce"
+      lead="Montaż SMT to fundament nowoczesnej produkcji elektroniki i jedna z najczęściej wybieranych technologii dla komponentów SMD. Dzięki katalogowi PolskiEMS możesz szybko porównać firmy, które realizują montaż SMT dla prototypów, krótkich serii i produkcji wolumenowej."
+      searchHref="/producenci?requirements=Monta%C5%BC%20SMT"
+      heroImage={{
+        src: "/images/gradient.jpg",
+        alt: "Linia montażu SMT w nowoczesnym zakładzie EMS",
+      }}
+      sections={[
+        {
+          heading: "Czym jest montaż SMT?",
+          paragraphs: [
+            "SMT (Surface Mount Technology) to technologia montażu powierzchniowego, w której elementy są osadzane bezpośrednio na powierzchni płytki drukowanej. Proces jest zoptymalizowany pod kątem szybkości, powtarzalności i wysokiej precyzji pozycjonowania komponentów.",
+            "Dzięki SMT można realizować złożone układy o dużej gęstości upakowania. To istotne w urządzeniach, gdzie liczy się miniaturyzacja, niska masa i wysoka wydajność procesu produkcyjnego.",
+          ],
+        },
+        {
+          heading: "Kiedy warto wybrać technologię SMT?",
+          paragraphs: [
+            "SMT sprawdza się szczególnie przy produktach seryjnych, elektronice użytkowej, IoT, automotive i urządzeniach przemysłowych. Pozwala utrzymać wysoką jakość przy rosnącym wolumenie i szybciej przechodzić z prototypu do skalowania.",
+            "W projektach wymagających krótkiego czasu wdrożenia technologia SMT pomaga ograniczyć ryzyko opóźnień. Kluczowe jest jednak dobre przygotowanie dokumentacji, BOM oraz planu testów jakościowych.",
+          ],
+        },
+        {
+          heading: "Jak ocenić producenta montażu SMT?",
+          paragraphs: [
+            "Przy wyborze partnera warto porównać możliwości linii, standardy AOI/X-ray, doświadczenie zespołu technologicznego i dostępność wsparcia DFM/DFT. Liczy się też transparentna komunikacja oraz szybkość reakcji na zmiany projektowe.",
+            "Dobrze zaplanowana współpraca obejmuje nie tylko montaż, ale również testy, raportowanie jakości i wsparcie przy optymalizacji kosztów produkcji seryjnej.",
+          ],
+        },
+      ]}
+      cards={[
+        {
+          title: "Najczęstsze zastosowania",
+          text: "Elektronika konsumencka, systemy IoT, automatyka, medtech i moduły komunikacyjne wymagające miniaturyzacji.",
+        },
+        {
+          title: "Korzyści biznesowe",
+          text: "Wysoka powtarzalność produkcji, krótszy czas realizacji i łatwiejsze skalowanie przy utrzymaniu stabilnej jakości.",
+        },
+        {
+          title: "Wskazówka zakupowa",
+          text: "Poproś o przykładowy przebieg uruchomienia nowego projektu: od analizy dokumentacji po raport z pierwszej partii.",
+        },
+      ]}
+    />
   );
 }
