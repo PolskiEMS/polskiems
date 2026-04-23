@@ -14,7 +14,7 @@ export default function MontazsmtpolskaPage() {
       lead="Montaż SMT to fundament nowoczesnej produkcji elektroniki i jedna z najczęściej wybieranych technologii dla komponentów SMD. Dzięki katalogowi PolskiEMS możesz szybko porównać firmy, które realizują montaż SMT dla prototypów, krótkich serii i produkcji wolumenowej."
       searchHref="/producenci?requirements=Monta%C5%BC%20SMT"
       heroImage={{
-        src: "/images/gradient.jpg",
+        src: "/image/montaz-smt.jpg",
         alt: "Linia montażu SMT w nowoczesnym zakładzie EMS",
       }}
       sections={[
