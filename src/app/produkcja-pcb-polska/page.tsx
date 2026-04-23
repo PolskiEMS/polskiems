@@ -14,7 +14,7 @@ export default function ProdukcjapcbpolskaPage() {
       lead="Produkcja płytek drukowanych PCB to kluczowy etap każdego projektu elektronicznego. Na tej stronie znajdziesz firmy, które dostarczają PCB i wspierają pełny proces wdrożenia – od prototypowania po produkcję seryjną oraz integrację z montażem EMS."
       searchHref="/producenci?requirements=Dostarcza%20PCB"
       heroImage={{
-        src: "images/uslugi/produkcja-pcb.png",
+        src: "/images/uslugi/produkcja_pcb.png",
         alt: "Proces produkcji płytek PCB dla projektów elektronicznych",
       }}
       sections={[
