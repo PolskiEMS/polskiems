@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import SeoPageTemplateA from "../components/SeoPages/SeoPageTemplateA";
-import { seoPagesData } from "../seo-pages-data";
-import styles from "./styles.module.css";
+import styles from "../seo-page.module.css";
 import Link from "next/link";
-
-const pageData = seoPagesData["montaz-smt-polska"];
 
 export const metadata: Metadata = {
   title: "Montaż SMT w Polsce | Firmy EMS | PolskiEMS",
@@ -49,4 +45,4 @@ export default function MontazsmtpolskaPage() {
 
     </div>
   );
-};
+}
