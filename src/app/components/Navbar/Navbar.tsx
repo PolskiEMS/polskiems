@@ -65,8 +65,8 @@ export default function Navbar() {
           <Image
             src="/images/logo.png"
             alt="Polski EMS - znajdź swojego producenta"
-            width={118}
-            height={50}
+            width={102}
+            height={44}
             className={styles.logo}
           />
         </Link>
