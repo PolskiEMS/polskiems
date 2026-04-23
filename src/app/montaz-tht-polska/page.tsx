@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import SeoPageTemplateA from "../components/SeoPages/SeoPageTemplateA";
 import { seoPagesData } from "../seo-pages-data";
+import styles from "./styles.module.css";
+import Link from "next/link";
 
 const pageData = seoPagesData["montaz-tht-polska"];
 
@@ -10,6 +12,39 @@ export const metadata: Metadata = {
     "Szukasz montażu THT w Polsce? Sprawdź producentów EMS, porównaj kompetencje technologiczne i wybierz partnera do projektów wymagających trwałych połączeń.",
 };
 
-export default function MontazthtpolskaPage() {
-  return <SeoPageTemplateA data={pageData} />;
-}
+export default function MontazthtpolskaPage () {
+
+return (
+    <div className={styles.page}>
+      <section className={styles.hero}>
+        <h1>Montaż THT w Polsce</h1>
+        <p>
+          Szukasz firmy realizującej montaż THT w Polsce? W katalogu PolskiEMS.pl
+          znajdziesz producentów elektroniki, którzy oferują usługi w technologii THT
+          i obsługują projekty o różnej skali.
+        </p>
+
+        <div className={styles.ctaRow}>
+          <Link href="/producenci?requirements=Montaż+THT">
+            <button className={styles.primaryBtn}>Wyszukaj producenta THT</button>
+          </Link>
+          <Link href="/wszyscy-producenci">
+            <button className={styles.secondaryBtn}>Wszyscy producenci</button>
+          </Link>
+        </div>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Kiedy warto wybrać montaż THT?</h2>
+        <p>
+          Technologia THT nadal ma duże znaczenie w wielu projektach elektronicznych,
+          szczególnie tam, gdzie liczy się trwałość połączeń i specyficzne wymagania
+          konstrukcyjne. Wybór odpowiedniego partnera produkcyjnego może znacząco
+          wpłynąć na jakość i terminowość realizacji.
+        </p>
+      </section>
+
+    </div>
+  );
+  
+};
