@@ -18,11 +18,11 @@ export default function Page() {
           realizują usługi najlepiej dopasowane do Twojego projektu.
         </p>
         <div className={styles.ctaRow}>
-          <Link href="/wyszukaj">
-            <button className={styles.primaryBtn}>Wyszukaj producenta</button>
+          <Link href="/producenci?regions=mazowieckie">
+            <button className={styles.primaryBtn}>Producenci z Mazowieckiego</button>
           </Link>
           <Link href="/wszyscy-producenci">
-            <button className={styles.secondaryBtn}>Wszyscy producenci</button>
+            <button className={styles.secondaryBtn}>Wszyscy Producenci</button>
           </Link>
         </div>
       </section>
