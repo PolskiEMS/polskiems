@@ -3,7 +3,7 @@
     flex-direction: row;
     gap: 15px;
     flex-wrap: wrap;
-    margin-top: 120px;
+    margin-top: 185px;
     justify-content: center;
     margin-bottom: 50px;
 }
@@ -101,7 +101,7 @@
 
 @media screen and (max-width: 830px) {
     .allFiltersGroup {
-        margin-top: 150px;
+        margin-top: 175px;
         flex-direction: column;
     }
 
@@ -125,9 +125,15 @@
     }
 }
 
+@media screen and (min-width: 831px) {
+    .allFiltersGroup {
+        margin-top: 235px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .allFiltersGroup {
-        margin-top: 180px;
+        margin-top: 190px;
         gap: 20px;
     }
 
