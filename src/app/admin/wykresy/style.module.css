@@ -1,9 +1,7 @@
 .page {
   min-height: 100vh;
   padding: 32px 16px 60px;
-  background: linear-gradient(rgba(47, 28, 78, 0.397), rgba(0, 0, 0, 0.13)), url('/images/gradient.jpg');
-  background-size: cover;
-  background-attachment: fixed;
+  background: #0e1117;
   color: #f3f4f6;
 }
 
