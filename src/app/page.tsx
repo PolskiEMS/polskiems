@@ -47,6 +47,7 @@ export default async function Home() {
             ))}
           </div>
           <div className={styles.recommendedCta}>
+            <h4 className={styles.recommendedCtaTitle}>Zapytanie ofertowe</h4>
             <p>
               Szukasz partnera EMS do projektu seryjnego lub prototypowego? Wyślij jedno zapytanie,
               a dopasujemy je do firm gotowych do szybkiej i rzetelnej wyceny.
