@@ -528,50 +528,113 @@ export async function getCompanyRanking(days = 30) {
 export async function getChartsData(days = 30) {
   const db = getDb();
 
-  const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+  const allowedRanges = new Set([7, 30, 90, 365]);
+  const safeDays = allowedRanges.has(days) ? days : 30;
 
-  const viewsExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
-
-  const websiteClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
-
-  const emailClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+  const currentSince = sql`NOW() - INTERVAL ${safeDays} DAY`;
+  const previousStart = sql`NOW() - INTERVAL ${safeDays * 2} DAY`;
 
   const rows = await db
     .select({
       companyId: producenci.id,
       firma: producenci.nazwa,
-      views: viewsExpr,
-      websiteClicks: websiteClicksExpr,
-      emailClicks: emailClicksExpr,
+      views: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${currentSince} AND ${companyEvents.eventType} = 'view' THEN 1 ELSE 0 END), 0)`,
+      websiteClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${currentSince} AND ${companyEvents.eventType} = 'website_click' THEN 1 ELSE 0 END), 0)`,
+      emailClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${currentSince} AND ${companyEvents.eventType} = 'email_click' THEN 1 ELSE 0 END), 0)`,
+      phoneClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${currentSince} AND ${companyEvents.eventType} = 'phone_click' THEN 1 ELSE 0 END), 0)`,
+      previousViews: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${previousStart} AND ${companyEvents.createdAt} < ${currentSince} AND ${companyEvents.eventType} = 'view' THEN 1 ELSE 0 END), 0)`,
+      previousWebsiteClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${previousStart} AND ${companyEvents.createdAt} < ${currentSince} AND ${companyEvents.eventType} = 'website_click' THEN 1 ELSE 0 END), 0)`,
+      previousEmailClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${previousStart} AND ${companyEvents.createdAt} < ${currentSince} AND ${companyEvents.eventType} = 'email_click' THEN 1 ELSE 0 END), 0)`,
+      previousPhoneClicks: sql<number>`COALESCE(SUM(CASE WHEN ${companyEvents.createdAt} >= ${previousStart} AND ${companyEvents.createdAt} < ${currentSince} AND ${companyEvents.eventType} = 'phone_click' THEN 1 ELSE 0 END), 0)`,
+      profileCompleteness: sql<number>`ROUND((
+        (CASE WHEN ${producenci.opis} IS NOT NULL AND TRIM(${producenci.opis}) != '' THEN 1 ELSE 0 END) +
+        (CASE WHEN ${producenci.adres} IS NOT NULL AND TRIM(${producenci.adres}) != '' THEN 1 ELSE 0 END) +
+        (CASE WHEN ${producenci.telefon} IS NOT NULL AND TRIM(${producenci.telefon}) != '' THEN 1 ELSE 0 END) +
+        (CASE WHEN ${producenci.email} IS NOT NULL AND TRIM(${producenci.email}) != '' THEN 1 ELSE 0 END) +
+        (CASE WHEN ${producenci.www} IS NOT NULL AND TRIM(${producenci.www}) != '' THEN 1 ELSE 0 END)
+      ) * 20, 0)`,
     })
     .from(producenci)
-    .leftJoin(
-      companyEvents,
-      since
-        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
-        : sql`${companyEvents.companyId} = ${producenci.id}`
-    )
+    .leftJoin(companyEvents, sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${previousStart}`)
     .where(sql`${producenci.isActive} = 1`)
-    .groupBy(producenci.id, producenci.nazwa);
+    .groupBy(producenci.id, producenci.nazwa, producenci.opis, producenci.adres, producenci.telefon, producenci.email, producenci.www);
 
-  const normalized = rows.map((row) => ({
-    companyId: row.companyId,
-    firma: row.firma,
-    views: Number(row.views ?? 0),
-    websiteClicks: Number(row.websiteClicks ?? 0),
-    emailClicks: Number(row.emailClicks ?? 0),
-  }));
+  const companies = rows.map((row) => {
+    const views = Number(row.views ?? 0);
+    const websiteClicks = Number(row.websiteClicks ?? 0);
+    const emailClicks = Number(row.emailClicks ?? 0);
+    const phoneClicks = Number(row.phoneClicks ?? 0);
+    const totalClicks = websiteClicks + emailClicks + phoneClicks;
+    const totalCtrPct = views > 0 ? Number(((totalClicks / views) * 100).toFixed(2)) : 0;
+
+    const previousViews = Number(row.previousViews ?? 0);
+    const previousWebsiteClicks = Number(row.previousWebsiteClicks ?? 0);
+    const previousEmailClicks = Number(row.previousEmailClicks ?? 0);
+    const previousPhoneClicks = Number(row.previousPhoneClicks ?? 0);
+    const previousTotalClicks = previousWebsiteClicks + previousEmailClicks + previousPhoneClicks;
+    const previousCtrPct = previousViews > 0 ? (previousTotalClicks / previousViews) * 100 : 0;
+
+    const leadPotential = Number((views * 0.35 + totalClicks * 0.65).toFixed(0));
+
+    return {
+      companyId: row.companyId,
+      firma: row.firma,
+      views,
+      websiteClicks,
+      emailClicks,
+      phoneClicks,
+      totalClicks,
+      totalCtrPct,
+      previousViews,
+      previousCtrPct: Number(previousCtrPct.toFixed(2)),
+      leadPotential,
+      profileCompleteness: Number(row.profileCompleteness ?? 0),
+    };
+  });
+
+  const totals = companies.reduce(
+    (acc, company) => {
+      acc.views += company.views;
+      acc.websiteClicks += company.websiteClicks;
+      acc.emailClicks += company.emailClicks;
+      acc.phoneClicks += company.phoneClicks;
+      acc.leadPotential += company.leadPotential;
+      return acc;
+    },
+    { views: 0, websiteClicks: 0, emailClicks: 0, phoneClicks: 0, leadPotential: 0 }
+  );
+
+  const totalClicks = totals.websiteClicks + totals.emailClicks + totals.phoneClicks;
+  const averageCtrPct = totals.views > 0 ? Number(((totalClicks / totals.views) * 100).toFixed(2)) : 0;
+
+  const previousTotals = companies.reduce(
+    (acc, company) => {
+      acc.views += company.previousViews;
+      acc.weightedCtrSum += company.previousCtrPct * company.previousViews;
+      return acc;
+    },
+    { views: 0, weightedCtrSum: 0 }
+  );
+
+  const previousCtrPct = previousTotals.views > 0 ? previousTotals.weightedCtrSum / previousTotals.views : 0;
 
   return {
-    viewsChart: [...normalized].sort((a, b) => b.views - a.views).slice(0, 10),
-    websiteClicksChart: [...normalized].sort((a, b) => b.websiteClicks - a.websiteClicks).slice(0, 10),
-    emailClicksChart: [...normalized].sort((a, b) => b.emailClicks - a.emailClicks).slice(0, 10),
+    days: safeDays,
+    companies,
+    totals: {
+      ...totals,
+      averageCtrPct,
+    },
+    trend: {
+      viewsChangePct:
+        previousTotals.views > 0
+          ? Number((((totals.views - previousTotals.views) / previousTotals.views) * 100).toFixed(2))
+          : 0,
+      ctrChangePct: Number((averageCtrPct - previousCtrPct).toFixed(2)),
+    },
   };
 }
+
 
 export async function getReportCompanies() {
   const db = getDb();
