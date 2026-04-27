@@ -58,7 +58,7 @@
     cursor: pointer;
     background-color: rgb(6, 122, 255);
 
-    margin-bottom: 70px;
+    margin-bottom: 130px;
 }
 
 .chceZnalezcSie:hover {
@@ -66,7 +66,7 @@
 }
 
 .seoSection {
-    margin-top: 48px;
+    margin-top: 120px;
     margin-bottom: 120px;
     text-align: center;
 }
@@ -97,6 +97,39 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 14px;
+}
+
+.recommendedCta {
+    margin-top: 44px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.recommendedCtaTitle {
+    font-size: 1.55rem;
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+
+.recommendedCta p {
+    margin-bottom: 14px;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.recommendedCtaButton {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(0, 102, 255, 0.85);
+    font-weight: 600;
+}
+
+.recommendedCtaButton:hover {
+    background: rgba(0, 86, 214, 0.95);
 }
 
 .recommendedCard img {
@@ -173,7 +206,7 @@
     }
 
     .chceZnalezcSie {
-        margin-bottom: 64px;
+        margin-bottom: 96px;
         width: 300px;
         max-width: 280px;
     }
@@ -186,6 +219,15 @@
 
     .recommendedActions {
         justify-content: center;
+    }
+
+    .recommendedCta {
+        padding: 16px 14px;
+    }
+
+    .recommendedCtaTitle {
+        font-size: 1.35rem;
+        margin-bottom: 12px;
     }
 
     .buttons button {
