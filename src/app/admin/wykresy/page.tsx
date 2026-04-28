@@ -23,9 +23,10 @@ const formatPct = (value: number) => `${value.toFixed(2)}%`;
 export default async function AdminChartsPage({
   searchParams,
 }: {
-  searchParams?: { days?: string };
+  searchParams: Promise<{ days?: string }>;
 }) {
-  const parsedDays = Number(searchParams?.days ?? 30);
+  const params = await searchParams;
+  const parsedDays = Number(params?.days ?? 30);
   const safeDays = AVAILABLE_DAYS.includes(parsedDays as (typeof AVAILABLE_DAYS)[number])
     ? parsedDays
     : 30;
