@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { approveCompanyAction, getAdminCompanies } from "@/lib/actions";
+import { approveCompanyAction, deleteCompanyAction, getAdminCompanies } from "@/lib/actions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -119,6 +119,13 @@ export default async function AdminCompaniesPage() {
                       >
                         Edytuj
                       </Link>
+
+                      <form action={deleteCompanyAction}>
+                        <input type="hidden" name="id" value={company.id} />
+                        <button type="submit" className={styles.deleteBtn}>
+                          Usuń
+                        </button>
+                      </form>
                     </div>
                   </td>
                 </tr>
@@ -198,6 +205,13 @@ export default async function AdminCompaniesPage() {
                   >
                     Edytuj
                   </Link>
+
+                  <form action={deleteCompanyAction}>
+                    <input type="hidden" name="id" value={company.id} />
+                    <button type="submit" className={styles.deleteBtn}>
+                      Usuń
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>

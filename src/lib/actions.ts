@@ -1029,6 +1029,33 @@ export async function updateCompanyAction(formData: FormData) {
   redirect("/admin/firmy");
 }
 
+
+export async function deleteCompanyAction(formData: FormData) {
+  "use server";
+
+  const db = getDb();
+  const id = Number(formData.get("id"));
+
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error("Nieprawidłowe ID firmy");
+  }
+
+  await db.delete(producenciEmsDzialania).where(eq(producenciEmsDzialania.companyId, id));
+  await db.delete(producenciEmsProdukcja).where(eq(producenciEmsProdukcja.companyId, id));
+  await db.delete(companyEvents).where(eq(companyEvents.companyId, id));
+  await db.delete(inquiryRecipients).where(eq(inquiryRecipients.companyId, id));
+
+  await db
+    .update(packageOrders)
+    .set({ companyId: null })
+    .where(eq(packageOrders.companyId, id));
+
+  await db.delete(producenci).where(eq(producenci.id, id));
+
+  revalidatePath("/admin/firmy");
+  redirect("/admin/firmy?deleted=1");
+}
+
 export async function approveCompanyAction(formData: FormData) {
   "use server";
   const db = getDb();
