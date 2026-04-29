@@ -1,99 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
-import { getDb } from "@/lib/db";
-import { packageOrders, producenci } from "@/db/schema";
+import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const PACKAGE_LIMIT: Record<"standard" | "premium", number> = {
-  standard: 20,
-  premium: 999999,
-};
-
-function toSqlDateTime(date: Date) {
-  return date.toISOString().slice(0, 19).replace("T", " ");
-}
-
-function addMonths(baseDate: Date, months: number) {
-  const d = new Date(baseDate);
-  d.setMonth(d.getMonth() + months);
-  return d;
-}
-
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const orderId = Number(body?.orderId);
-
-  if (!Number.isFinite(orderId) || orderId <= 0) {
-    return NextResponse.json({ ok: false, error: "Nieprawidłowe ID zamówienia" }, { status: 400 });
-  }
-
-  const db = getDb();
-
-  const orderRows = await db
-    .select({
-      id: packageOrders.id,
-      companyId: packageOrders.companyId,
-      packageType: packageOrders.packageType,
-      status: packageOrders.status,
-      billingCycleMonths: packageOrders.billingCycleMonths,
-    })
-    .from(packageOrders)
-    .where(eq(packageOrders.id, orderId));
-
-  const order = orderRows[0];
-  if (!order) {
-    return NextResponse.json({ ok: false, error: "Nie znaleziono zamówienia" }, { status: 404 });
-  }
-
-  if (order.status === "paid") {
-    return NextResponse.json({ ok: true, alreadyPaid: true });
-  }
-
-  const nowDate = new Date();
-  const now = toSqlDateTime(nowDate);
-
-  const companyRows = await db
-    .select({
-      id: producenci.id,
-      packageValidUntil: producenci.packageValidUntil,
-    })
-    .from(producenci)
-    .where(eq(producenci.id, order.companyId));
-
-  const company = companyRows[0];
-  if (!company) {
-    return NextResponse.json({ ok: false, error: "Nie znaleziono firmy dla zamówienia" }, { status: 404 });
-  }
-
-  const baseDate = company.packageValidUntil
-    ? new Date(company.packageValidUntil.replace(" ", "T") + "Z")
-    : nowDate;
-
-  const validUntil = addMonths(baseDate > nowDate ? baseDate : nowDate, Number(order.billingCycleMonths || 1));
-  const validUntilSql = toSqlDateTime(validUntil);
-
-  await db
-    .update(packageOrders)
-    .set({ status: "paid", paidAt: now, activatedAt: now, accessValidUntil: validUntilSql })
-    .where(and(eq(packageOrders.id, order.id), eq(packageOrders.status, "pending")));
-
-  await db
-    .update(producenci)
-    .set({
-      isActive: true,
-      packageType: order.packageType,
-      featured: true,
-      monthlyInquiryLimit: PACKAGE_LIMIT[order.packageType],
-      monthlyInquiryCount: 0,
-      packageValidUntil: validUntilSql,
-    })
-    .where(eq(producenci.id, order.companyId));
-
-  return NextResponse.json({
-    ok: true,
-    activatedPackage: order.packageType,
-    billingCycleMonths: order.billingCycleMonths,
-    packageValidUntil: validUntilSql,
-  });
+export async function POST() {
+  return NextResponse.json(
+    {
+      ok: false,
+      code: "FORBIDDEN",
+      error:
+        "Ręczna aktywacja pakietu przez użytkownika jest niedostępna. Aktywacja odbywa się po potwierdzeniu płatności lub przez administratora.",
+    },
+    { status: 403 }
+  );
 }

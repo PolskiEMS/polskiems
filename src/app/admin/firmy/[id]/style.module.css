@@ -240,3 +240,24 @@
     align-items: stretch;
   }
 }
+
+.deleteForm {
+  margin-top: 12px;
+}
+
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.85);
+  background: rgba(127, 29, 29, 0.5);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(185, 28, 28, 0.75);
+}
