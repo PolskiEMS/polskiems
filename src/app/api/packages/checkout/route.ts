@@ -2,42 +2,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { packageOrders, producenci } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
+import { getStripeClient } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
 type PaidPackage = "standard" | "premium";
 type BillingCycleMonths = 1 | 3 | 6 | 12;
 
+type Provider = "stripe" | "przelewy24";
+
 const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
-  standard: {
-    1: 199,
-    3: 549,
-    6: 999,
-    12: 1799,
-  },
-  premium: {
-    1: 299,
-    3: 849,
-    6: 1599,
-    12: 2999,
-  },
+  standard: { 1: 199, 3: 549, 6: 999, 12: 1799 },
+  premium: { 1: 299, 3: 849, 6: 1599, 12: 2999 },
 };
 
 function isPackageType(value: string): value is PaidPackage {
   return value === "standard" || value === "premium";
 }
 
-function isProvider(value: string): value is "stripe" | "przelewy24" {
+function isProvider(value: string): value is Provider {
   return value === "stripe" || value === "przelewy24";
 }
 
 function parseBillingCycleMonths(value: unknown): BillingCycleMonths | null {
   const months = Number(value);
-  if (months === 1 || months === 3 || months === 6 || months === 12) {
-    return months;
-  }
-
-  return null;
+  return months === 1 || months === 3 || months === 6 || months === 12 ? months : null;
 }
 
 export async function POST(req: NextRequest) {
@@ -60,38 +49,53 @@ export async function POST(req: NextRequest) {
   const buyerCity = String(body?.buyerCity ?? "").trim();
   const buyerCountry = String(body?.buyerCountry ?? "Polska").trim();
 
-  if (!companyName || !companyEmail) {
+  if (!companyName || !companyEmail || !isPackageType(packageType) || !billingCycleMonths) {
     return NextResponse.json(
-      { ok: false, error: "Uzupełnij nazwę i e-mail firmy" },
+      {
+        ok: false,
+        code: "VALIDATION_ERROR",
+        error: "Uzupełnij wymagane dane firmy przed przejściem do płatności.",
+      },
       { status: 400 }
     );
   }
 
-  if (!isPackageType(packageType)) {
-    return NextResponse.json({ ok: false, error: "Wybierz pakiet Standard lub Premium" }, { status: 400 });
-  }
-
   if (!isProvider(provider)) {
-    return NextResponse.json({ ok: false, error: "Wybierz operatora płatności" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, code: "VALIDATION_ERROR", error: "Wybierz poprawną metodę płatności." },
+      { status: 400 }
+    );
   }
 
-  if (!billingCycleMonths) {
+  if (provider === "przelewy24") {
     return NextResponse.json(
-      { ok: false, error: "Wybierz okres subskrypcji: 1, 3, 6 lub 12 miesięcy" },
+      {
+        ok: false,
+        code: "PROVIDER_NOT_AVAILABLE",
+        error:
+          "Płatność przez Przelewy24 jest obecnie przygotowywana. Wybierz płatność Stripe albo skontaktuj się z nami w celu otrzymania danych do przelewu.",
+      },
       { status: 400 }
+    );
+  }
+
+  const stripe = getStripeClient();
+  if (!stripe) {
+    return NextResponse.json(
+      {
+        ok: false,
+        code: "PAYMENT_CONFIGURATION_ERROR",
+        error: "Płatności online są chwilowo niedostępne. Skontaktuj się z nami, aby dokończyć zamówienie.",
+      },
+      { status: 503 }
     );
   }
 
   const db = getDb();
   const existingCompanyRows = await db
-    .select({ id: producenci.id, nazwa: producenci.nazwa })
+    .select({ id: producenci.id })
     .from(producenci)
-    .where(
-      or(
-        eq(producenci.nazwa, companyName),
-        eq(producenci.email, companyEmail)
-      )
-    );
+    .where(or(eq(producenci.nazwa, companyName), eq(producenci.email, companyEmail)));
 
   if (existingCompanyRows.length > 0) {
     return NextResponse.json(
@@ -99,30 +103,20 @@ export async function POST(req: NextRequest) {
         ok: false,
         code: "COMPANY_EXISTS",
         error:
-          "Taki Producent jest już obecny, uzupełnij więcej potrzebnych danych w formularzu zgłoszeniowym.",
+          "Firma o tej nazwie lub adresie e-mail już istnieje. Skontaktuj się z nami, aby rozszerzyć obecny profil.",
       },
       { status: 409 }
     );
   }
 
-  const companyInsertResult = await db.insert(producenci).values({
-    nazwa: companyName,
-    email: companyEmail,
-    telefon: companyPhone || null,
-    opis: companyDescription || null,
-    isActive: false,
-    featured: false,
-    packageType: "free",
-    monthlyInquiryLimit: 5,
-    monthlyInquiryCount: 0,
-    packageValidUntil: null,
-  });
-
-  const companyId = Number((companyInsertResult as any).insertId);
   const amountGross = PACKAGE_PRICE_TOTAL[packageType][billingCycleMonths];
 
-  const insertResult = await db.insert(packageOrders).values({
-    companyId,
+  const orderResult = await db.insert(packageOrders).values({
+    companyId: null,
+    companyName,
+    companyEmail,
+    companyPhone: companyPhone || null,
+    companyDescription: companyDescription || null,
     packageType,
     provider,
     billingCycleMonths,
@@ -136,19 +130,48 @@ export async function POST(req: NextRequest) {
     buyerPostalCode: buyerPostalCode || null,
     buyerCity: buyerCity || null,
     buyerCountry: buyerCountry || null,
-    status: "pending",
+    paymentStatus: "pending_payment",
   });
 
-  const orderId = Number((insertResult as any).insertId);
+  const orderId = Number((orderResult as any).insertId);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    success_url: `${siteUrl}/platnosc/sukces?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${siteUrl}/platnosc/anulowano`,
+    customer_email: companyEmail,
+    metadata: {
+      orderId: String(orderId),
+      companyName,
+      companyEmail,
+      packageType,
+      billingCycleMonths: String(billingCycleMonths),
+      provider,
+    },
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: "pln",
+          unit_amount: amountGross * 100,
+          product_data: {
+            name: `Pakiet ${packageType.toUpperCase()} (${billingCycleMonths} mies.)`,
+          },
+        },
+      },
+    ],
+  });
+
+  await db
+    .update(packageOrders)
+    .set({ stripeSessionId: session.id })
+    .where(eq(packageOrders.id, orderId));
 
   return NextResponse.json({
     ok: true,
+    provider: "stripe",
+    checkoutUrl: session.url,
     orderId,
-    companyId,
-    companyName,
-    amountGross,
-    provider,
-    packageType,
-    billingCycleMonths,
   });
 }

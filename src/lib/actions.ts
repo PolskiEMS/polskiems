@@ -733,13 +733,13 @@ export async function getAdminSubscriptions() {
       id: packageOrders.id,
       createdAt: packageOrders.createdAt,
       paidAt: packageOrders.paidAt,
-      status: packageOrders.status,
+      status: packageOrders.paymentStatus,
       provider: packageOrders.provider,
       packageType: packageOrders.packageType,
       amountGross: packageOrders.amountGross,
       billingCycleMonths: packageOrders.billingCycleMonths,
-      companyId: producenci.id,
-      companyName: producenci.nazwa,
+      companyId: packageOrders.companyId,
+      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
       buyerName: packageOrders.buyerName,
       buyerEmail: packageOrders.buyerEmail,
       buyerPhone: packageOrders.buyerPhone,
@@ -752,7 +752,7 @@ export async function getAdminSubscriptions() {
       accessValidUntil: packageOrders.accessValidUntil,
     })
     .from(packageOrders)
-    .innerJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .leftJoin(producenci, eq(packageOrders.companyId, producenci.id))
     .orderBy(desc(packageOrders.createdAt))
     .limit(200);
 
@@ -1029,6 +1029,33 @@ export async function updateCompanyAction(formData: FormData) {
   redirect("/admin/firmy");
 }
 
+
+export async function deleteCompanyAction(formData: FormData) {
+  "use server";
+
+  const db = getDb();
+  const id = Number(formData.get("id"));
+
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error("Nieprawidłowe ID firmy");
+  }
+
+  await db.delete(producenciEmsDzialania).where(eq(producenciEmsDzialania.companyId, id));
+  await db.delete(producenciEmsProdukcja).where(eq(producenciEmsProdukcja.companyId, id));
+  await db.delete(companyEvents).where(eq(companyEvents.companyId, id));
+  await db.delete(inquiryRecipients).where(eq(inquiryRecipients.companyId, id));
+
+  await db
+    .update(packageOrders)
+    .set({ companyId: null })
+    .where(eq(packageOrders.companyId, id));
+
+  await db.delete(producenci).where(eq(producenci.id, id));
+
+  revalidatePath("/admin/firmy");
+  redirect("/admin/firmy?deleted=1");
+}
+
 export async function approveCompanyAction(formData: FormData) {
   "use server";
   const db = getDb();
@@ -1106,8 +1133,8 @@ export async function getAdminInquiries() {
       createdAt: inquiries.createdAt,
 
       recipientId: inquiryRecipients.id,
-      companyId: producenci.id,
-      companyName: producenci.nazwa,
+      companyId: packageOrders.companyId,
+      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
       packageType: producenci.packageType,
       companyEmail: inquiryRecipients.companyEmail,
       status: inquiryRecipients.status,

@@ -244,3 +244,20 @@
     text-align: center;
   }
 }
+
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.8);
+  background: rgba(127, 29, 29, 0.5);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(185, 28, 28, 0.7);
+}

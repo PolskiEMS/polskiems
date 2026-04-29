@@ -6,6 +6,7 @@ import {
   getAllProdukcjaScales,
   getAllRegion,
   updateCompanyAction,
+  deleteCompanyAction,
 } from "@/lib/actions";
 import styles from "./style.module.css";
 
@@ -247,6 +248,13 @@ export default async function EditCompanyPage({ params }: PageProps) {
               Powrót
             </Link>
           </div>
+        </form>
+
+        <form action={deleteCompanyAction} className={styles.deleteForm}>
+          <input type="hidden" name="id" value={String(company.id)} />
+          <button type="submit" className={styles.deleteBtn}>
+            Usuń firmę
+          </button>
         </form>
       </div>
     </div>
