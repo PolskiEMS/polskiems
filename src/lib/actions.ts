@@ -738,8 +738,8 @@ export async function getAdminSubscriptions() {
       packageType: packageOrders.packageType,
       amountGross: packageOrders.amountGross,
       billingCycleMonths: packageOrders.billingCycleMonths,
-      companyId: producenci.id,
-      companyName: producenci.nazwa,
+      companyId: packageOrders.companyId,
+      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
       buyerName: packageOrders.buyerName,
       buyerEmail: packageOrders.buyerEmail,
       buyerPhone: packageOrders.buyerPhone,
@@ -752,7 +752,7 @@ export async function getAdminSubscriptions() {
       accessValidUntil: packageOrders.accessValidUntil,
     })
     .from(packageOrders)
-    .innerJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .leftJoin(producenci, eq(packageOrders.companyId, producenci.id))
     .orderBy(desc(packageOrders.createdAt))
     .limit(200);
 
@@ -1133,8 +1133,8 @@ export async function getAdminInquiries() {
       createdAt: inquiries.createdAt,
 
       recipientId: inquiryRecipients.id,
-      companyId: producenci.id,
-      companyName: producenci.nazwa,
+      companyId: packageOrders.companyId,
+      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
       packageType: producenci.packageType,
       companyEmail: inquiryRecipients.companyEmail,
       status: inquiryRecipients.status,
