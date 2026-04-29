@@ -733,7 +733,7 @@ export async function getAdminSubscriptions() {
       id: packageOrders.id,
       createdAt: packageOrders.createdAt,
       paidAt: packageOrders.paidAt,
-      status: packageOrders.status,
+      status: packageOrders.paymentStatus,
       provider: packageOrders.provider,
       packageType: packageOrders.packageType,
       amountGross: packageOrders.amountGross,
