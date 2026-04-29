@@ -162,7 +162,7 @@ export const seoPagesData: Record<string, SeoPageData> = {
   },
   "produkcja-prototypowa-elektroniki": {
     title: "Produkcja prototypowa elektroniki",
-    searchHref: "/producenci?scales=1%20-%2010",
+    searchHref: "/producenci?scales=1+-+10&scales=10+-+50&scales=50+-+200&scales=200+-+1000&scales=1000+%2B",
     lead: [
       "Produkcja prototypowa elektroniki pomaga zweryfikować projekt przed wejściem w serię i szybciej wykryć ryzyka techniczne. To etap, na którym liczy się tempo iteracji, dostęp do kompetencji inżynierskich i sprawna komunikacja.",
       "W katalogu PolskiEMS możesz porównać firmy wspierające uruchomienia prototypowe i przygotowanie procesu pod kolejne etapy skalowania.",
