@@ -9,7 +9,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 80px;
+    top: 124px;
     width: 400px;
     margin-left: auto;
     margin-right: auto;
@@ -38,8 +38,14 @@
 
 @media screen and (max-width: 768px) {
     .page h1 {
-        top: 140px;
+        top: 124px;
         font-size: 2.4em;
         width: 100%;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .page h1 {
+        top: 168px;
     }
 }
