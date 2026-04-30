@@ -10,11 +10,11 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 62px;
+  min-height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
+  padding: 0 12px;
 }
 
 .logoWrap {
@@ -41,7 +41,7 @@
   border: 0;
   background: transparent;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.96rem;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 10px;
