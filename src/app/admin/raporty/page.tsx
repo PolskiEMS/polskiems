@@ -4,18 +4,37 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+const PRESET_DAYS = [7, 30, 90, 180, 365] as const;
+
+const isValidDate = (value?: string) =>
+  Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+
 export default async function AdminReportsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ companyId?: string; days?: string }>;
+  searchParams: Promise<{ companyId?: string; days?: string; startDate?: string; endDate?: string }>;
 }) {
   const params = await searchParams;
-  const days = Number(params?.days ?? 30);
+  const daysRaw = Number(params?.days ?? 30);
+  const days = PRESET_DAYS.includes(daysRaw as (typeof PRESET_DAYS)[number]) ? daysRaw : 30;
   const companyId = Number(params?.companyId ?? 0);
+  const startDate = isValidDate(params?.startDate) ? String(params?.startDate) : "";
+  const endDate = isValidDate(params?.endDate) ? String(params?.endDate) : "";
+  const useCustomRange = Boolean(startDate && endDate);
 
   const companies = await getReportCompanies();
   const report =
-    companyId > 0 ? await getCompanyReport(companyId, days) : null;
+    companyId > 0
+      ? await getCompanyReport(companyId, days, startDate || null, endDate || null)
+      : null;
+
+  const rangeLabel = useCustomRange
+    ? `${startDate} – ${endDate}`
+    : `${days} dni`;
+
+  const queryRange = useCustomRange
+    ? `startDate=${startDate}&endDate=${endDate}`
+    : `days=${days}`;
 
   return (
     <div className={styles.page}>
@@ -41,7 +60,7 @@ export default async function AdminReportsPage({
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="days">Zakres</label>
+            <label htmlFor="days">Gotowy zakres</label>
             <select
               id="days"
               name="days"
@@ -51,8 +70,19 @@ export default async function AdminReportsPage({
               <option value="7">7 dni</option>
               <option value="30">30 dni</option>
               <option value="90">90 dni</option>
+              <option value="180">180 dni</option>
               <option value="365">365 dni</option>
             </select>
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="startDate">Data od</label>
+            <input id="startDate" name="startDate" type="date" defaultValue={startDate} className={styles.select} />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="endDate">Data do</label>
+            <input id="endDate" name="endDate" type="date" defaultValue={endDate} className={styles.select} />
           </div>
 
           <button type="submit" className={styles.button}>
@@ -63,7 +93,7 @@ export default async function AdminReportsPage({
         {report ? (
           <div className={styles.reportCard}>
             <h2 className={styles.reportTitle}>
-              {report.firma} — raport ({days} dni)
+              {report.firma} — raport ({rangeLabel})
             </h2>
 
             <div className={styles.kpis}>
@@ -95,7 +125,7 @@ export default async function AdminReportsPage({
 
             <div className={styles.actionsRow}>
               <a
-                href={`/admin/raporty/pdf?companyId=${companyId}&days=${days}`}
+                href={`/admin/raporty/pdf?companyId=${companyId}&${queryRange}`}
                 className={styles.pdfButton}
               >
                 Pobierz PDF

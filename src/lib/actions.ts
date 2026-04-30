@@ -649,11 +649,18 @@ export async function getReportCompanies() {
     .orderBy(asc(producenci.nazwa));
 }
 
-export async function getCompanyReport(companyId: number, days = 30) {
+export async function getCompanyReport(
+  companyId: number,
+  days = 30,
+  startDate?: string | null,
+  endDate?: string | null
+) {
   const db = getDb();
 
-  const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+  const hasCustomRange = Boolean(startDate && endDate);
+  const since = !hasCustomRange && days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+  const rangeStart = hasCustomRange ? sql`${startDate} 00:00:00` : null;
+  const rangeEnd = hasCustomRange ? sql`${endDate} 23:59:59` : null;
 
   const rows = await db
     .select({
@@ -690,9 +697,11 @@ export async function getCompanyReport(companyId: number, days = 30) {
     .from(producenci)
     .leftJoin(
       companyEvents,
-      since
-        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
-        : sql`${companyEvents.companyId} = ${producenci.id}`
+      hasCustomRange && rangeStart && rangeEnd
+        ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} BETWEEN ${rangeStart} AND ${rangeEnd}`
+        : since
+          ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
+          : sql`${companyEvents.companyId} = ${producenci.id}`
     )
     .where(sql`${producenci.id} = ${companyId}`)
     .groupBy(
