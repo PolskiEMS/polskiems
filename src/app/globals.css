@@ -20,6 +20,7 @@
 /* } */
 
 body {
+  margin: 0;
   background: var(--background);
   background-image: linear-gradient(rgba(47, 28, 78, 0.397), rgba(0, 0, 0, 0.13)), url('/images/gradient.jpg');
   background-size: cover;
