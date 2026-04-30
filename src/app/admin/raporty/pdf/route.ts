@@ -603,12 +603,15 @@ export async function GET(req: NextRequest) {
     try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
     const days = Number(req.nextUrl.searchParams.get("days") ?? 30);
+    const startDate = req.nextUrl.searchParams.get("startDate");
+    const endDate = req.nextUrl.searchParams.get("endDate");
+    const hasCustomRange = Boolean(startDate && endDate);
 
     if (!Number.isFinite(companyId) || companyId <= 0) {
       return new Response("Invalid companyId", { status: 400 });
     }
 
-    const report = await getCompanyReport(companyId, days);
+    const report = await getCompanyReport(companyId, days, startDate, endDate);
 
     if (!report) {
       return new Response("Report not found", { status: 404 });
@@ -647,9 +650,13 @@ export async function GET(req: NextRequest) {
       const contentWidth = pageWidth - 100;
 
       const now = new Date();
-      const start = new Date();
-      start.setDate(now.getDate() - days);
-      const reportRangeLabel = `${formatDate(start)} – ${formatDate(now)}`;
+      const reportRangeLabel = hasCustomRange && startDate && endDate
+        ? `${formatDate(new Date(startDate))} – ${formatDate(new Date(endDate))}`
+        : (() => {
+            const start = new Date();
+            start.setDate(now.getDate() - days);
+            return `${formatDate(start)} – ${formatDate(now)}`;
+          })();
 
       const companyName = String(report.firma ?? "Firma");
       const packageType = String(report.packageType ?? "free").toLowerCase();
@@ -699,7 +706,7 @@ export async function GET(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="raport-${safeName}-${days}dni.pdf"`,
+        "Content-Disposition": `attachment; filename="raport-${safeName}-${hasCustomRange ? `${startDate}-${endDate}` : `${days}dni`}.pdf"`,
       },
     });
   } catch (error) {
