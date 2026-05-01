@@ -5,9 +5,19 @@
     margin: 0 auto;
 }
 
+.hero {
+    min-height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 36px 0 32px;
+}
+
 .page h1 {
     text-align: center;
-    font-size: 6em;
+    font-size: clamp(3.3rem, 8.5vw, 6.4em);
     line-height: 1.02;
     font-weight: 700;
 }
@@ -16,27 +26,29 @@
     margin-top: 20px;
     font-size: 1.4em;
     text-align: center;
-    color: rgba(255, 255, 255, 0.637);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .buttons {
-    margin-top: 100px;
+    margin-top: 72px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    gap: 14px;
+    max-width: 780px;
+}
+
+.buttons a {
+    display: block;
 }
 
 .buttons button {
-    width: 235px;
-    height: 45px;
+    width: 280px;
+    min-height: 52px;
     border: 1px solid rgba(255, 255, 255, 0.637);
     border-radius: 4px;
-    font-size: 1.1em;
-    transition: 0.06s ease-in-out;
+    font-size: 1.12em;
+    transition: 0.12s ease-in-out;
     cursor: pointer;
 }
 
@@ -45,38 +57,33 @@
 }
 
 .chceZnalezcSie {
-    margin-top: 60px;
+    margin-top: 14px;
     padding: 10px 10px;
     border: 1px solid rgba(255, 255, 255, 0.178);
-    width: 250px;
+    width: 300px;
     text-align: center;
     display: block;
     margin-left: auto;
     margin-right: auto;
     border-radius: 4px;
-    transition: 0.06s ease-in-out;
+    transition: 0.12s ease-in-out;
     cursor: pointer;
     background-color: rgb(6, 122, 255);
-
-    margin-bottom: 130px;
 }
 
 .chceZnalezcSie:hover {
     background-color: rgb(0, 73, 156);
 }
 
-.seoSection {
-    margin-top: 120px;
-    margin-bottom: 120px;
-    text-align: center;
-}
-
 .recommendedSection {
     margin: 0 auto;
     max-width: 1100px;
+    padding-top: 42px;
 }
 
-.recommendedSection h3 {
+.recommendedSection h3,
+.rfqSection h3,
+.seoSection h3 {
     font-size: 2rem;
     margin-bottom: 20px;
     text-align: center;
@@ -99,8 +106,13 @@
     gap: 14px;
 }
 
+.rfqSection {
+    margin: 38px auto 0;
+    max-width: 1100px;
+}
+
 .recommendedCta {
-    margin-top: 44px;
+    margin-top: 0;
     padding: 18px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 14px;
@@ -164,9 +176,10 @@
     background: rgba(255, 255, 255, 0.15);
 }
 
-.seoSection h3 {
-    font-size: 2rem;
-    margin-bottom: 24px;
+.seoSection {
+    margin-top: 96px;
+    margin-bottom: 120px;
+    text-align: center;
 }
 
 .seoLinks {
@@ -190,8 +203,14 @@
 }
 
 @media screen and (max-width: 768px) {
+    .hero {
+        min-height: calc(100svh - var(--navbar-height));
+        padding-top: 14px;
+        padding-bottom: 20px;
+    }
+
     .page h1 {
-        font-size: 4em;
+        font-size: 4.4em;
     }
 
     .page h2 {
@@ -199,16 +218,25 @@
     }
 
     .buttons {
-        margin-top: 40px;
+        margin-top: 28px;
         flex-direction: column;
-        gap: 20px;
+        gap: 14px;
         align-items: center;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .buttons a {
+        width: 100%;
     }
 
     .chceZnalezcSie {
-        margin-bottom: 96px;
-        width: 300px;
-        max-width: 280px;
+        margin-top: 10px;
+        width: min(100%, 360px);
+    }
+
+    .recommendedSection {
+        padding-top: 22px;
     }
 
     .recommendedCard {
@@ -231,9 +259,9 @@
     }
 
     .buttons button {
-        width: 300px;
-        max-width: 280px;
-        font-size: 1em;
+        width: 100%;
+        min-height: 54px;
+        font-size: 1.05em;
     }
 }
 
@@ -242,15 +270,12 @@
         padding-inline: 15px;
     }
 
-    .buttons {
-        margin-top: 40px;
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
+    .page h1 {
+        font-size: 3.2em;
     }
 
-    .buttons button {
-        width: 300px;
-        max-width: 280px;
+    .buttons button,
+    .chceZnalezcSie {
+        width: 100%;
     }
 }
