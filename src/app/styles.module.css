@@ -17,7 +17,7 @@
 
 .page h1 {
     text-align: center;
-    font-size: clamp(3rem, 8vw, 6em);
+    font-size: clamp(3.3rem, 8.5vw, 6.4em);
     line-height: 1.02;
     font-weight: 700;
 }
@@ -38,12 +38,16 @@
     max-width: 780px;
 }
 
+.buttons a {
+    display: block;
+}
+
 .buttons button {
-    width: 240px;
-    min-height: 46px;
+    width: 280px;
+    min-height: 52px;
     border: 1px solid rgba(255, 255, 255, 0.637);
     border-radius: 4px;
-    font-size: 1.1em;
+    font-size: 1.12em;
     transition: 0.12s ease-in-out;
     cursor: pointer;
 }
@@ -56,7 +60,7 @@
     margin-top: 14px;
     padding: 10px 10px;
     border: 1px solid rgba(255, 255, 255, 0.178);
-    width: 250px;
+    width: 300px;
     text-align: center;
     display: block;
     margin-left: auto;
@@ -206,7 +210,7 @@
     }
 
     .page h1 {
-        font-size: 4em;
+        font-size: 4.4em;
     }
 
     .page h2 {
@@ -218,6 +222,11 @@
         flex-direction: column;
         gap: 14px;
         align-items: center;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .buttons a {
         width: 100%;
     }
 
@@ -250,8 +259,9 @@
     }
 
     .buttons button {
-        width: min(100%, 360px);
-        font-size: 1em;
+        width: 100%;
+        min-height: 54px;
+        font-size: 1.05em;
     }
 }
 
