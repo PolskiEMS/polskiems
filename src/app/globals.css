@@ -16,7 +16,7 @@
   :root {
     --background: #26255a;
     --foreground: #ededed;
-    --navbar-height: 54px;
+    --navbar-height: 88px;
   }
 /* } */
 
@@ -29,4 +29,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans);
   padding-top: var(--navbar-height);
+}
+
+
+@media (max-width: 959px) {
+  :root {
+    --navbar-height: 76px;
+  }
 }

@@ -8,16 +8,18 @@ export default async function Home() {
   const featuredProducers = await getFeaturedProducers(3);
 
   return (
-    <div className={styles.page}>
+    <main className={styles.page}>
       <PageViewTracker page="home" />
-      
-      <h1>Polski <br /> EMS</h1>
-      <h2>Znajdź swojego producenta</h2>
-      <div className={styles.buttons}>
-        <Link href={'/wyszukaj'}><button>Wyszukaj</button></Link>
-        <Link href={'/wszyscy-producenci'}><button>Wszyscy Producenci</button></Link>
-      </div>
-      <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+
+      <section className={styles.hero}>
+        <h1>Polski <br /> EMS</h1>
+        <h2>Znajdź swojego producenta</h2>
+        <div className={styles.buttons}>
+          <Link href={'/wyszukaj'}><button>Wyszukaj</button></Link>
+          <Link href={'/wszyscy-producenci'}><button>Wszyscy Producenci</button></Link>
+        </div>
+        <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+      </section>
 
       {featuredProducers.length > 0 && (
         <section className={styles.recommendedSection}>
@@ -46,18 +48,21 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          <div className={styles.recommendedCta}>
-            <h4 className={styles.recommendedCtaTitle}>Zapytanie ofertowe</h4>
-            <p>
-              Szukasz partnera EMS do projektu seryjnego lub prototypowego? Wyślij jedno zapytanie,
-              a dopasujemy je do firm gotowych do szybkiej i rzetelnej wyceny.
-            </p>
-            <Link href="/zapytania-ofertowe" className={styles.recommendedCtaButton}>
-              Dodaj zapytanie ofertowe
-            </Link>
-          </div>
         </section>
       )}
+
+      <section className={styles.rfqSection}>
+        <div className={styles.recommendedCta}>
+          <h4 className={styles.recommendedCtaTitle}>Zapytanie ofertowe</h4>
+          <p>
+            Szukasz partnera EMS do projektu seryjnego lub prototypowego? Wyślij jedno zapytanie,
+            a dopasujemy je do firm gotowych do szybkiej i rzetelnej wyceny.
+          </p>
+          <Link href="/zapytania-ofertowe" className={styles.recommendedCtaButton}>
+            Dodaj zapytanie ofertowe
+          </Link>
+        </div>
+      </section>
 
       <section className={styles.seoSection}>
         <h3>Najczęściej wyszukiwane usługi EMS</h3>
@@ -69,6 +74,6 @@ export default async function Home() {
           <Link href="/kontraktowy-montaz-elektroniki">Kontraktowy montaż elektroniki w Polsce</Link>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
