@@ -13,7 +13,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 54px;
+  min-height: 88px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -169,6 +169,12 @@
 
 .mobileLink:hover {
   background: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 959px) {
+  .container {
+    min-height: 72px;
+  }
 }
 
 @media (min-width: 960px) {
