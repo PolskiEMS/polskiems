@@ -16,14 +16,24 @@
   :root {
     --background: #26255a;
     --foreground: #ededed;
+    --navbar-height: 88px;
   }
 /* } */
 
 body {
+  margin: 0;
   background: var(--background);
   background-image: linear-gradient(rgba(47, 28, 78, 0.397), rgba(0, 0, 0, 0.13)), url('/images/gradient.jpg');
   background-size: cover;
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans);
+  padding-top: var(--navbar-height);
+}
+
+
+@media (max-width: 959px) {
+  :root {
+    --navbar-height: 76px;
+  }
 }
