@@ -16,7 +16,7 @@
   :root {
     --background: #26255a;
     --foreground: #ededed;
-    --navbar-height: 88px;
+    --header-height: 88px;
   }
 /* } */
 
@@ -35,4 +35,12 @@ body {
   :root {
     --navbar-height: 88px;
   }
+}
+
+.site-main {
+  padding-top: var(--header-height);
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 16px);
 }

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.polskiems.pl";
+  const baseUrl = "https://polskiems.pl";
 
   return [
     {
