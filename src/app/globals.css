@@ -16,7 +16,7 @@
   :root {
     --background: #26255a;
     --foreground: #ededed;
-    --navbar-height: 88px;
+    --header-height: 88px;
   }
 /* } */
 
@@ -28,12 +28,20 @@ body {
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans);
-  padding-top: var(--navbar-height);
+  padding-top: var(--header-height);
 }
 
 
 @media (max-width: 959px) {
   :root {
-    --navbar-height: 76px;
+    --header-height: 76px;
   }
+}
+
+.site-main {
+  padding-top: var(--header-height);
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 16px);
 }
