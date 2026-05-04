@@ -34,6 +34,6 @@ body {
 
 @media (max-width: 959px) {
   :root {
-    --navbar-height: 76px;
+    --navbar-height: 88px;
   }
 }

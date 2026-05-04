@@ -28,16 +28,29 @@ export default function Page() {
       </section>
 
       <section className={styles.textBlock}>
-        <h2>Jak wybierać partnera EMS lokalnie?</h2>
+        <h2>Śląsk i elektronika przemysłowa</h2>
         <p>
-          Współpraca z firmą z tego samego regionu może ułatwić logistykę, skrócić czas
-          dostaw i przyspieszyć komunikację w trakcie wdrożenia. Warto sprawdzić możliwości
-          montażu SMT i THT, doświadczenie w podobnych branżach oraz zaplecze testowe.
+          Województwo śląskie to silny ośrodek produkcyjny, dlatego firmy EMS z regionu często
+          realizują projekty dla automatyki, energetyki i urządzeń przemysłowych. Często oznacza
+          to dobrą znajomość rygorystycznych norm jakości oraz wymagań dokumentacyjnych.
         </p>
         <p>
-          Jeśli projekt wymaga elastyczności, dobrze zwrócić uwagę na obsługę prototypów,
-          dostępność wsparcia inżynierskiego oraz gotowość do szybkiego skalowania produkcji.
-          Dzięki temu łatwiej dopasować model współpracy do etapu rozwoju produktu.
+          Dla zespołów R&D ważna jest możliwość szybkiego kontaktu z działem inżynierskim,
+          konsultacji DFM i sprawnego przejścia z prototypu do serii. Lokalny partner upraszcza
+          cały proces i ogranicza ryzyko opóźnień.
+        </p>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Ocena dostawcy: praktyczne kryteria</h2>
+        <p>
+          Sprawdź, jak wygląda kontrola jakości wejściowej komponentów, identyfikowalność partii
+          oraz standardy ESD na hali. To elementy, które realnie wpływają na stabilność procesu
+          i powtarzalność parametrów gotowej elektroniki.
+        </p>
+        <p>
+          Dodatkowym atutem jest doświadczenie firmy w obsłudze serii mieszanych: od krótkich
+          partii pilotażowych po większe zamówienia produkcyjne z planowanym harmonogramem dostaw.
         </p>
       </section>
     </div>

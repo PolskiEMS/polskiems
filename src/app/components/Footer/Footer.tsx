@@ -3,14 +3,14 @@ import styles from './styles.module.css'
 
 const Footer = () => {
     return (
-        <div className={styles.footer}>
-            <div className={styles.links}>
+        <footer className={styles.footer}>
+            <nav className={styles.links} aria-label="Stopka">
                 <Link href={'/o-nas'}>O nas</Link>
                 <Link href={'/kontakt'}>Kontakt</Link>
                 <Link href={'/regulamin'}>Regulamin</Link>
                 <Link href={'/cennik'}>Cennik</Link>
-            </div>
-        </div>
+            </nav>
+        </footer>
     );
 }
 

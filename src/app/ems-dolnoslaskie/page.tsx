@@ -28,16 +28,29 @@ export default function Page() {
       </section>
 
       <section className={styles.textBlock}>
-        <h2>Jak wybierać partnera EMS lokalnie?</h2>
+        <h2>Dolny Śląsk: zaplecze technologiczne i inżynierskie</h2>
         <p>
-          Współpraca z firmą z tego samego regionu może ułatwić logistykę, skrócić czas
-          dostaw i przyspieszyć komunikację w trakcie wdrożenia. Warto sprawdzić możliwości
-          montażu SMT i THT, doświadczenie w podobnych branżach oraz zaplecze testowe.
+          Region dolnośląski wyróżnia się dużą dostępnością kompetencji inżynierskich oraz
+          rozwiniętym ekosystemem firm technologicznych. Dzięki temu łatwiej znaleźć partnera
+          EMS, który wesprze zarówno montaż, jak i optymalizację projektu pod produkcję.
         </p>
         <p>
-          Jeśli projekt wymaga elastyczności, dobrze zwrócić uwagę na obsługę prototypów,
-          dostępność wsparcia inżynierskiego oraz gotowość do szybkiego skalowania produkcji.
-          Dzięki temu łatwiej dopasować model współpracy do etapu rozwoju produktu.
+          Przy bardziej złożonych urządzeniach liczy się też jakość komunikacji między działami
+          konstrukcyjnymi i produkcyjnymi. Bliskość geograficzna pomaga szybciej zamykać tematy
+          dotyczące zmian materiałowych i aktualizacji dokumentacji.
+        </p>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Jak przygotować zapytanie do firm EMS?</h2>
+        <p>
+          Dobrze przygotowane zapytanie powinno zawierać BOM, pliki produkcyjne, oczekiwane testy,
+          planowany wolumen i terminy. Im precyzyjniejsza specyfikacja, tym łatwiej otrzymać
+          porównywalne oferty i realistyczne terminy realizacji.
+        </p>
+        <p>
+          Warto również dopytać o dostępność alternatywnych komponentów, procedury zarządzania
+          brakami materiałowymi oraz warunki współpracy przy zmianach projektu w trakcie produkcji.
         </p>
       </section>
     </div>
