@@ -28,16 +28,29 @@ export default function Page() {
       </section>
 
       <section className={styles.textBlock}>
-        <h2>Jak wybierać partnera EMS lokalnie?</h2>
+        <h2>Wielkopolska jako zaplecze stabilnej produkcji</h2>
         <p>
-          Współpraca z firmą z tego samego regionu może ułatwić logistykę, skrócić czas
-          dostaw i przyspieszyć komunikację w trakcie wdrożenia. Warto sprawdzić możliwości
-          montażu SMT i THT, doświadczenie w podobnych branżach oraz zaplecze testowe.
+          Firmy EMS z Wielkopolski często łączą wysoką powtarzalność procesu z dobrą organizacją
+          logistyki krajowej. To korzystne dla przedsiębiorstw, które potrzebują regularnych dostaw
+          i przewidywalnych terminów przy zachowaniu stałej jakości montażu.
         </p>
         <p>
-          Jeśli projekt wymaga elastyczności, dobrze zwrócić uwagę na obsługę prototypów,
-          dostępność wsparcia inżynierskiego oraz gotowość do szybkiego skalowania produkcji.
-          Dzięki temu łatwiej dopasować model współpracy do etapu rozwoju produktu.
+          Region jest atrakcyjny także dla projektów łączących prototypy z późniejszą produkcją
+          seryjną, ponieważ wielu dostawców rozwija kompetencje od etapu NPI po pełne wdrożenie.
+        </p>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Checklist przed wyborem partnera</h2>
+        <p>
+          W pierwszej kolejności porównaj zakres usług dodatkowych: lakierowanie, montaż końcowy,
+          pakowanie i wsparcie serwisowe. Takie elementy upraszczają łańcuch dostaw i redukują
+          liczbę podwykonawców potrzebnych do realizacji produktu.
+        </p>
+        <p>
+          Na etapie negocjacji warto omówić także KPI jakościowe, sposób raportowania postępu
+          produkcji i plan eskalacji w razie ryzyk terminowych. To buduje przewidywalną współpracę
+          zarówno przy krótkich, jak i długich seriach.
         </p>
       </section>
     </div>
