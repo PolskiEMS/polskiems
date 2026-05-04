@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Montaż THT w Polsce | Producenci elektroniki | PolskiEMS",
   description:
     "Szukasz montażu THT w Polsce? Sprawdź producentów EMS, porównaj kompetencje technologiczne i wybierz partnera do projektów wymagających trwałych połączeń.",
+  alternates: {
+    canonical: "https://polskiems.pl/montaz-tht-polska",
+  },
 };
 
 export default function MontazthtpolskaPage() {

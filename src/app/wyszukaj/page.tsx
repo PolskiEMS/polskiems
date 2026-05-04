@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import PageViewTracker from '../components/PageViewTracker';
 
 export const metadata: Metadata = {
-  title: "Wyszukiwarka Producentów Elektroniki w Polsce",
+  title: "Wyszukaj producenta elektroniki w Polsce | Filtry EMS | PolskiEMS",
   description: "Wybierz region, wymagania i skalę produkcji, aby znaleźć najlepszego producenta elektroniki dopasowanego do Twoich potrzeb.",
   keywords: [
     "wyszukiwarka producentów elektroniki",
@@ -19,7 +19,10 @@ export const metadata: Metadata = {
     siteName: "Wyszukiwarka Producentów",
     locale: "pl_PL",
     type: "website"
-  }
+  },
+  alternates: {
+    canonical: "https://polskiems.pl/wyszukaj",
+  },
 };
 
 
