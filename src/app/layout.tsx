@@ -26,7 +26,11 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Wyszukiwarka Producentów Elektroniki | Twoja Baza EMS",
+  metadataBase: new URL("https://polskiems.pl"),
+  title: {
+    default: "PolskiEMS | Wyszukiwarka producentów elektroniki i firm EMS w Polsce",
+    template: "%s | PolskiEMS",
+  },
   description:
     "Znajdź producentów elektroniki, firmy EMS, montaż SMD, THT, PCB i kontraktową produkcję elektroniki w Polsce.",
   keywords: [
@@ -48,12 +52,15 @@ export const metadata: Metadata = {
     "outsourcing produkcji elektroniki",
     "wyszukiwarka producentów elektroniki",
   ],
+  alternates: {
+    canonical: "https://polskiems.pl",
+  },
   openGraph: {
-    title: "Wyszukiwarka Producentów Elektroniki | Twoja Baza EMS",
+    title: "PolskiEMS | Wyszukiwarka producentów elektroniki i firm EMS w Polsce",
     description:
       "Znajdź idealnego partnera do produkcji elektroniki w Polsce. Intuicyjna wyszukiwarka producentów PCB i EMS.",
     url: "https://polskiems.pl",
-    siteName: "Wyszukiwarka Producentów",
+    siteName: "PolskiEMS",
     images: [
       {
         url: "/images/logo.png",
@@ -67,11 +74,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wyszukiwarka Producentów Elektroniki",
+    title: "PolskiEMS | Wyszukiwarka producentów elektroniki",
     description: "Znajdź firmę EMS lub producenta elektroniki w Polsce według usług, województwa i skali produkcji",
     images: ["/images/logo.png"],
   },
-  metadataBase: new URL("https://polskiems.pl"),
 };
 
 export default function RootLayout({
@@ -80,10 +86,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    <html lang="pl-PL">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Navbar />
-        {children}
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

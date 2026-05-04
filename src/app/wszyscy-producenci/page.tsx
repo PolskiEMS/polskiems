@@ -8,8 +8,9 @@ import Link from 'next/link';
 import PageViewTracker from '../components/PageViewTracker';
 
 export const metadata: Metadata = {
-  title: "Lista Wszystkich Producentów Elektroniki",
-  description: "Pełna lista producentów elektroniki w Polsce. Przeglądaj firmy EMS i dostawców usług montażu PCB bez filtrowania.",
+  title: "Wszyscy producenci elektroniki w Polsce | Baza firm EMS | PolskiEMS",
+  description:
+    "Przeglądaj pełną bazę producentów elektroniki i firm EMS w Polsce. Porównaj profile dostawców bez filtrowania i znajdź partnera do projektu.",
   keywords: [
     "lista producentów elektroniki",
     "pełna baza EMS",
@@ -23,7 +24,10 @@ export const metadata: Metadata = {
     siteName: "Wyszukiwarka Producentów",
     locale: "pl_PL",
     type: "website"
-  }
+  },
+  alternates: {
+    canonical: "https://polskiems.pl/wszyscy-producenci",
+  },
 };
 
 const Wyszukaj = async () => {
