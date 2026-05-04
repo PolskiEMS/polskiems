@@ -177,6 +177,16 @@
     padding: 0 14px;
   }
 
+  .logo {
+    max-height: 48px;
+    width: auto;
+  }
+
+  .hamburger {
+    width: 42px;
+    height: 42px;
+  }
+
   .mobileMenu {
     padding: 8px 14px 12px;
   }
