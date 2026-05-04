@@ -34,7 +34,7 @@ body {
 
 @media (max-width: 959px) {
   :root {
-    --header-height: 76px;
+    --header-height: 68px;
   }
 }
 

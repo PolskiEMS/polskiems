@@ -173,8 +173,18 @@
 
 @media (max-width: 959px) {
   .container {
-    min-height: 76px;
+    min-height: 68px;
     padding: 0 14px;
+  }
+
+  .logo {
+    max-height: 48px;
+    width: auto;
+  }
+
+  .hamburger {
+    width: 42px;
+    height: 42px;
   }
 
   .mobileMenu {
