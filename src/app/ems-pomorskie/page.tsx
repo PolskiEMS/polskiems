@@ -28,16 +28,30 @@ export default function Page() {
       </section>
 
       <section className={styles.textBlock}>
-        <h2>Jak wybierać partnera EMS lokalnie?</h2>
+        <h2>EMS na Pomorzu: produkcja dla firm krajowych i eksportowych</h2>
         <p>
-          Współpraca z firmą z tego samego regionu może ułatwić logistykę, skrócić czas
-          dostaw i przyspieszyć komunikację w trakcie wdrożenia. Warto sprawdzić możliwości
-          montażu SMT i THT, doświadczenie w podobnych branżach oraz zaplecze testowe.
+          Pomorskie to region, w którym wiele firm rozwija elektronikę dla automatyki,
+          telekomunikacji i systemów morskich. Dostawcy EMS oferują tu zarówno szybkie
+          prototypowanie, jak i stabilną produkcję seryjną.
         </p>
         <p>
-          Jeśli projekt wymaga elastyczności, dobrze zwrócić uwagę na obsługę prototypów,
-          dostępność wsparcia inżynierskiego oraz gotowość do szybkiego skalowania produkcji.
-          Dzięki temu łatwiej dopasować model współpracy do etapu rozwoju produktu.
+          Dostęp do portów oraz zaplecza logistycznego Trójmiasta pomaga organizować dostawy
+          komponentów i wysyłki gotowych urządzeń. To istotna przewaga przy projektach o
+          międzynarodowym łańcuchu dostaw.
+        </p>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Na co zwrócić uwagę przy wyborze partnera w regionie?</h2>
+        <p>
+          Oprócz ceny warto analizować transparentność procesu: terminy realizacji, komunikację
+          statusów produkcji i sposób raportowania jakości. Dobrą praktyką jest też weryfikacja,
+          jak firma obsługuje reklamacje i działania korygujące.
+        </p>
+        <p>
+          Jeśli planujesz skalowanie wolumenu, sprawdź dostępność dodatkowych zmian produkcyjnych,
+          elastyczność harmonogramu oraz możliwość utrzymania tych samych standardów jakości przy
+          większej liczbie zleceń.
         </p>
       </section>
     </div>

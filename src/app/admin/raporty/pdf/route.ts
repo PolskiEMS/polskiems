@@ -599,19 +599,33 @@ doc
   });
 }
   
+const PRESET_DAYS = [7, 30, 90] as const;
+const isValidIsoDate = (value: string | null) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+
 export async function GET(req: NextRequest) {
     try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
-    const days = Number(req.nextUrl.searchParams.get("days") ?? 30);
-    const startDate = req.nextUrl.searchParams.get("startDate");
-    const endDate = req.nextUrl.searchParams.get("endDate");
+    const daysRaw = Number(req.nextUrl.searchParams.get("days") ?? 30);
+    const days = PRESET_DAYS.includes(daysRaw as (typeof PRESET_DAYS)[number]) ? daysRaw : 30;
+    const startDateParam = req.nextUrl.searchParams.get("startDate");
+    const endDateParam = req.nextUrl.searchParams.get("endDate");
+    const startDate = isValidIsoDate(startDateParam) ? startDateParam : null;
+    const endDate = isValidIsoDate(endDateParam) ? endDateParam : null;
     const hasCustomRange = Boolean(startDate && endDate);
 
     if (!Number.isFinite(companyId) || companyId <= 0) {
       return new Response("Invalid companyId", { status: 400 });
     }
 
-    const report = await getCompanyReport(companyId, days, startDate, endDate);
+    if ((startDateParam || endDateParam) && !hasCustomRange) {
+      return new Response("Invalid startDate/endDate", { status: 400 });
+    }
+
+    if (hasCustomRange && new Date(startDate!) > new Date(endDate!)) {
+      return new Response("startDate cannot be greater than endDate", { status: 400 });
+    }
+
+    const report = await getCompanyReport(companyId, hasCustomRange ? null : days, startDate, endDate);
 
     if (!report) {
       return new Response("Report not found", { status: 404 });

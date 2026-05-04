@@ -28,16 +28,29 @@ export default function Page() {
       </section>
 
       <section className={styles.textBlock}>
-        <h2>Jak wybierać partnera EMS lokalnie?</h2>
+        <h2>Dlaczego Mazowsze jest mocnym regionem dla EMS?</h2>
         <p>
-          Współpraca z firmą z tego samego regionu może ułatwić logistykę, skrócić czas
-          dostaw i przyspieszyć komunikację w trakcie wdrożenia. Warto sprawdzić możliwości
-          montażu SMT i THT, doświadczenie w podobnych branżach oraz zaplecze testowe.
+          W województwie mazowieckim działa wiele firm łączących montaż SMT i THT z usługami
+          NPI, testami funkcjonalnymi oraz wsparciem zakupowym. Bliskość Warszawy ułatwia
+          koordynację projektów dla branż o wysokich wymaganiach jakościowych.
         </p>
         <p>
-          Jeśli projekt wymaga elastyczności, dobrze zwrócić uwagę na obsługę prototypów,
-          dostępność wsparcia inżynierskiego oraz gotowość do szybkiego skalowania produkcji.
-          Dzięki temu łatwiej dopasować model współpracy do etapu rozwoju produktu.
+          Zlecając produkcję lokalnie, łatwiej zaplanować spotkania techniczne, audyty procesu
+          i szybkie iteracje prototypów. To ważne szczególnie przy wdrożeniach, gdzie liczy się
+          krótki czas od projektu do gotowego wyrobu.
+        </p>
+      </section>
+
+      <section className={styles.textBlock}>
+        <h2>Jak porównać firmy EMS w regionie?</h2>
+        <p>
+          Zwróć uwagę na realne moce produkcyjne, poziom automatyzacji linii oraz zakres testów
+          AOI, ICT i FCT. Warto też sprawdzić doświadczenie dostawcy w podobnych urządzeniach,
+          np. elektronice przemysłowej, IoT lub systemach zasilania.
+        </p>
+        <p>
+          Przed wyborem partnera dobrze omówić proces onboardingowy: wyceny BOM, zasady zmian
+          inżynierskich (ECO), organizację logistyki i politykę utrzymania zapasu komponentów.
         </p>
       </section>
     </div>

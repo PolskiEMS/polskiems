@@ -651,14 +651,15 @@ export async function getReportCompanies() {
 
 export async function getCompanyReport(
   companyId: number,
-  days = 30,
+  days: number | null = 30,
   startDate?: string | null,
   endDate?: string | null
 ) {
   const db = getDb();
 
   const hasCustomRange = Boolean(startDate && endDate);
-  const since = !hasCustomRange && days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+  const safeDays = typeof days === "number" && Number.isFinite(days) ? Math.max(1, Math.floor(days)) : 30;
+  const since = !hasCustomRange ? sql`NOW() - INTERVAL ${safeDays} DAY` : null;
   const rangeStart = hasCustomRange ? sql`${startDate} 00:00:00` : null;
   const rangeEnd = hasCustomRange ? sql`${endDate} 23:59:59` : null;
 

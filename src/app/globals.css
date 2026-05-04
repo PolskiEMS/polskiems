@@ -28,13 +28,12 @@ body {
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans);
-  padding-top: var(--header-height);
 }
 
 
 @media (max-width: 959px) {
   :root {
-    --header-height: 68px;
+    --navbar-height: 88px;
   }
 }
 

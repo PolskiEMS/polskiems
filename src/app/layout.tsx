@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import "./globals.css";
+import styles from "./layout.module.css";
 
 const geistSans = localFont({
   src: [
@@ -86,10 +87,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl-PL">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="pl">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased ${styles.body}`}>
         <Navbar />
-        <main>{children}</main>
+        <main className={styles.main}>{children}</main>
         <Footer />
       </body>
     </html>
