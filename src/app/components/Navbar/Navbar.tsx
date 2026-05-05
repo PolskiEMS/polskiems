@@ -19,6 +19,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Usługi",
     children: [
+      { href: "/ems-polska", label: "EMS Polska" },
       { href: "/montaz-elektroniki-w-polsce", label: "Montaż elektroniki w Polsce" },
       { href: "/kontraktowy-montaz-elektroniki", label: "Kontraktowy montaż elektroniki" },
       { href: "/produkcja-pcb-polska", label: "Produkcja PCB w Polsce" },
