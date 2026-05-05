@@ -1143,8 +1143,8 @@ export async function getAdminInquiries() {
       createdAt: inquiries.createdAt,
 
       recipientId: inquiryRecipients.id,
-      companyId: packageOrders.companyId,
-      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
+      companyId: inquiryRecipients.companyId,
+      companyName: producenci.nazwa,
       packageType: producenci.packageType,
       companyEmail: inquiryRecipients.companyEmail,
       status: inquiryRecipients.status,

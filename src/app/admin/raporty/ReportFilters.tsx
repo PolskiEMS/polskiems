@@ -10,6 +10,7 @@ type RangeMode = "preset" | "custom";
 const PRESET_DAYS = [7, 30, 90] as const;
 
 const isIsoDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v);
+const isStartAfterEnd = (start: string, end: string) => start > end;
 
 export default function ReportFilters({
   companies,
@@ -57,7 +58,7 @@ export default function ReportFilters({
         setError("Wybierz poprawne daty w formacie RRRR-MM-DD.");
         return;
       }
-      if (new Date(dateFrom) > new Date(dateTo)) {
+      if (isStartAfterEnd(dateFrom, dateTo)) {
         setError("Data od nie może być późniejsza niż Data do.");
         return;
       }
