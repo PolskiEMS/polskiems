@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --header-height: 88px;
 }
 
 @theme inline {
@@ -16,7 +17,6 @@
   :root {
     --background: #26255a;
     --foreground: #ededed;
-    --header-height: 88px;
   }
 /* } */
 
@@ -33,14 +33,10 @@ body {
 
 @media (max-width: 959px) {
   :root {
-    --navbar-height: 88px;
+    --header-height: 80px;
   }
 }
 
-.site-main {
-  padding-top: var(--header-height);
-}
-
 html {
-  scroll-padding-top: calc(var(--header-height) + 16px);
+  scroll-padding-top: calc(var(--header-height) + 24px);
 }
