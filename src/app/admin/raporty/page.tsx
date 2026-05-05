@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 const PRESET_DAYS = [7, 30, 90] as const;
 const isValidDate = (value?: string) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+const isStartAfterEnd = (start: string, end: string) => start > end;
 
 export default async function AdminReportsPage({
   searchParams,
@@ -21,7 +22,7 @@ export default async function AdminReportsPage({
   const startDate = isValidDate(params?.startDate) ? String(params?.startDate) : "";
   const endDate = isValidDate(params?.endDate) ? String(params?.endDate) : "";
   const useCustomRange = Boolean(startDate && endDate);
-  const invalidCustomRange = useCustomRange && new Date(startDate) > new Date(endDate);
+  const invalidCustomRange = useCustomRange && isStartAfterEnd(startDate, endDate);
 
   const companies = await getReportCompanies();
 
