@@ -17,7 +17,7 @@ export default function EmsPolskaPage() {
       lead="PolskiEMS pomaga szybko znaleźć i porównać firmy EMS działające w Polsce. Sprawdź partnerów do produkcji kontraktowej elektroniki: od prototypowania i wdrożeń NPI po stabilną produkcję seryjną."
       searchHref="/producenci"
       heroImage={{
-        src: "/images/uslugi/montaz_smt.png",
+        src: "/images/uslugi/EMS-polska.png",
         alt: "Zakład EMS w Polsce realizujący produkcję elektroniki",
       }}
       sections={[
