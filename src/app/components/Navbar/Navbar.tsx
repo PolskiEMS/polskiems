@@ -19,7 +19,6 @@ const navGroups: NavGroup[] = [
   {
     label: "Usługi",
     children: [
-      { href: "/ems-polska", label: "EMS Polska" },
       { href: "/montaz-elektroniki-w-polsce", label: "Montaż elektroniki w Polsce" },
       { href: "/kontraktowy-montaz-elektroniki", label: "Kontraktowy montaż elektroniki" },
       { href: "/produkcja-pcb-polska", label: "Produkcja PCB w Polsce" },
@@ -31,6 +30,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Lokalizacje",
     children: [
+      { href: "/ems-polska", label: "EMS Polska" },
       { href: "/ems-mazowieckie", label: "EMS mazowieckie" },
       { href: "/ems-pomorskie", label: "EMS pomorskie" },
       { href: "/ems-slaskie", label: "EMS śląskie" },
