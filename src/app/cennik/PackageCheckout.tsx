@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import styles from "./styles.module.css";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
