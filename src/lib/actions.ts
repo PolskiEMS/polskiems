@@ -728,23 +728,36 @@ export async function getAdminSubscriptions() {
       nazwa: producenci.nazwa,
       email: producenci.email,
       telefon: producenci.telefon,
+      adres: producenci.adres,
+      wojewodztwo: wojewodztwa.nazwa,
       packageType: producenci.packageType,
       featured: producenci.featured,
       monthlyInquiryLimit: producenci.monthlyInquiryLimit,
       packageValidUntil: producenci.packageValidUntil,
       isActive: producenci.isActive,
+      dzialania: sql<string>`(
+        SELECT COALESCE(GROUP_CONCAT(DISTINCT ${dzialaniaEms.nazwa} ORDER BY ${dzialaniaEms.nazwa} SEPARATOR ', '), '')
+        FROM ${producenciEmsDzialania}
+        LEFT JOIN ${dzialaniaEms} ON ${producenciEmsDzialania.dzialanieId} = ${dzialaniaEms.id}
+        WHERE ${producenciEmsDzialania.companyId} = ${producenci.id}
+      )`,
+      produkcja: sql<string>`(
+        SELECT COALESCE(GROUP_CONCAT(DISTINCT ${produkcja.zakres} ORDER BY ${produkcja.zakres} SEPARATOR ', '), '')
+        FROM ${producenciEmsProdukcja}
+        LEFT JOIN ${produkcja} ON ${producenciEmsProdukcja.produkcjaId} = ${produkcja.id}
+        WHERE ${producenciEmsProdukcja.companyId} = ${producenci.id}
+      )`,
     })
     .from(producenci)
-    .where(sql`${producenci.packageType} IN ('standard', 'premium') OR ${producenci.featured} = 1`)
+    .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id))
+    .where(sql`${producenci.packageType} IN ('standard', 'premium')`)
     .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
 
-  const orders = await db
+  const bankTransferOrders = await db
     .select({
       id: packageOrders.id,
       createdAt: packageOrders.createdAt,
-      paidAt: packageOrders.paidAt,
       status: packageOrders.paymentStatus,
-      provider: packageOrders.provider,
       packageType: packageOrders.packageType,
       amountGross: packageOrders.amountGross,
       billingCycleMonths: packageOrders.billingCycleMonths,
@@ -759,14 +772,14 @@ export async function getAdminSubscriptions() {
       buyerPostalCode: packageOrders.buyerPostalCode,
       buyerCity: packageOrders.buyerCity,
       buyerCountry: packageOrders.buyerCountry,
-      accessValidUntil: packageOrders.accessValidUntil,
     })
     .from(packageOrders)
     .leftJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .where(sql`${packageOrders.provider} = 'przelewy24' AND ${packageOrders.paymentStatus} = 'pending_payment'`)
     .orderBy(desc(packageOrders.createdAt))
-    .limit(200);
+    .limit(100);
 
-  return { companies, orders };
+  return { companies, bankTransferOrders };
 }
 
 export async function updateCompanyPackageValidityAction(formData: FormData) {
@@ -1204,7 +1217,7 @@ export async function sendInquiryAction(formData: FormData) {
 
   const company = companyRows[0];
 
-  if (!company || !company.email) {
+  if (!company || !company.email || !company.isActive) {
     redirect("/zapytania-ofertowe");
   }
 

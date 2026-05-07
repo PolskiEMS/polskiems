@@ -57,11 +57,11 @@ const activationFlow = [
   },
   {
     title: '2. Płatność',
-    description: 'Po wyborze płatnego pakietu przechodzisz do bezpiecznej płatności online.'
+    description: 'Dla Standard i Premium możesz wybrać aktywację bez opłaty albo przelew tradycyjny z danymi do faktury.'
   },
   {
     title: '3. Potwierdzenie',
-    description: 'System automatycznie potwierdza transakcję i zapisuje płatność.'
+    description: 'Przy przelewie tradycyjnym administrator otrzymuje zgłoszenie i dane potrzebne do wystawienia faktury.'
   },
   {
     title: '4. Aktywacja',

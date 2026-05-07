@@ -108,7 +108,7 @@ export default async function AdminInquiriesPage() {
                       <form action={sendInquiryToCompanyAction}>
                         <input type="hidden" name="recipientId" value={String(row.recipientId)} />
                         <button type="submit" className={styles.sendBtn}>
-                          Wyślij
+                          Akceptuj i wyślij
                         </button>
                       </form>
                     ) : (
@@ -171,7 +171,7 @@ export default async function AdminInquiriesPage() {
                 <form action={sendInquiryToCompanyAction}>
                   <input type="hidden" name="recipientId" value={String(row.recipientId)} />
                   <button type="submit" className={styles.sendBtn}>
-                    Wyślij
+                    Akceptuj i wyślij
                   </button>
                 </form>
               )}
