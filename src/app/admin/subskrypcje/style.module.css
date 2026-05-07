@@ -93,6 +93,27 @@
   padding: 24px !important;
 }
 
+.actionsCell {
+  display: grid;
+  gap: 8px;
+  min-width: 250px;
+}
+
+.editBtn {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(147, 197, 253, 0.55);
+  color: #bfdbfe;
+  text-decoration: none;
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.editBtn:hover {
+  background: rgba(59, 130, 246, 0.24);
+}
+
 .periodForm {
   display: flex;
   gap: 8px;

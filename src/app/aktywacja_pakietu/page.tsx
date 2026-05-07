@@ -39,7 +39,7 @@ export default async function AktywacjaPakietuPage({
         <h2>Wybrany pakiet</h2>
         <p className={styles.selectedPackage}>{selectedPackage.toUpperCase()}</p>
         <p>{packageDescriptions[selectedPackage]}</p>
-        <p className={styles.muted}>Krótkie podsumowanie: formularz aktywuje wybrany pakiet bez opłaty, a konto otrzyma odpowiednie limity i funkcje.</p>
+        <p className={styles.muted}>Krótkie podsumowanie: formularz pozwala aktywować pakiet bez opłaty albo zgłosić Standard/Premium do przelewu tradycyjnego z fakturą.</p>
       </section>
 
       <PackageCheckout initialPackage={selectedPackage} regions={regions} dzialania={dzialania} produkcja={produkcja} />

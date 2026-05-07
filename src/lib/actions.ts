@@ -753,7 +753,33 @@ export async function getAdminSubscriptions() {
     .where(sql`${producenci.packageType} IN ('standard', 'premium')`)
     .orderBy(desc(sql`CASE WHEN ${producenci.packageType} = 'premium' THEN 2 WHEN ${producenci.packageType} = 'standard' THEN 1 ELSE 0 END`), asc(producenci.nazwa));
 
-  return { companies };
+  const bankTransferOrders = await db
+    .select({
+      id: packageOrders.id,
+      createdAt: packageOrders.createdAt,
+      status: packageOrders.paymentStatus,
+      packageType: packageOrders.packageType,
+      amountGross: packageOrders.amountGross,
+      billingCycleMonths: packageOrders.billingCycleMonths,
+      companyId: packageOrders.companyId,
+      companyName: sql<string>`COALESCE(${producenci.nazwa}, ${packageOrders.companyName})`,
+      buyerName: packageOrders.buyerName,
+      buyerEmail: packageOrders.buyerEmail,
+      buyerPhone: packageOrders.buyerPhone,
+      buyerCompanyName: packageOrders.buyerCompanyName,
+      buyerTaxId: packageOrders.buyerTaxId,
+      buyerAddressLine1: packageOrders.buyerAddressLine1,
+      buyerPostalCode: packageOrders.buyerPostalCode,
+      buyerCity: packageOrders.buyerCity,
+      buyerCountry: packageOrders.buyerCountry,
+    })
+    .from(packageOrders)
+    .leftJoin(producenci, eq(packageOrders.companyId, producenci.id))
+    .where(sql`${packageOrders.provider} = 'przelewy24' AND ${packageOrders.paymentStatus} = 'pending_payment'`)
+    .orderBy(desc(packageOrders.createdAt))
+    .limit(100);
+
+  return { companies, bankTransferOrders };
 }
 
 export async function updateCompanyPackageValidityAction(formData: FormData) {
@@ -1191,7 +1217,7 @@ export async function sendInquiryAction(formData: FormData) {
 
   const company = companyRows[0];
 
-  if (!company || !company.email) {
+  if (!company || !company.email || !company.isActive) {
     redirect("/zapytania-ofertowe");
   }
 
