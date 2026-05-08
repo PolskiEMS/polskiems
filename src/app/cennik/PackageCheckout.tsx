@@ -82,14 +82,8 @@ export default function PackageCheckout({
   const [isLoading, setIsLoading] = useState(false);
 
   const paidPackageSelected = isPaidPackage(selectedPackage);
-  const total = useMemo(
-    () => (paidPackageSelected ? PACKAGE_PRICE_TOTAL[selectedPackage][billingCycleMonths] : 0),
-    [billingCycleMonths, paidPackageSelected, selectedPackage]
-  );
-  const monthlyAverage = useMemo(
-    () => (paidPackageSelected ? Math.round((total / billingCycleMonths) * 100) / 100 : 0),
-    [billingCycleMonths, paidPackageSelected, total]
-  );
+  const total = paidPackageSelected ? PACKAGE_PRICE_TOTAL[selectedPackage][billingCycleMonths] : 0;
+  const monthlyAverage = paidPackageSelected ? Math.round((total / billingCycleMonths) * 100) / 100 : 0;
 
   function toggleSelection(value: number, selectedValues: number[], setter: (values: number[]) => void) {
     setter(
