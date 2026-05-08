@@ -20,7 +20,29 @@
 
 .section h2 {
   color: white;
+  margin-bottom: 6px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
   margin-bottom: 12px;
+}
+
+.sectionHeader p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.counter {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: #dbeafe;
+  background: rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
 }
 
 .tableWrap {
@@ -46,6 +68,50 @@
 
 .table th {
   white-space: nowrap;
+}
+
+.smallText {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+}
+
+.packageBadge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgba(59, 130, 246, 0.22);
+  color: #bfdbfe;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.emptyCell {
+  text-align: center !important;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 24px !important;
+}
+
+.actionsCell {
+  display: grid;
+  gap: 8px;
+  min-width: 250px;
+}
+
+.editBtn {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(147, 197, 253, 0.55);
+  color: #bfdbfe;
+  text-decoration: none;
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.editBtn:hover {
+  background: rgba(59, 130, 246, 0.24);
 }
 
 .periodForm {
