@@ -4,11 +4,13 @@ type SendInquiryEmailData = {
   companyEmail: string;
   companyName: string;
   customerName: string;
+  customerCompany?: string | null;
   customerEmail: string;
   customerPhone?: string | null;
   serviceType: string;
   quantity?: string | null;
   deadline?: string | null;
+  hasDocumentation: boolean;
   message: string;
 };
 
@@ -22,30 +24,47 @@ function getResendClient() {
   return new Resend(apiKey);
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export async function sendInquiryEmail(data: SendInquiryEmailData) {
   const resend = getResendClient();
+  const clientLabel = data.customerCompany || data.customerName;
 
   return await resend.emails.send({
     from: "PolskiEMS <onboarding@resend.dev>",
     to: data.companyEmail,
-    subject: `Nowe zapytanie ofertowe – ${data.companyName}`,
+    subject: `Nowe zapytanie ofertowe z PolskiEMS - ${clientLabel}`,
     html: `
-      <h2>Nowe zapytanie ofertowe</h2>
+      <h2>Nowe zapytanie ofertowe z PolskiEMS</h2>
+      <p>Ten lead został przekazany po weryfikacji przez zespół PolskiEMS. Prosimy o bezpośredni kontakt z klientem.</p>
 
-      <p><strong>Imię i nazwisko:</strong> ${data.customerName}</p>
-      <p><strong>Email:</strong> ${data.customerEmail}</p>
-      <p><strong>Telefon:</strong> ${data.customerPhone || "-"}</p>
+      <h3>Dane klienta</h3>
+      <p><strong>Imię i nazwisko:</strong> ${escapeHtml(data.customerName)}</p>
+      <p><strong>Firma klienta:</strong> ${escapeHtml(data.customerCompany || "-")}</p>
+      <p><strong>Email:</strong> ${escapeHtml(data.customerEmail)}</p>
+      <p><strong>Telefon:</strong> ${escapeHtml(data.customerPhone || "-")}</p>
 
       <hr />
 
-      <p><strong>Usługa:</strong> ${data.serviceType}</p>
-      <p><strong>Ilość:</strong> ${data.quantity || "-"}</p>
-      <p><strong>Termin:</strong> ${data.deadline || "-"}</p>
+      <h3>Zakres zapytania</h3>
+      <p><strong>Typ usługi:</strong> ${escapeHtml(data.serviceType)}</p>
+      <p><strong>Liczba sztuk / skala produkcji:</strong> ${escapeHtml(data.quantity || "-")}</p>
+      <p><strong>Termin realizacji:</strong> ${escapeHtml(data.deadline || "-")}</p>
+      <p><strong>Dokumentacja techniczna:</strong> ${data.hasDocumentation ? "Tak" : "Nie"}</p>
 
       <hr />
 
       <p><strong>Opis projektu:</strong></p>
-      <p>${data.message.replace(/\n/g, "<br />")}</p>
+      <p>${escapeHtml(data.message).replace(/\n/g, "<br />")}</p>
+
+      <p>Prosimy o kontakt bezpośrednio z klientem i przygotowanie wyceny zgodnie z przesłanymi informacjami.</p>
     `,
   });
 }

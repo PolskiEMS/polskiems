@@ -39,7 +39,7 @@ export default async function Home() {
                   <div className={styles.recommendedActions}>
                     <Link href="/wszyscy-producenci">Zobacz profil</Link>
                     {featuredProducer.id && (
-                      <Link href={`/zapytania-ofertowe?companyId=${featuredProducer.id}`}>
+                      <Link href={`/zapytania-ofertowe?companyId=${featuredProducer.id}&source=company_card`}>
                         Poproś o wycenę
                       </Link>
                     )}

@@ -1,24 +1,44 @@
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, sql } from 'drizzle-orm';
 import Link from 'next/link';
 import { producenci } from '@/db/schema';
 import { getDb } from '@/lib/db';
 import { sendInquiryAction } from '@/lib/actions';
 import styles from './style.module.css';
-import { SERVICES } from "@/lib/services";
+import { SERVICES } from '@/lib/services';
 
 export const dynamic = 'force-dynamic';
 
 type PageProps = {
   searchParams: Promise<{
     companyId?: string;
+    source?: string;
     success?: string;
+    error?: string;
   }>;
 };
+
+function normalizeSource(source?: string) {
+  if (source === 'company_card' || source === 'company_profile') return source;
+  return 'global_form';
+}
+
+function getErrorCopy(error?: string) {
+  switch (error) {
+    case 'missing':
+      return 'Uzupełnij wszystkie wymagane pola i zaakceptuj zgodę na kontakt.';
+    case 'company':
+      return 'Wybrana firma jest nieaktywna albo nie ma adresu e-mail. Wybierz inną firmę EMS.';
+    default:
+      return null;
+  }
+}
 
 export default async function InquiryPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const companyId = Number(params.companyId ?? 0);
+  const source = normalizeSource(params.source);
   const success = params.success === '1';
+  const errorCopy = getErrorCopy(params.error);
   const db = getDb();
 
   const activeCompanies = await db
@@ -27,7 +47,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
       nazwa: producenci.nazwa,
     })
     .from(producenci)
-    .where(eq(producenci.isActive, true))
+    .where(and(eq(producenci.isActive, true), sql`${producenci.email} IS NOT NULL`, sql`${producenci.email} <> ''`))
     .orderBy(asc(producenci.nazwa));
 
   let company: { id: number; nazwa: string } | null = null;
@@ -49,16 +69,26 @@ export default async function InquiryPage({ searchParams }: PageProps) {
     <div className={styles.page}>
       <div className={styles.container}>
         <h1 className={styles.title}>Zapytanie ofertowe</h1>
+        <p className={styles.lead}>
+          Wybierz firmę EMS i opisz projekt. Zapytanie najpierw trafi do weryfikacji PolskiEMS,
+          a dopiero po akceptacji zostanie przekazane do wybranej firmy.
+        </p>
 
         {success && (
           <div className={styles.successBox}>
-            Dziękujemy. Twoje zapytanie zostało zapisane.
+            Dziękujemy. Twoje zapytanie zostało przekazane do weryfikacji. Po akceptacji trafi do wybranej firmy EMS.
           </div>
         )}
 
+        {errorCopy && (
+          <div className={styles.errorBox}>{errorCopy}</div>
+        )}
+
         <form action={sendInquiryAction} className={styles.form}>
+          <input type="hidden" name="source" value={source} />
+
           <div className={styles.field}>
-            <label htmlFor="company">Firma</label>
+            <label htmlFor="company">Wybrana firma EMS *</label>
             <select
               id="company"
               name="companyId"
@@ -66,7 +96,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
               defaultValue={company?.id ? String(company.id) : ''}
               required
             >
-              <option value="" disabled>Wybierz firmę</option>
+              <option value="" disabled>Wybierz aktywną firmę EMS</option>
               {activeCompanies.map((activeCompany) => (
                 <option key={activeCompany.id} value={activeCompany.id}>
                   {activeCompany.nazwa}
@@ -75,34 +105,38 @@ export default async function InquiryPage({ searchParams }: PageProps) {
             </select>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="customerName">Imię i nazwisko *</label>
-            <input id="customerName" name="customerName" className={styles.input} required />
+          <div className={styles.gridTwo}>
+            <div className={styles.field}>
+              <label htmlFor="customerName">Imię i nazwisko klienta *</label>
+              <input id="customerName" name="customerName" className={styles.input} required />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="customerCompany">Nazwa firmy klienta</label>
+              <input id="customerCompany" name="customerCompany" className={styles.input} />
+            </div>
+          </div>
+
+          <div className={styles.gridTwo}>
+            <div className={styles.field}>
+              <label htmlFor="customerEmail">E-mail *</label>
+              <input id="customerEmail" name="customerEmail" type="email" className={styles.input} required />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="customerPhone">Telefon</label>
+              <input id="customerPhone" name="customerPhone" className={styles.input} />
+            </div>
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="customerCompany">Firma</label>
-            <input id="customerCompany" name="customerCompany" className={styles.input} />
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="customerEmail">E-mail *</label>
-            <input id="customerEmail" name="customerEmail" type="email" className={styles.input} required />
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="customerPhone">Telefon</label>
-            <input id="customerPhone" name="customerPhone" className={styles.input} />
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="serviceTypes">Usługi *</label>
+            <label htmlFor="serviceTypes">Typ usługi *</label>
             <select
               id="serviceTypes"
               name="serviceTypes"
               className={styles.select}
               multiple
-              size={SERVICES.length}
+              size={Math.min(SERVICES.length, 8)}
               required
               defaultValue={[]}
             >
@@ -115,15 +149,29 @@ export default async function InquiryPage({ searchParams }: PageProps) {
             <small>Przytrzymaj Ctrl (Windows) lub Cmd (Mac), aby zaznaczyć wiele usług.</small>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="quantity">Ilość</label>
-            <input id="quantity" name="quantity" className={styles.input} />
+          <div className={styles.gridTwo}>
+            <div className={styles.field}>
+              <label htmlFor="quantity">Liczba sztuk / skala produkcji *</label>
+              <input id="quantity" name="quantity" className={styles.input} placeholder="np. 500 szt., prototyp + seria" required />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="deadline">Termin realizacji *</label>
+              <input id="deadline" name="deadline" className={styles.input} placeholder="np. do końca Q3 / 6 tygodni" required />
+            </div>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="deadline">Termin realizacji</label>
-            <input id="deadline" name="deadline" className={styles.input} />
-          </div>
+          <fieldset className={styles.fieldset}>
+            <legend>Czy posiadasz dokumentację techniczną? *</legend>
+            <label className={styles.radioLabel}>
+              <input type="radio" name="hasDocumentation" value="yes" required />
+              Tak
+            </label>
+            <label className={styles.radioLabel}>
+              <input type="radio" name="hasDocumentation" value="no" required />
+              Nie / w przygotowaniu
+            </label>
+          </fieldset>
 
           <div className={styles.field}>
             <label htmlFor="message">Opis projektu *</label>
@@ -132,17 +180,22 @@ export default async function InquiryPage({ searchParams }: PageProps) {
               name="message"
               className={styles.textarea}
               required
-              placeholder="Opisz krótko projekt, wymagania, technologię, dokumentację itp."
+              placeholder="Opisz projekt, technologię, wymagania jakościowe, oczekiwane testy, BOM/PCB/gerbery oraz istotne ograniczenia."
             />
           </div>
 
+          <label className={styles.consentLabel}>
+            <input type="checkbox" name="rodoConsent" required />
+            Wyrażam zgodę na kontakt w sprawie zapytania ofertowego oraz przekazanie danych do wybranej firmy EMS po weryfikacji przez PolskiEMS.
+          </label>
+
           <div className={styles.actions}>
-            <button type="submit" className={styles.submitBtn}>Wyślij zapytanie</button>
+            <button type="submit" className={styles.submitBtn}>Wyślij zapytanie do weryfikacji</button>
           </div>
         </form>
 
         <div className={styles.actions}>
-          <Link href="/producenci" className={styles.submitBtn}>Wróć do producentów</Link>
+          <Link href="/producenci" className={styles.secondaryBtn}>Wróć do producentów</Link>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
 }
 
 .container {
-  max-width: 1300px;
+  max-width: 1450px;
   margin: 0 auto;
 }
 
@@ -12,6 +12,12 @@
   text-align: center;
   color: white;
   font-size: 2.6rem;
+  margin-bottom: 8px;
+}
+
+.lead {
+  text-align: center;
+  color: rgba(255,255,255,0.85);
   margin-bottom: 28px;
 }
 
@@ -64,7 +70,6 @@
   border-radius: 999px;
 }
 
-
 .packageBadgeStandard {
   background: linear-gradient(135deg, #1d4ed8, #3b82f6);
   color: white;
@@ -76,6 +81,7 @@
   color: #2b1900;
   box-shadow: 0 8px 18px rgba(245, 158, 11, 0.32);
 }
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -84,9 +90,10 @@
   padding: 4px 10px;
   font-weight: 700;
   font-size: 12px;
+  white-space: nowrap;
 }
 
-.statusNew {
+.statusPending {
   background: rgba(250, 204, 21, 0.22);
   color: #fde68a;
 }
@@ -96,14 +103,40 @@
   color: #86efac;
 }
 
-.statusError {
+.statusRejected {
+  background: rgba(156, 163, 175, 0.24);
+  color: #e5e7eb;
+}
+
+.statusFailed {
   background: rgba(239, 68, 68, 0.22);
   color: #fca5a5;
 }
 
-.statusBlocked {
-  background: rgba(156, 163, 175, 0.24);
-  color: #e5e7eb;
+.details {
+  min-width: 260px;
+}
+
+.details summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #bfdbfe;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.details h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.details p {
+  margin: 0 0 6px;
 }
 
 .cards {
@@ -138,6 +171,44 @@
   border-top: 1px solid rgba(255,255,255,0.16);
 }
 
+.actionStack,
+.actionForm {
+  display: grid;
+  gap: 8px;
+}
+
+.actionStack {
+  min-width: 230px;
+}
+
+.noteInput {
+  min-height: 58px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.95);
+  color: #111827;
+  padding: 8px;
+  resize: vertical;
+}
+
+.sendBtn,
+.rejectBtn {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sendBtn {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.rejectBtn {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+}
+
 .bottomBack {
   margin-top: 24px;
 }
@@ -158,12 +229,11 @@
 }
 
 .noAction {
-  margin-top: 12px;
   opacity: 0.85;
   font-size: 14px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .tableWrap {
     display: none;
   }
@@ -171,5 +241,15 @@
   .cards {
     display: grid;
     gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 12px;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
   }
 }
