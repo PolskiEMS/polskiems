@@ -88,8 +88,11 @@ export const inquiries = mysqlTable("inquiries", {
   serviceType: varchar("service_type", { length: 100 }).notNull(),
   quantity: varchar("quantity", { length: 100 }),
   deadline: varchar("deadline", { length: 100 }),
+  hasDocumentation: boolean("has_documentation").notNull().default(false),
   message: text("message").notNull(),
+  source: mysqlEnum("source", ["company_card", "company_profile", "global_form"]).notNull().default("global_form"),
   createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: datetime("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const inquiryRecipients = mysqlTable("inquiry_recipients", {
@@ -97,8 +100,12 @@ export const inquiryRecipients = mysqlTable("inquiry_recipients", {
   inquiryId: int("inquiry_id").notNull().references(() => inquiries.id),
   companyId: int("company_id").notNull().references(() => producenci.id),
   companyEmail: varchar("company_email", { length: 150 }).notNull(),
-  status: varchar("status", { length: 50 }).notNull().default("new"),
+  status: mysqlEnum("status", ["pending_review", "sent_to_company", "rejected", "failed"]).notNull().default("pending_review"),
+  adminNote: text("admin_note"),
   sentAt: datetime("sent_at", { mode: "string" }),
+  rejectedAt: datetime("rejected_at", { mode: "string" }),
+  errorMessage: text("error_message"),
+  updatedAt: datetime("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const packageOrders = mysqlTable("package_orders", {

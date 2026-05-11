@@ -16,7 +16,6 @@ import {
 import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { inquiries, inquiryRecipients } from "@/db/schema";
-import error from "next/error";
 
 export async function getDashboardStats(days = 30) {
   const db = getDb();
@@ -1139,6 +1138,28 @@ function getPackageConfig(packageType: string) {
   }
 }
 
+function getInquiryRedirect(companyId: number, params: Record<string, string>) {
+  const search = new URLSearchParams(params);
+  if (companyId > 0) search.set("companyId", String(companyId));
+  return `/zapytania-ofertowe?${search.toString()}`;
+}
+
+function normalizeInquirySource(value: FormDataEntryValue | null) {
+  const source = String(value ?? "global_form");
+  if (["company_card", "company_profile", "global_form"].includes(source)) {
+    return source as "company_card" | "company_profile" | "global_form";
+  }
+  return "global_form";
+}
+
+function getCurrentDateTime() {
+  return new Date().toISOString().slice(0, 19).replace("T", " ");
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Nieznany błąd wysyłki";
+}
+
 export async function getAdminInquiries() {
   const db = getDb();
 
@@ -1152,16 +1173,24 @@ export async function getAdminInquiries() {
       serviceType: inquiries.serviceType,
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
+      hasDocumentation: inquiries.hasDocumentation,
       message: inquiries.message,
+      source: inquiries.source,
       createdAt: inquiries.createdAt,
+      updatedAt: inquiries.updatedAt,
 
       recipientId: inquiryRecipients.id,
       companyId: inquiryRecipients.companyId,
       companyName: producenci.nazwa,
       packageType: producenci.packageType,
+      currentCompanyEmail: producenci.email,
+      companyIsActive: producenci.isActive,
       companyEmail: inquiryRecipients.companyEmail,
       status: inquiryRecipients.status,
+      adminNote: inquiryRecipients.adminNote,
       sentAt: inquiryRecipients.sentAt,
+      rejectedAt: inquiryRecipients.rejectedAt,
+      errorMessage: inquiryRecipients.errorMessage,
     })
     .from(inquiries)
     .leftJoin(
@@ -1181,6 +1210,7 @@ export async function sendInquiryAction(formData: FormData) {
   const db = getDb();
 
   const companyId = Number(formData.get("companyId"));
+  const source = normalizeInquirySource(formData.get("source"));
   const customerName = String(formData.get("customerName") ?? "").trim();
   const customerCompany = String(formData.get("customerCompany") ?? "").trim();
   const customerEmail = String(formData.get("customerEmail") ?? "").trim();
@@ -1198,10 +1228,22 @@ export async function sendInquiryAction(formData: FormData) {
   const serviceType = normalizedServices.join(", ");
   const quantity = String(formData.get("quantity") ?? "").trim();
   const deadline = String(formData.get("deadline") ?? "").trim();
+  const hasDocumentation = formData.get("hasDocumentation") === "yes";
   const message = String(formData.get("message") ?? "").trim();
+  const rodoConsent = formData.get("rodoConsent") === "on";
 
-  if (!companyId || !customerName || !customerEmail || normalizedServices.length === 0 || !message) {
-    redirect("/zapytania-ofertowe");
+  if (
+    !Number.isFinite(companyId) ||
+    companyId <= 0 ||
+    !customerName ||
+    !customerEmail ||
+    normalizedServices.length === 0 ||
+    !quantity ||
+    !deadline ||
+    !message ||
+    !rodoConsent
+  ) {
+    redirect(getInquiryRedirect(Number.isFinite(companyId) ? companyId : 0, { error: "missing" }));
   }
 
   const companyRows = await db
@@ -1209,7 +1251,6 @@ export async function sendInquiryAction(formData: FormData) {
       id: producenci.id,
       nazwa: producenci.nazwa,
       email: producenci.email,
-      packageType: producenci.packageType,
       isActive: producenci.isActive,
     })
     .from(producenci)
@@ -1218,60 +1259,95 @@ export async function sendInquiryAction(formData: FormData) {
   const company = companyRows[0];
 
   if (!company || !company.email || !company.isActive) {
-    redirect("/zapytania-ofertowe");
+    redirect(getInquiryRedirect(0, { error: "company" }));
   }
 
+  const now = getCurrentDateTime();
   const inquiryResult = await db.insert(inquiries).values({
     customerName,
     customerCompany: customerCompany || null,
     customerEmail,
     customerPhone: customerPhone || null,
     serviceType,
-    quantity: quantity || null,
-    deadline: deadline || null,
+    quantity,
+    deadline,
+    hasDocumentation,
     message,
+    source,
+    updatedAt: now,
   });
 
   const inquiryId = Number((inquiryResult as any).insertId);
-
-  const recipientStatus = "new";
 
   await db.insert(inquiryRecipients).values({
     inquiryId,
     companyId: company.id,
     companyEmail: company.email,
-    status: recipientStatus,
+    status: "pending_review",
+    updatedAt: now,
   });
 
   redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
+}
+
+export async function rejectInquiryAction(formData: FormData) {
+  "use server";
+
+  const recipientId = Number(formData.get("recipientId"));
+  const adminNote = String(formData.get("adminNote") ?? "").trim();
+  const db = getDb();
+
+  if (!Number.isFinite(recipientId) || recipientId <= 0) {
+    return;
   }
+
+  const now = getCurrentDateTime();
+
+  await db
+    .update(inquiryRecipients)
+    .set({
+      status: "rejected",
+      adminNote: adminNote || null,
+      rejectedAt: now,
+      errorMessage: null,
+      updatedAt: now,
+    })
+    .where(and(eq(inquiryRecipients.id, recipientId), eq(inquiryRecipients.status, "pending_review")));
+
+  revalidatePath("/admin/zapytania");
+}
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
 
   const recipientId = Number(formData.get("recipientId"));
+  const adminNote = String(formData.get("adminNote") ?? "").trim();
   const db = getDb();
 
   if (!Number.isFinite(recipientId) || recipientId <= 0) {
-    throw new Error("Nieprawidłowy recipientId");
+    return;
   }
 
   const rows = await db
     .select({
       recipientId: inquiryRecipients.id,
       status: inquiryRecipients.status,
-      companyEmail: inquiryRecipients.companyEmail,
+      storedCompanyEmail: inquiryRecipients.companyEmail,
+      companyEmail: producenci.email,
       companyName: producenci.nazwa,
       companyId: producenci.id,
+      companyIsActive: producenci.isActive,
       sentAt: inquiryRecipients.sentAt,
 
       inquiryId: inquiries.id,
       customerName: inquiries.customerName,
+      customerCompany: inquiries.customerCompany,
       customerEmail: inquiries.customerEmail,
       customerPhone: inquiries.customerPhone,
       serviceType: inquiries.serviceType,
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
+      hasDocumentation: inquiries.hasDocumentation,
       message: inquiries.message,
 
       packageType: producenci.packageType,
@@ -1285,17 +1361,25 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
 
   const row = rows[0];
 
-  if (!row) {
-    throw new Error("Nie znaleziono odbiorcy zapytania");
-  }
-
-  if (row.status === "sent") {
+  if (!row || row.status !== "pending_review") {
     revalidatePath("/admin/zapytania");
     return;
   }
 
-  if (row.status === "blocked") {
-    throw new Error("To zapytanie jest zablokowane");
+  const now = getCurrentDateTime();
+
+  if (!row.companyIsActive || !row.companyEmail) {
+    await db
+      .update(inquiryRecipients)
+      .set({
+        status: "failed",
+        adminNote: adminNote || null,
+        errorMessage: "Wybrana firma jest nieaktywna albo nie ma adresu e-mail.",
+        updatedAt: now,
+      })
+      .where(eq(inquiryRecipients.id, recipientId));
+    revalidatePath("/admin/zapytania");
+    return;
   }
 
   if (
@@ -1303,29 +1387,43 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
     row.monthlyInquiryCount >= row.monthlyInquiryLimit
   ) {
     const packageLabel = row.packageType === "free" ? "Free" : "Standard";
-    throw new Error(`Miesięczny limit leadów dla pakietu ${packageLabel} został osiągnięty`);
+    await db
+      .update(inquiryRecipients)
+      .set({
+        status: "failed",
+        adminNote: adminNote || null,
+        errorMessage: `Miesięczny limit leadów dla pakietu ${packageLabel} został osiągnięty`,
+        updatedAt: now,
+      })
+      .where(eq(inquiryRecipients.id, recipientId));
+    revalidatePath("/admin/zapytania");
+    return;
   }
-
-  const sentAt = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   try {
     await sendInquiryEmail({
       companyEmail: row.companyEmail,
       companyName: row.companyName,
       customerName: row.customerName,
+      customerCompany: row.customerCompany,
       customerEmail: row.customerEmail,
       customerPhone: row.customerPhone,
       serviceType: row.serviceType,
       quantity: row.quantity,
       deadline: row.deadline,
+      hasDocumentation: row.hasDocumentation,
       message: row.message,
     });
 
     await db
       .update(inquiryRecipients)
       .set({
-        status: "sent",
-        sentAt,
+        companyEmail: row.companyEmail,
+        status: "sent_to_company",
+        adminNote: adminNote || null,
+        sentAt: now,
+        errorMessage: null,
+        updatedAt: now,
       })
       .where(eq(inquiryRecipients.id, recipientId));
 
@@ -1339,12 +1437,12 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
     await db
       .update(inquiryRecipients)
       .set({
-        status: "error",
-        sentAt: null,
+        status: "failed",
+        adminNote: adminNote || null,
+        errorMessage: getErrorMessage(error),
+        updatedAt: now,
       })
       .where(eq(inquiryRecipients.id, recipientId));
-
-    throw error;
   }
 
   revalidatePath("/admin/zapytania");

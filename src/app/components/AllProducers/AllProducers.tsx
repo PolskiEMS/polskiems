@@ -76,7 +76,7 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                   )}
 
                   {producer.id && (
-                    <Link href={`/zapytania-ofertowe?companyId=${producer.id}`}>
+                    <Link href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}>
                       <button className={styles.contactMeBtn}>Poproś o wycenę</button>
                     </Link>
                   )}
