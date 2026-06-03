@@ -27,7 +27,7 @@ function getErrorCopy(error?: string) {
     case 'missing':
       return 'Uzupełnij wszystkie wymagane pola i zaakceptuj zgodę na kontakt.';
     case 'company':
-      return 'Wybrana firma jest nieaktywna albo nie ma adresu e-mail. Wybierz inną firmę EMS.';
+      return 'Nie udało się znaleźć aktywnych firm EMS z adresem e-mail dla tego zapytania. Zmień zakres usług albo skontaktuj się z PolskiEMS.';
     default:
       return null;
   }
@@ -70,13 +70,24 @@ export default async function InquiryPage({ searchParams }: PageProps) {
       <div className={styles.container}>
         <h1 className={styles.title}>Zapytanie ofertowe</h1>
         <p className={styles.lead}>
-          Wybierz firmę EMS i opisz projekt. Zapytanie najpierw trafi do weryfikacji PolskiEMS,
-          a dopiero po akceptacji zostanie przekazane do wybranej firmy.
+          Uzupełnij potrzeby projektu w formularzu. Możesz wskazać konkretną firmę EMS albo zostawić
+          dopasowanie PolskiEMS — wtedy dobierzemy 3–5 najlepiej pasujących firm, zweryfikujemy
+          zapytanie po stronie administratora i przekażemy je dalej.
         </p>
+
+        <section className={styles.processBox} aria-label="Jak obsługujemy zapytanie ofertowe">
+          <h2>Jak obsługujemy zapytanie?</h2>
+          <ol>
+            <li>Klient opisuje potrzeby, technologię, skalę i termin realizacji.</li>
+            <li>PolskiEMS dopasowuje zapytanie do 3–5 najlepiej pasujących firm EMS.</li>
+            <li>Administrator weryfikuje kompletność i jakość zapytania.</li>
+            <li>Po akceptacji zapytanie trafia do wybranych firm, które mogą przygotować kontakt lub ofertę.</li>
+          </ol>
+        </section>
 
         {success && (
           <div className={styles.successBox}>
-            Dziękujemy. Twoje zapytanie zostało przekazane do weryfikacji. Po akceptacji trafi do wybranej firmy EMS.
+            Dziękujemy. Twoje zapytanie zostało przekazane do weryfikacji. Po akceptacji trafi do wybranej lub dopasowanej grupy firm EMS.
           </div>
         )}
 
@@ -88,21 +99,21 @@ export default async function InquiryPage({ searchParams }: PageProps) {
           <input type="hidden" name="source" value={source} />
 
           <div className={styles.field}>
-            <label htmlFor="company">Wybrana firma EMS *</label>
+            <label htmlFor="company">Preferowana firma EMS</label>
             <select
               id="company"
               name="companyId"
               className={`${styles.input} ${styles.select}`}
               defaultValue={company?.id ? String(company.id) : ''}
-              required
             >
-              <option value="" disabled>Wybierz aktywną firmę EMS</option>
+              <option value="">Dopasuj automatycznie 3–5 najlepiej pasujących firm</option>
               {activeCompanies.map((activeCompany) => (
                 <option key={activeCompany.id} value={activeCompany.id}>
                   {activeCompany.nazwa}
                 </option>
               ))}
             </select>
+            <small>Jeśli nie wybierzesz firmy, PolskiEMS dobierze najlepsze firmy na podstawie usług i opisu projektu.</small>
           </div>
 
           <div className={styles.gridTwo}>
@@ -186,7 +197,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
 
           <label className={styles.consentLabel}>
             <input type="checkbox" name="rodoConsent" required />
-            Wyrażam zgodę na kontakt w sprawie zapytania ofertowego oraz przekazanie danych do wybranej firmy EMS po weryfikacji przez PolskiEMS.
+            Wyrażam zgodę na kontakt w sprawie zapytania ofertowego oraz przekazanie danych do wybranej lub dopasowanej grupy firm EMS po weryfikacji przez PolskiEMS.
           </label>
 
           <div className={styles.actions}>

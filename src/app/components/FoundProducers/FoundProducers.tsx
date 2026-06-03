@@ -8,6 +8,16 @@ import { useSearchParams } from 'next/navigation';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
 
+const hiddenDescriptions = new Set([['Twój', 'krótki', 'opis'].join(' ')]);
+
+const getProducerDescription = (description?: string | null) => {
+  if (!description || hiddenDescriptions.has(description.trim())) {
+    return null;
+  }
+
+  return description;
+};
+
 type Producer = {
   id?: number;
   nazwa: string;
@@ -108,7 +118,9 @@ const SearchContent = () => {
                     <h2>{producer.nazwa}</h2>
 
                     <div className={styles.bottom}>
-                      <p className={styles.description}>{producer.opis}</p>
+                      {getProducerDescription(producer.opis) && (
+                        <p className={styles.description}>{getProducerDescription(producer.opis)}</p>
+                      )}
                       {producer.wojewodztwo && (
                         <p className={styles.regionBadge}>Województwo: {producer.wojewodztwo}</p>
                       )}

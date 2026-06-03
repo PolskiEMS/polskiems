@@ -24,6 +24,34 @@
   line-height: 1.6;
 }
 
+.processBox {
+  margin: 0 auto 22px;
+  max-width: 860px;
+  padding: 18px 20px;
+  border: 1px solid rgba(147, 197, 253, 0.32);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+}
+.processBox h2 {
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 1.35rem;
+}
+.processBox ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 22px;
+}
+.processBox li {
+  line-height: 1.5;
+}
+.processBox li::marker {
+  color: #93c5fd;
+  font-weight: 700;
+}
+
 .successBox,
 .errorBox {
   margin-bottom: 20px;
