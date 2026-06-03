@@ -50,6 +50,45 @@ const packages = [
   }
 ];
 
+const comparisonRows = [
+  {
+    feature: 'Cena miesięczna',
+    free: '0 zł',
+    standard: '199 zł',
+    premium: '299 zł',
+  },
+  {
+    feature: 'Okresy płatności',
+    free: 'Bez opłat miesięcznych',
+    standard: '1, 3, 6 lub 12 miesięcy',
+    premium: '1, 3, 6 lub 12 miesięcy',
+  },
+  {
+    feature: 'Profil firmy',
+    free: 'Podstawowy',
+    standard: 'Profesjonalny',
+    premium: 'Profesjonalny i wyróżniony',
+  },
+  {
+    feature: 'Widoczność w katalogu',
+    free: 'Standardowa',
+    standard: 'Lepsza widoczność',
+    premium: 'Najwyższa widoczność i priorytet',
+  },
+  {
+    feature: 'Zapytania ofertowe miesięcznie',
+    free: 'Do 5',
+    standard: 'Do 20',
+    premium: 'Bez limitu',
+  },
+  {
+    feature: 'Raport statystyk',
+    free: '—',
+    standard: 'Miesięczny raport',
+    premium: 'Rozszerzony raport i analityka',
+  },
+];
+
 const activationFlow = [
   {
     title: '1. Wybór pakietu',
@@ -97,6 +136,32 @@ const CennikPage = () => {
             </Link>
           </article>
         ))}
+      </section>
+
+      <section className={styles.comparisonSection}>
+        <h3>Porównanie pakietów</h3>
+        <div className={styles.tableWrapper}>
+          <table className={styles.comparisonTable}>
+            <thead>
+              <tr>
+                <th>Funkcja</th>
+                <th>FREE</th>
+                <th>STANDARD</th>
+                <th>PREMIUM</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row) => (
+                <tr key={row.feature}>
+                  <th scope="row">{row.feature}</th>
+                  <td>{row.free}</td>
+                  <td>{row.standard}</td>
+                  <td>{row.premium}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className={styles.flowSection}>
