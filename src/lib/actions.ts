@@ -1204,6 +1204,82 @@ export async function getAdminInquiries() {
     .orderBy(desc(inquiries.id), desc(inquiryRecipients.id));
 }
 
+async function getMatchedInquiryCompanies(selectedServices: string[]) {
+  const db = getDb();
+  const normalizedServices = selectedServices.map((service) => service.trim()).filter(Boolean);
+
+  if (normalizedServices.length > 0) {
+    const matchedRows = await db
+      .select({
+        id: producenci.id,
+        nazwa: producenci.nazwa,
+        email: producenci.email,
+        packageType: producenci.packageType,
+      })
+      .from(producenci)
+      .innerJoin(producenciEmsDzialania, eq(producenciEmsDzialania.companyId, producenci.id))
+      .innerJoin(dzialaniaEms, eq(producenciEmsDzialania.dzialanieId, dzialaniaEms.id))
+      .where(and(
+        eq(producenci.isActive, true),
+        sql`${producenci.email} IS NOT NULL`,
+        sql`${producenci.email} <> ''`,
+        inArray(dzialaniaEms.nazwa, normalizedServices)
+      ))
+      .groupBy(producenci.id, producenci.nazwa, producenci.email, producenci.packageType)
+      .orderBy(
+        desc(sql`count(distinct ${dzialaniaEms.nazwa})`),
+        desc(sql`CASE
+          WHEN ${producenci.packageType} = 'premium' THEN 2
+          WHEN ${producenci.packageType} = 'standard' THEN 1
+          ELSE 0
+        END`),
+        asc(producenci.nazwa)
+      )
+      .limit(5);
+
+    if (matchedRows.length >= 3) {
+      return matchedRows;
+    }
+
+    const fallbackRows = await getFallbackInquiryCompanies();
+    const combinedRows = [...matchedRows];
+
+    fallbackRows.forEach((company) => {
+      if (combinedRows.length < 5 && !combinedRows.some((matchedCompany) => matchedCompany.id === company.id)) {
+        combinedRows.push(company);
+      }
+    });
+
+    return combinedRows;
+  }
+
+  return await getFallbackInquiryCompanies();
+}
+
+async function getFallbackInquiryCompanies() {
+  const db = getDb();
+
+  return await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      email: producenci.email,
+      packageType: producenci.packageType,
+    })
+    .from(producenci)
+    .where(and(eq(producenci.isActive, true), sql`${producenci.email} IS NOT NULL`, sql`${producenci.email} <> ''`))
+    .orderBy(
+      desc(sql`CASE
+        WHEN ${producenci.packageType} = 'premium' THEN 2
+        WHEN ${producenci.packageType} = 'standard' THEN 1
+        ELSE 0
+      END`),
+      desc(producenci.featured),
+      asc(producenci.nazwa)
+    )
+    .limit(5);
+}
+
 export async function sendInquiryAction(formData: FormData) {
   "use server";
 
@@ -1233,8 +1309,6 @@ export async function sendInquiryAction(formData: FormData) {
   const rodoConsent = formData.get("rodoConsent") === "on";
 
   if (
-    !Number.isFinite(companyId) ||
-    companyId <= 0 ||
     !customerName ||
     !customerEmail ||
     normalizedServices.length === 0 ||
@@ -1246,19 +1320,33 @@ export async function sendInquiryAction(formData: FormData) {
     redirect(getInquiryRedirect(Number.isFinite(companyId) ? companyId : 0, { error: "missing" }));
   }
 
-  const companyRows = await db
-    .select({
-      id: producenci.id,
-      nazwa: producenci.nazwa,
-      email: producenci.email,
-      isActive: producenci.isActive,
-    })
-    .from(producenci)
-    .where(eq(producenci.id, companyId));
+  let recipientCompanies: Array<{ id: number; nazwa: string; email: string | null }> = [];
 
-  const company = companyRows[0];
+  if (Number.isFinite(companyId) && companyId > 0) {
+    const companyRows = await db
+      .select({
+        id: producenci.id,
+        nazwa: producenci.nazwa,
+        email: producenci.email,
+        isActive: producenci.isActive,
+      })
+      .from(producenci)
+      .where(eq(producenci.id, companyId));
 
-  if (!company || !company.email || !company.isActive) {
+    const company = companyRows[0];
+
+    if (!company || !company.email || !company.isActive) {
+      redirect(getInquiryRedirect(0, { error: "company" }));
+    }
+
+    recipientCompanies = [company];
+  } else {
+    recipientCompanies = await getMatchedInquiryCompanies(normalizedServices);
+  }
+
+  const validRecipientCompanies = recipientCompanies.filter((company) => company.email);
+
+  if (validRecipientCompanies.length === 0) {
     redirect(getInquiryRedirect(0, { error: "company" }));
   }
 
@@ -1277,17 +1365,24 @@ export async function sendInquiryAction(formData: FormData) {
     updatedAt: now,
   });
 
-  const inquiryId = Number((inquiryResult as any).insertId);
+  const inquiryId = Number((inquiryResult as { insertId?: number | string }).insertId);
 
-  await db.insert(inquiryRecipients).values({
-    inquiryId,
-    companyId: company.id,
-    companyEmail: company.email,
-    status: "pending_review",
-    updatedAt: now,
-  });
+  await db.insert(inquiryRecipients).values(
+    validRecipientCompanies.map((company) => ({
+      inquiryId,
+      companyId: company.id,
+      companyEmail: company.email as string,
+      status: "pending_review" as const,
+      updatedAt: now,
+    }))
+  );
 
-  redirect(`/zapytania-ofertowe?companyId=${companyId}&success=1`);
+  const successParams = new URLSearchParams({ success: "1" });
+  if (Number.isFinite(companyId) && companyId > 0) {
+    successParams.set("companyId", String(companyId));
+  }
+
+  redirect(`/zapytania-ofertowe?${successParams.toString()}`);
 }
 
 export async function rejectInquiryAction(formData: FormData) {

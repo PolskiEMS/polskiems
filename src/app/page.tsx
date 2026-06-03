@@ -6,6 +6,17 @@ import { getFeaturedProducers } from "@/lib/actions";
 
 const hiddenDescriptions = new Set([["Twój", "krótki", "opis"].join(" ")]);
 
+const valuePropositions = [
+  {
+    audience: "Dla firm szukających producenta",
+    benefit: "Szybciej porównujesz dostawców.",
+  },
+  {
+    audience: "Dla firm EMS",
+    benefit: "Zyskujesz widoczność i zapytania ofertowe.",
+  },
+];
+
 const howItWorksSteps = [
   "Wybierasz usługę",
   "Filtrujesz firmy",
@@ -20,6 +31,25 @@ const audienceItems = [
   "Producent urządzeń IoT",
   "Firma szukająca montażu SMT/THT",
   "Firma potrzebująca prototypu",
+];
+
+const faqItems = [
+  {
+    question: "Czy muszę samodzielnie wybierać firmę EMS?",
+    answer: "Nie. Możesz wskazać konkretną firmę albo wysłać zapytanie do dopasowania — PolskiEMS dobierze 3–5 najlepiej pasujących firm na podstawie potrzeb projektu.",
+  },
+  {
+    question: "Co dzieje się z zapytaniem ofertowym po wysłaniu?",
+    answer: "Zapytanie trafia najpierw do weryfikacji administratora. Po sprawdzeniu kompletności i jakości zostaje przekazane dalej do wybranych lub dopasowanych firm EMS.",
+  },
+  {
+    question: "Jakie informacje warto uzupełnić w formularzu?",
+    answer: "Najważniejsze są: typ usługi, skala produkcji, termin, dokumentacja techniczna, wymagania jakościowe, testy oraz opis ograniczeń projektu.",
+  },
+  {
+    question: "Co zyskuje firma EMS obecna w PolskiEMS?",
+    answer: "Firma EMS zwiększa widoczność w katalogu i może otrzymywać zweryfikowane zapytania ofertowe od klientów szukających produkcji elektroniki.",
+  },
 ];
 
 const getProducerDescription = (description?: string | null) => {
@@ -40,6 +70,14 @@ export default async function Home() {
       <section className={styles.hero}>
         <h1>Polski <br /> EMS</h1>
         <h2>Znajdź swojego producenta</h2>
+        <div className={styles.valueProposition}>
+          {valuePropositions.map((item) => (
+            <article key={item.audience} className={styles.valueCard}>
+              <strong>{item.audience}</strong>
+              <span>{item.benefit}</span>
+            </article>
+          ))}
+        </div>
         <div className={styles.buttons}>
           <Link href={'/wyszukaj'}><button>Wyszukaj</button></Link>
           <Link href={'/wszyscy-producenci'}><button>Wszyscy Producenci</button></Link>
@@ -101,12 +139,25 @@ export default async function Home() {
         <div className={styles.recommendedCta}>
           <h4 className={styles.recommendedCtaTitle}>Zapytanie ofertowe</h4>
           <p>
-            Szukasz partnera EMS do projektu seryjnego lub prototypowego? Wyślij jedno zapytanie,
-            a dopasujemy je do firm gotowych do szybkiej i rzetelnej wyceny.
+            Szukasz partnera EMS do projektu seryjnego lub prototypowego? Uzupełnij potrzeby w formularzu,
+            a PolskiEMS dopasuje zapytanie do 3–5 najlepiej pasujących firm, zweryfikuje je po stronie
+            administratora i przekaże dalej.
           </p>
           <Link href="/zapytania-ofertowe" className={styles.recommendedCtaButton}>
             Dodaj zapytanie ofertowe
           </Link>
+        </div>
+      </section>
+
+      <section className={styles.faqSection}>
+        <h3>FAQ</h3>
+        <div className={styles.faqGrid}>
+          {faqItems.map((item) => (
+            <article key={item.question} className={styles.faqCard}>
+              <h4>{item.question}</h4>
+              <p>{item.answer}</p>
+            </article>
+          ))}
         </div>
       </section>
 
