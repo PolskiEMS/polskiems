@@ -3,7 +3,7 @@
     flex-direction: row;
     gap: 15px;
     flex-wrap: wrap;
-    margin-top: 120px;
+    margin-top: 36px;
     justify-content: center;
     margin-bottom: 50px;
 }
@@ -101,7 +101,7 @@
 
 @media screen and (max-width: 830px) {
     .allFiltersGroup {
-        margin-top: 150px;
+        margin-top: 30px;
         flex-direction: column;
     }
 
@@ -127,7 +127,7 @@
 
 @media screen and (max-width: 480px) {
     .allFiltersGroup {
-        margin-top: 180px;
+        margin-top: 24px;
         gap: 20px;
     }
 
@@ -149,6 +149,11 @@
     gap: 20px;
     flex-wrap: wrap;
     margin-top: 70px;
+    padding: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    background: rgba(33, 31, 51, 0.58);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
 }
 
 .controlLabel {
@@ -157,6 +162,14 @@
     gap: 8px;
     width: min(450px, 100%);
     font-weight: 600;
+}
+
+.controlLabel:first-child {
+    flex: 1 1 560px;
+}
+
+.controlLabel:last-child {
+    flex: 0 1 260px;
 }
 
 .searchInput,
@@ -168,4 +181,18 @@
     background-color: rgb(33, 31, 51);
     color: #fff;
     font-size: 1rem;
+}
+
+@media screen and (max-width: 830px) {
+    .searchControls {
+        margin-top: 45px;
+        padding: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .searchControls {
+        margin-top: 32px;
+        padding: 14px;
+    }
 }
