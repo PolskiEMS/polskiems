@@ -303,8 +303,16 @@ type Filters = {
   scales?: string[];
   searchQuery?: string;
   query?: string;
-  sort?: ProducerSort;
+  sort?: ProducerSort | string;
 };
+
+const producerSortOptions = new Set<ProducerSort>([
+  "default",
+  "name-asc",
+  "name-desc",
+  "newest",
+  "oldest",
+]);
 
 export async function getFeaturedProducers(limit = 6) {
   await deactivateExpiredPaidCompanies();
@@ -336,8 +344,11 @@ export async function getFeaturedProducers(limit = 6) {
 export async function getFilteredProducers(filters: Filters) {
   await deactivateExpiredPaidCompanies();
   const db = getDb();
-  const { regions = [], requirements = [], scales = [], sort = "default" } = filters;
+  const { regions = [], requirements = [], scales = [] } = filters;
   const searchQuery = (filters.searchQuery ?? filters.query ?? "").trim();
+  const sort = producerSortOptions.has(filters.sort as ProducerSort)
+    ? (filters.sort as ProducerSort)
+    : "default";
 
   let matchingRequirementsIds: number[] = [];
   if (requirements.length > 0) {
