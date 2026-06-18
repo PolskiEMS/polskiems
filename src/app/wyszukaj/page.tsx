@@ -32,7 +32,7 @@ const Wyszukaj = () => {
       <PageViewTracker page="search" />
       <div className={styles.topPage}>
         <h1>Wyszukaj Producenta</h1>
-        <p>Wybierz opcje</p>
+        <p>Wyszukaj producentów po nazwie lub usłudze albo Wybierz usługi EMS, lokalizację i skalę produkcji, aby znaleźć dopasowane firmy.</p>
       </div>
       <ProducerSearch />
     </div>

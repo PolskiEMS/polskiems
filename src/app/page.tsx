@@ -69,7 +69,7 @@ export default async function Home() {
 
       <section className={styles.hero}>
         <h1>Polski <br /> EMS</h1>
-        <h2>Znajdź swojego producenta</h2>
+        <h2>Porównaj firmy EMS i znajdź wykonawcę dopasowanego do Twoich potrzeb</h2>
         <div className={styles.valueProposition}>
           {valuePropositions.map((item) => (
             <article key={item.audience} className={styles.valueCard}>
