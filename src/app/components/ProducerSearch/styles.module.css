@@ -143,3 +143,29 @@
         font-size: 1.2em;
     }
 }
+.searchControls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 70px;
+}
+
+.controlLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(450px, 100%);
+    font-weight: 600;
+}
+
+.searchInput,
+.sortSelect {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgb(33, 31, 51);
+    color: #fff;
+    font-size: 1rem;
+}
