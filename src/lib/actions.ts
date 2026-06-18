@@ -13,7 +13,7 @@ import {
   pageViews,
   packageOrders,
 } from "@/db/schema";
-import { and, asc, eq, inArray, sql, desc } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { inquiries, inquiryRecipients } from "@/db/schema";
 
@@ -295,10 +295,15 @@ export const saveStatistics = async (data: string) => {
   return await db.insert(statystyki).values({ wynik: data });
 };
 
+type ProducerSort = "default" | "name-asc" | "name-desc" | "newest" | "oldest";
+
 type Filters = {
   regions?: string[];
   requirements?: string[];
   scales?: string[];
+  searchQuery?: string;
+  query?: string;
+  sort?: ProducerSort;
 };
 
 export async function getFeaturedProducers(limit = 6) {
@@ -331,7 +336,8 @@ export async function getFeaturedProducers(limit = 6) {
 export async function getFilteredProducers(filters: Filters) {
   await deactivateExpiredPaidCompanies();
   const db = getDb();
-  const { regions = [], requirements = [], scales = [] } = filters;
+  const { regions = [], requirements = [], scales = [], sort = "default" } = filters;
+  const searchQuery = (filters.searchQuery ?? filters.query ?? "").trim();
 
   let matchingRequirementsIds: number[] = [];
   if (requirements.length > 0) {
@@ -396,16 +402,52 @@ export async function getFilteredProducers(filters: Filters) {
     whereConditions.push(inArray(producenci.id, matchingScalesIds));
   }
 
+  if (searchQuery) {
+    const searchPattern = `%${searchQuery}%`;
+
+    whereConditions.push(
+      or(
+        sql`${producenci.nazwa} LIKE ${searchPattern}`,
+        sql`${producenci.opis} LIKE ${searchPattern}`,
+        sql`EXISTS (
+          SELECT 1
+          FROM ${producenciEmsDzialania}
+          LEFT JOIN ${dzialaniaEms}
+            ON ${producenciEmsDzialania.dzialanieId} = ${dzialaniaEms.id}
+          WHERE ${producenciEmsDzialania.companyId} = ${producenci.id}
+            AND ${dzialaniaEms.nazwa} LIKE ${searchPattern}
+        )`
+      )!
+    );
+  }
+
   query.where(and(...whereConditions));
-  query.orderBy(
-    desc(sql`CASE
-      WHEN ${producenci.packageType} = 'premium' THEN 2
-      WHEN ${producenci.packageType} = 'standard' THEN 1
-      ELSE 0
-    END`),
-    desc(producenci.featured),
-    asc(producenci.id)
-  );
+
+  switch (sort) {
+    case "name-asc":
+      query.orderBy(asc(producenci.nazwa), asc(producenci.id));
+      break;
+    case "name-desc":
+      query.orderBy(desc(producenci.nazwa), asc(producenci.id));
+      break;
+    case "newest":
+      query.orderBy(desc(producenci.createdAt), desc(producenci.id));
+      break;
+    case "oldest":
+      query.orderBy(asc(producenci.createdAt), asc(producenci.id));
+      break;
+    default:
+      query.orderBy(
+        desc(sql`CASE
+          WHEN ${producenci.packageType} = 'premium' THEN 2
+          WHEN ${producenci.packageType} = 'standard' THEN 1
+          ELSE 0
+        END`),
+        desc(producenci.featured),
+        asc(producenci.id)
+      );
+      break;
+  }
 
   return await query;
 }
@@ -659,8 +701,8 @@ export async function getCompanyReport(
   const hasCustomRange = Boolean(startDate && endDate);
   const safeDays = typeof days === "number" && Number.isFinite(days) ? Math.max(1, Math.floor(days)) : 30;
   const since = !hasCustomRange ? sql`NOW() - INTERVAL ${safeDays} DAY` : null;
-  const rangeStart = hasCustomRange ? sql`${startDate} 00:00:00` : null;
-  const rangeEnd = hasCustomRange ? sql`${endDate} 23:59:59` : null;
+  const rangeStart = hasCustomRange ? `${startDate} 00:00:00` : null;
+  const rangeEnd = hasCustomRange ? `${endDate} 23:59:59` : null;
 
   const rows = await db
     .select({

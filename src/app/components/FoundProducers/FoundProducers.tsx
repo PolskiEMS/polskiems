@@ -39,6 +39,8 @@ const SearchContent = () => {
   const regions = searchParams.getAll('regions');
   const requirements = searchParams.getAll('requirements');
   const scales = searchParams.getAll('scales');
+  const searchQuery = searchParams.get('searchQuery') ?? searchParams.get('query') ?? '';
+  const sort = searchParams.get('sort') ?? 'default';
 
   const getProducers = async () => {
     setIsLoading(true);
@@ -48,7 +50,7 @@ const SearchContent = () => {
       const response = await fetch('/api/searchProducers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ regions, requirements, scales }),
+        body: JSON.stringify({ regions, requirements, scales, searchQuery, sort }),
       });
 
       if (!response.ok) {
@@ -73,7 +75,7 @@ const SearchContent = () => {
 
   useEffect(() => {
     getProducers();
-  }, [regions.join('|'), requirements.join('|'), scales.join('|')]);
+  }, [regions.join('|'), requirements.join('|'), scales.join('|'), searchQuery, sort]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

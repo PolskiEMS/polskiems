@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { SERVICES } from '@/lib/services';
 
 type FilterCategory = "regions" | "requirements" | "scales";
+type SortOption = "default" | "name-asc" | "name-desc" | "newest" | "oldest";
 
 const filtersData = {
     regions: [
@@ -20,6 +21,8 @@ const filtersData = {
 };
 
 const ProducerSearch = () => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sort, setSort] = useState<SortOption>('default');
     const [selectedFilters, setSelectedFilters] = useState<{
         regions: string[];
         requirements: string[];
@@ -87,7 +90,9 @@ const ProducerSearch = () => {
                             query: {
                                 regions: selectedFilters.regions,
                                 requirements: selectedFilters.requirements,
-                                scales: selectedFilters.scales
+                                scales: selectedFilters.scales,
+                                searchQuery: searchQuery.trim() || undefined,
+                                sort
                             }
                         }} className={styles.searchBtn}><button>Wyszukaj</button></Link>
                         <Link href={'/wszyscy-producenci'} className={styles.allProducentsBtn}><button>Wszyscy Producenci</button></Link>
@@ -122,6 +127,32 @@ const ProducerSearch = () => {
 
     return (
         <div>
+            <div className={styles.searchControls}>
+                <label className={styles.controlLabel}>
+                    <span>Szukaj producentów</span>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder="Szukaj po nazwie, opisie lub usługach"
+                        className={styles.searchInput}
+                    />
+                </label>
+                <label className={styles.controlLabel}>
+                    <span>Sortuj wyniki</span>
+                    <select
+                        value={sort}
+                        onChange={(event) => setSort(event.target.value as SortOption)}
+                        className={styles.sortSelect}
+                    >
+                        <option value="default">Domyślnie</option>
+                        <option value="name-asc">Nazwa A-Z</option>
+                        <option value="name-desc">Nazwa Z-A</option>
+                        <option value="newest">Najnowsze</option>
+                        <option value="oldest">Najstarsze</option>
+                    </select>
+                </label>
+            </div>
             <div className={styles.allFiltersGroup}>
                 {renderFilterGroup("Region", "regions", filtersData.regions)}
                 {renderFilterGroup("Usługi EMS", "requirements", filtersData.requirements)}
