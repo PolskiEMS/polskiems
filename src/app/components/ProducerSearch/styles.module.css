@@ -148,7 +148,9 @@
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    margin-top: 70px;
+    width: calc(100% - 48px);
+    max-width: 1380px;
+    margin: 70px auto 0;
     padding: 22px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 18px;
@@ -165,7 +167,7 @@
 }
 
 .controlLabel:first-child {
-    flex: 1 1 560px;
+    flex: 1 1 520px;
 }
 
 .controlLabel:last-child {
@@ -187,6 +189,12 @@
     .searchControls {
         margin-top: 45px;
         padding: 16px;
+    }
+}
+
+@media screen and (max-width: 1466px) and (min-width: 831px) {
+    .searchControls {
+        max-width: 1080px;
     }
 }
 
