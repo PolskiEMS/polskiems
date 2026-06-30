@@ -12,6 +12,9 @@ type SendInquiryEmailData = {
   deadline?: string | null;
   hasDocumentation: boolean;
   message: string;
+  attachmentName?: string | null;
+  attachmentType?: string | null;
+  attachmentContent?: string | null;
 };
 
 function getResendClient() {
@@ -41,6 +44,13 @@ export async function sendInquiryEmail(data: SendInquiryEmailData) {
     from: "PolskiEMS <onboarding@resend.dev>",
     to: data.companyEmail,
     subject: `Nowe zapytanie ofertowe z PolskiEMS - ${clientLabel}`,
+    attachments: data.attachmentContent && data.attachmentName ? [
+      {
+        filename: data.attachmentName,
+        content: data.attachmentContent,
+        contentType: data.attachmentType || undefined,
+      },
+    ] : undefined,
     html: `
       <h2>Nowe zapytanie ofertowe z PolskiEMS</h2>
       <p>Ten lead został przekazany po weryfikacji przez zespół PolskiEMS. Prosimy o bezpośredni kontakt z klientem.</p>
@@ -57,7 +67,8 @@ export async function sendInquiryEmail(data: SendInquiryEmailData) {
       <p><strong>Typ usługi:</strong> ${escapeHtml(data.serviceType)}</p>
       <p><strong>Liczba sztuk / skala produkcji:</strong> ${escapeHtml(data.quantity || "-")}</p>
       <p><strong>Termin realizacji:</strong> ${escapeHtml(data.deadline || "-")}</p>
-      <p><strong>Dokumentacja techniczna:</strong> ${data.hasDocumentation ? "Tak" : "Nie"}</p>
+      <p><strong>Dokumentacja techniczna:</strong> ${data.hasDocumentation ? "Tak" : "Nie / w przygotowaniu"}</p>
+      <p><strong>Załącznik:</strong> ${escapeHtml(data.attachmentName || "Brak załącznika")}</p>
 
       <hr />
 
