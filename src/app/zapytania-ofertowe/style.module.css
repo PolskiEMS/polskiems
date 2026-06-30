@@ -1,11 +1,14 @@
 .page {
+  box-sizing: border-box;
   min-height: calc(100vh - 90px);
   padding: 24px 20px 60px;
 }
 
 .container {
+  width: 100%;
   max-width: 960px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .title {
@@ -74,6 +77,9 @@
 
 .form {
   display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   gap: 16px;
   background: #f7f8ff;
   border: 1px solid #d7dcff;
@@ -91,6 +97,7 @@
 
 .field {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -109,6 +116,10 @@
 .input,
 .select,
 .textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border: 1px solid #b9c2f5;
   border-radius: 10px;
   background: #ffffff;
@@ -242,6 +253,9 @@
 
 .fileInput {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border: 1px dashed #8b97e8;
   border-radius: 12px;
   background: #f8f9ff;
@@ -278,6 +292,7 @@
   }
 
   .container,
+  .field,
   .form,
   .input,
   .select,
