@@ -28,6 +28,8 @@ function getErrorCopy(error?: string) {
       return 'Uzupełnij wszystkie wymagane pola i zaakceptuj zgodę na kontakt.';
     case 'company':
       return 'Nie udało się znaleźć aktywnych firm EMS z adresem e-mail dla tego zapytania. Zmień zakres usług albo skontaktuj się z PolskiEMS.';
+    case 'file':
+      return 'Załącznik jest za duży. Maksymalny rozmiar pliku dokumentacji to 5 MB.';
     default:
       return null;
   }
@@ -95,7 +97,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
           <div className={styles.errorBox}>{errorCopy}</div>
         )}
 
-        <form action={sendInquiryAction} className={styles.form}>
+        <form action={sendInquiryAction} className={styles.form} encType="multipart/form-data">
           <input type="hidden" name="source" value={source} />
 
           <div className={styles.field}>
@@ -172,17 +174,31 @@ export default async function InquiryPage({ searchParams }: PageProps) {
             </div>
           </div>
 
-          <fieldset className={styles.fieldset}>
-            <legend>Czy posiadasz dokumentację techniczną? *</legend>
-            <label className={styles.radioLabel}>
-              <input type="radio" name="hasDocumentation" value="yes" required />
-              Tak
-            </label>
-            <label className={styles.radioLabel}>
-              <input type="radio" name="hasDocumentation" value="no" required />
-              Nie / w przygotowaniu
-            </label>
-          </fieldset>
+          <section className={styles.documentationBox}>
+            <fieldset className={styles.fieldset}>
+              <legend>Czy posiadasz dokumentację techniczną? *</legend>
+              <label className={styles.radioLabel}>
+                <input type="radio" name="hasDocumentation" value="yes" required />
+                <span>Tak — chcę załączyć pliki do weryfikacji</span>
+              </label>
+              <label className={styles.radioLabel}>
+                <input type="radio" name="hasDocumentation" value="no" required />
+                <span>Nie / dokumentacja jest w przygotowaniu</span>
+              </label>
+            </fieldset>
+
+            <div className={styles.field}>
+              <label htmlFor="documentationFile">Załącz dokumentację techniczną</label>
+              <input
+                id="documentationFile"
+                name="documentationFile"
+                type="file"
+                className={styles.fileInput}
+                accept=".pdf,.zip,.rar,.7z,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg,.ger,.gbr,.brd,.pcb"
+              />
+              <small>Opcjonalnie: BOM, gerbery, PCB, rysunki, wymagania testowe lub paczka ZIP/RAR. Maksymalnie 5 MB.</small>
+            </div>
+          </section>
 
           <div className={styles.field}>
             <label htmlFor="message">Opis projektu *</label>

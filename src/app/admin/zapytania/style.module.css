@@ -253,3 +253,26 @@
     grid-template-columns: 1fr;
   }
 }
+
+.errorBox,
+.emptyBox {
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  color: #111827;
+  line-height: 1.5;
+}
+
+.errorBox {
+  border: 1px solid rgba(248, 113, 113, 0.65);
+  background: #fee2e2;
+}
+
+.emptyBox {
+  border: 1px solid rgba(191, 219, 254, 0.7);
+  background: #eff6ff;
+}
+
+.errorBox code {
+  font-weight: 700;
+}

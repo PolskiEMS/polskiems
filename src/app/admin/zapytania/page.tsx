@@ -90,7 +90,8 @@ function InquiryDetails({ row }: { row: AdminInquiryRow }) {
           <p><strong>Typ usługi:</strong> {row.serviceType}</p>
           <p><strong>Liczba sztuk / skala:</strong> {row.quantity || '-'}</p>
           <p><strong>Termin:</strong> {row.deadline || '-'}</p>
-          <p><strong>Dokumentacja techniczna:</strong> {row.hasDocumentation ? 'Tak' : 'Nie'}</p>
+          <p><strong>Dokumentacja techniczna:</strong> {row.hasDocumentation ? 'Tak' : 'Nie / w przygotowaniu'}</p>
+          <p><strong>Załącznik:</strong> {row.attachmentName || '-'}</p>
         </div>
         <div>
           <h3>Workflow</h3>
@@ -131,7 +132,14 @@ function PendingActions({ row }: { row: AdminInquiryRow }) {
 }
 
 export default async function AdminInquiriesPage() {
-  const rows = await getAdminInquiries();
+  let rows: AdminInquiryRow[] = [];
+  let loadError: string | null = null;
+
+  try {
+    rows = await getAdminInquiries();
+  } catch (error) {
+    loadError = error instanceof Error ? error.message : 'Nieznany błąd pobierania zapytań.';
+  }
 
   return (
     <div className={styles.page}>
@@ -139,6 +147,17 @@ export default async function AdminInquiriesPage() {
         <h1 className={styles.title}>Zapytania ofertowe</h1>
         <p className={styles.lead}>Lead trafia do firmy dopiero po akceptacji przez administratora.</p>
 
+        {loadError && (
+          <div className={styles.errorBox}>
+            <strong>Podstrona zapytań ofertowych nie może pobrać danych.</strong> Najczęstsza przyczyna to brak aktualnej migracji bazy danych dla workflow zapytań lub kolumn załączników. Uruchom migrację z pliku <code>docs/inquiry-workflow-migration.sql</code>. Komunikat techniczny: {loadError}
+          </div>
+        )}
+
+        {!loadError && rows.length === 0 && (
+          <div className={styles.emptyBox}>Brak zapytań ofertowych do wyświetlenia.</div>
+        )}
+
+        {!loadError && (
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
@@ -196,7 +215,9 @@ export default async function AdminInquiriesPage() {
             </tbody>
           </table>
         </div>
+        )}
 
+        {!loadError && (
         <div className={styles.cards}>
           {rows.map((row: AdminInquiryRow, index: number) => (
             <div key={`${row.inquiryId}-${row.recipientId ?? index}`} className={styles.card}>
@@ -214,6 +235,7 @@ export default async function AdminInquiriesPage() {
             </div>
           ))}
         </div>
+        )}
 
         <div className={styles.bottomBack}>
           <Link href="/admin" className={styles.backBtn}>Powrót do panelu</Link>
