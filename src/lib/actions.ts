@@ -1227,6 +1227,9 @@ export async function getAdminInquiries() {
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
       hasDocumentation: inquiries.hasDocumentation,
+      attachmentName: inquiries.attachmentName,
+      attachmentType: inquiries.attachmentType,
+      attachmentContent: inquiries.attachmentContent,
       message: inquiries.message,
       source: inquiries.source,
       createdAt: inquiries.createdAt,
@@ -1359,6 +1362,21 @@ export async function sendInquiryAction(formData: FormData) {
   const deadline = String(formData.get("deadline") ?? "").trim();
   const hasDocumentation = formData.get("hasDocumentation") === "yes";
   const message = String(formData.get("message") ?? "").trim();
+  const documentationFile = formData.get("documentationFile");
+  let attachmentName: string | null = null;
+  let attachmentType: string | null = null;
+  let attachmentContent: string | null = null;
+
+  if (documentationFile instanceof File && documentationFile.size > 0) {
+    if (documentationFile.size > 5 * 1024 * 1024) {
+      redirect(getInquiryRedirect(Number.isFinite(companyId) ? companyId : 0, { error: "file" }));
+    }
+
+    attachmentName = documentationFile.name;
+    attachmentType = documentationFile.type || "application/octet-stream";
+    attachmentContent = Buffer.from(await documentationFile.arrayBuffer()).toString("base64");
+  }
+
   const rodoConsent = formData.get("rodoConsent") === "on";
 
   if (
@@ -1413,6 +1431,9 @@ export async function sendInquiryAction(formData: FormData) {
     quantity,
     deadline,
     hasDocumentation,
+    attachmentName,
+    attachmentType,
+    attachmentContent,
     message,
     source,
     updatedAt: now,
@@ -1496,6 +1517,9 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       quantity: inquiries.quantity,
       deadline: inquiries.deadline,
       hasDocumentation: inquiries.hasDocumentation,
+      attachmentName: inquiries.attachmentName,
+      attachmentType: inquiries.attachmentType,
+      attachmentContent: inquiries.attachmentContent,
       message: inquiries.message,
 
       packageType: producenci.packageType,
@@ -1561,6 +1585,9 @@ export async function sendInquiryToCompanyAction(formData: FormData) {
       deadline: row.deadline,
       hasDocumentation: row.hasDocumentation,
       message: row.message,
+      attachmentName: row.attachmentName,
+      attachmentType: row.attachmentType,
+      attachmentContent: row.attachmentContent,
     });
 
     await db

@@ -1,11 +1,14 @@
 .page {
+  box-sizing: border-box;
   min-height: calc(100vh - 90px);
   padding: 24px 20px 60px;
 }
 
 .container {
+  width: 100%;
   max-width: 960px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .title {
@@ -74,6 +77,9 @@
 
 .form {
   display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   gap: 16px;
   background: #f7f8ff;
   border: 1px solid #d7dcff;
@@ -91,6 +97,7 @@
 
 .field {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -109,6 +116,10 @@
 .input,
 .select,
 .textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border: 1px solid #b9c2f5;
   border-radius: 10px;
   background: #ffffff;
@@ -222,5 +233,102 @@
 
   .select[multiple] {
     min-height: 180px;
+  }
+}
+
+.documentationBox {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #cfd6ff;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.documentationBox .fieldset {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.fileInput {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px dashed #8b97e8;
+  border-radius: 12px;
+  background: #f8f9ff;
+  color: #20264a;
+  padding: 12px;
+}
+
+.fileInput::file-selector-button {
+  margin-right: 12px;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #6272f0 0%, #4d39b6 100%);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .form {
+    gap: 20px;
+    padding: 30px;
+  }
+
+  .documentationBox {
+    grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    overflow-x: hidden;
+  }
+
+  .container,
+  .field,
+  .form,
+  .input,
+  .select,
+  .textarea,
+  .documentationBox,
+  .fieldset,
+  .consentLabel,
+  .submitBtn,
+  .secondaryBtn {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .title {
+    font-size: clamp(2rem, 11vw, 2.6rem);
+  }
+
+  .lead,
+  .processBox {
+    text-align: left;
+  }
+
+  .fieldset {
+    display: grid;
+    gap: 12px;
+  }
+
+  .radioLabel,
+  .consentLabel {
+    align-items: flex-start;
+    font-size: 1rem;
+  }
+
+  .submitBtn,
+  .secondaryBtn {
+    width: 100%;
+    text-align: center;
   }
 }
