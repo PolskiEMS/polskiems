@@ -3,6 +3,7 @@
 }
 
 .producerBlock {
+    scroll-margin-top: calc(var(--navbar-height) + 24px);
     padding: 25px;
     border-radius: 24px;
     background-color: rgba(201, 154, 255, 0.384);

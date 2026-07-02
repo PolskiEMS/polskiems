@@ -42,6 +42,7 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                   : ''
             }`}
             key={producer.id ?? i}
+            id={producer.id ? `producent-${producer.id}` : undefined}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
