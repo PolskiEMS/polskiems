@@ -121,7 +121,11 @@ export default async function Home() {
                   <h4>{featuredProducer.nazwa}</h4>
                   <p>{getProducerDescription(featuredProducer.opis) || "Sprawdź profil producenta i poproś o wycenę."}</p>
                   <div className={styles.recommendedActions}>
-                    <Link href="/wszyscy-producenci">Zobacz profil</Link>
+                    <Link
+                      href={featuredProducer.id ? `/wszyscy-producenci#producent-${featuredProducer.id}` : "/wszyscy-producenci"}
+                    >
+                      Zobacz profil
+                    </Link>
                     {featuredProducer.id && (
                       <Link href={`/zapytania-ofertowe?companyId=${featuredProducer.id}&source=company_card`}>
                         Poproś o wycenę

@@ -150,9 +150,9 @@
 }
 
 .recommendedSection {
-    margin: 104px auto 0;
+    margin: 148px auto 0;
     max-width: 1100px;
-    padding-top: 56px;
+    padding-top: 72px;
 }
 
 .recommendedSection h3,
@@ -160,7 +160,7 @@
 .faqSection h3,
 .seoSection h3 {
     font-size: 2rem;
-    margin-bottom: 30px;
+    margin-bottom: 42px;
     text-align: center;
 }
 
@@ -178,17 +178,17 @@
 .recommendedGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 24px;
+    gap: 36px;
 }
 
 .rfqSection {
-    margin: 72px auto 0;
+    margin: 112px auto 0;
     max-width: 1100px;
 }
 
 .recommendedCta {
     margin-top: 0;
-    padding: 28px 24px;
+    padding: 36px 28px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.05);
@@ -252,14 +252,14 @@
 }
 
 .faqSection {
-    margin: 104px auto 0;
+    margin: 148px auto 0;
     max-width: 1100px;
 }
 
 .faqGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
+    gap: 36px;
 }
 
 .faqCard {
@@ -281,8 +281,8 @@
 }
 
 .seoSection {
-    margin-top: 120px;
-    margin-bottom: 140px;
+    margin-top: 164px;
+    margin-bottom: 164px;
     text-align: center;
 }
 
@@ -365,23 +365,23 @@
     }
 
     .recommendedSection {
-        margin-top: 76px;
-        padding-top: 34px;
+        margin-top: 108px;
+        padding-top: 48px;
     }
 
     .recommendedGrid,
     .faqGrid {
-        gap: 20px;
+        gap: 28px;
     }
 
     .rfqSection,
     .faqSection {
-        margin-top: 76px;
+        margin-top: 108px;
     }
 
     .seoSection {
-        margin-top: 88px;
-        margin-bottom: 96px;
+        margin-top: 116px;
+        margin-bottom: 120px;
     }
 
     .recommendedCard {
@@ -395,7 +395,7 @@
     }
 
     .recommendedCta {
-        padding: 24px 18px;
+        padding: 30px 20px;
     }
 
     .recommendedCtaTitle {
