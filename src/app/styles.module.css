@@ -351,8 +351,13 @@
         width: min(100%, 360px);
     }
 
+    .page > section:not(.hero) {
+        padding-top: 28px;
+        border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
     .infoSections {
-        margin-top: 28px;
+        margin-top: 56px;
     }
 
     .infoCard {
@@ -365,8 +370,8 @@
     }
 
     .recommendedSection {
-        margin-top: 108px;
-        padding-top: 48px;
+        margin-top: 96px;
+        padding-top: 56px;
     }
 
     .recommendedGrid,
@@ -376,11 +381,11 @@
 
     .rfqSection,
     .faqSection {
-        margin-top: 108px;
+        margin-top: 96px;
     }
 
     .seoSection {
-        margin-top: 116px;
+        margin-top: 96px;
         margin-bottom: 120px;
     }
 
