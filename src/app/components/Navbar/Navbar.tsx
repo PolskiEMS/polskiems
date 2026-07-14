@@ -44,6 +44,15 @@ const navGroups: NavGroup[] = [
       { href: "/jak-wybrac-firme-ems", label: "Jak wybrać firmę EMS" },
     ],
   },
+  {
+    label: "Informacje",
+    children: [
+      { href: "/regulamin", label: "Regulamin" },
+      { href: "/cennik", label: "Cennik" },
+      { href: "/o-nas", label: "O nas" },
+      { href: "/kontakt", label: "Kontakt" },
+    ],
+  },
 ];
 
 export default function Navbar() {
