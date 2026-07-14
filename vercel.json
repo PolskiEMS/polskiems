@@ -1,0 +1,7 @@
+{
+  "env": {
+    "PAYMENTS_ENABLED": "false",
+    "NEXT_PUBLIC_PAYMENTS_ENABLED": "false",
+    "NEXT_PUBLIC_CONTACT_EMAIL": "info@polskiems.pl"
+  }
+}

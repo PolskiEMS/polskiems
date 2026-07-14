@@ -30,6 +30,17 @@ function parseBillingCycleMonths(value: unknown): BillingCycleMonths | null {
 }
 
 export async function POST(req: NextRequest) {
+  if (process.env.PAYMENTS_ENABLED !== "true") {
+    return NextResponse.json(
+      {
+        ok: false,
+        code: "PAYMENTS_DISABLED",
+        error: "Płatności są obecnie w trakcie uruchamiania.",
+      },
+      { status: 503 }
+    );
+  }
+
   const body = await req.json();
 
   const companyName = String(body?.companyName ?? "").trim();

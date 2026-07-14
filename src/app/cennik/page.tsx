@@ -95,12 +95,12 @@ const activationFlow = [
     description: 'Wybierz pakiet najlepiej dopasowany do potrzeb Twojej firmy.'
   },
   {
-    title: '2. Płatność',
-    description: 'Dla Standard i Premium możesz wybrać aktywację bez opłaty albo przelew tradycyjny z danymi do faktury.'
+    title: '2. Kontakt',
+    description: 'Do czasu uruchomienia płatności online skontaktuj się z PolskiEMS w sprawie wcześniejszej aktywacji pakietu.'
   },
   {
     title: '3. Potwierdzenie',
-    description: 'Przy przelewie tradycyjnym administrator otrzymuje zgłoszenie i dane potrzebne do wystawienia faktury.'
+    description: 'Administrator potwierdzi dostępność pakietu i przekaże dalsze kroki aktywacji.'
   },
   {
     title: '4. Aktywacja',
@@ -108,11 +108,20 @@ const activationFlow = [
   }
 ];
 
+const paymentsEnabled = process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === 'true';
+const contactHref = '/kontakt';
+
 const CennikPage = () => {
   return (
     <div className={styles.page}>
       <h1>Cennik pakietów</h1>
       <p className={styles.note}>Wybierz rozwiązanie dopasowane do etapu rozwoju Twojej firmy.</p>
+
+      {!paymentsEnabled && (
+        <div className={styles.paymentsNotice}>
+          Zakup pakietów online jest obecnie w trakcie uruchamiania. Cennik pozostaje aktualny. W sprawie wcześniejszej aktywacji pakietu skontaktuj się z PolskiEMS.
+        </div>
+      )}
 
       <section className={styles.packageGrid}>
         {packages.map((item) => (
@@ -131,9 +140,20 @@ const CennikPage = () => {
                 <li key={feature}>{feature}</li>
               ))}
             </ul>
-            <Link href={`/aktywacja_pakietu?pakiet=${item.key}`} className={styles.packageCta}>
-              Wybierz pakiet
-            </Link>
+            <div className={styles.packageActions}>
+              {paymentsEnabled ? (
+                <Link href={`/aktywacja_pakietu?pakiet=${item.key}`} className={styles.packageCta}>
+                  Wybierz pakiet
+                </Link>
+              ) : (
+                <button type="button" className={styles.disabledPackageCta} disabled aria-disabled="true">
+                  Płatności w trakcie uruchamiania
+                </button>
+              )}
+              <Link href={contactHref} className={styles.contactPackageCta}>
+                Skontaktuj się w sprawie pakietu
+              </Link>
+            </div>
           </article>
         ))}
       </section>
@@ -187,8 +207,17 @@ const CennikPage = () => {
 
       <section className={styles.ctaSection}>
         <h3>Gotowy na aktywację?</h3>
-        <p>Przejdź dalej i dokończ aktywację pakietu dla swojej firmy.</p>
-        <Link href="/aktywacja_pakietu" className={styles.finalCta}>Przejdź do aktywacji pakietu</Link>
+        <p>{paymentsEnabled ? 'Przejdź dalej i dokończ aktywację pakietu dla swojej firmy.' : 'Aktywacja online jest tymczasowo wyłączona — skontaktuj się z nami, aby omówić pakiet.'}</p>
+        {paymentsEnabled ? (
+          <Link href="/aktywacja_pakietu" className={styles.finalCta}>Przejdź do aktywacji pakietu</Link>
+        ) : (
+          <div className={styles.finalActions}>
+            <button type="button" className={styles.disabledFinalCta} disabled aria-disabled="true">
+              Płatności w trakcie uruchamiania
+            </button>
+            <Link href={contactHref} className={styles.finalCta}>Skontaktuj się w sprawie pakietu</Link>
+          </div>
+        )}
       </section>
     </div>
   );
