@@ -27,6 +27,9 @@ const PACKAGE_LABELS: Record<PackageType, string> = {
   premium: "PREMIUM",
 };
 
+const paymentsEnabled = process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === "true";
+const contactHref = "/kontakt";
+
 const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
   standard: { 1: 199, 3: 549, 6: 999, 12: 1799 },
   premium: { 1: 299, 3: 849, 6: 1599, 12: 2999 },
@@ -101,6 +104,11 @@ export default function PackageCheckout({
   }
 
   async function handleActivation() {
+    if (!paymentsEnabled) {
+      setStatus({ type: "error", text: "Płatności są obecnie w trakcie uruchamiania. Skontaktuj się z PolskiEMS w sprawie wcześniejszej aktywacji pakietu." });
+      return;
+    }
+
     setIsLoading(true);
     setStatus(null);
 
@@ -185,8 +193,15 @@ export default function PackageCheckout({
   return (
     <section className={styles.checkoutSection}>
       <h3>Dane aktywacji</h3>
+      {!paymentsEnabled && (
+        <div className={styles.paymentsNotice}>
+          Zakup pakietów online jest obecnie w trakcie uruchamiania. Cennik pozostaje aktualny. W sprawie wcześniejszej aktywacji pakietu skontaktuj się z PolskiEMS.
+        </div>
+      )}
       <p className={styles.checkoutHint}>
-        Uzupełnij dane firmy. Pakiet Standard lub Premium możesz aktywować bez opłaty albo zgłosić do przelewu tradycyjnego z fakturą.
+        {paymentsEnabled
+          ? "Uzupełnij dane firmy. Pakiet Standard lub Premium możesz aktywować bez opłaty albo zgłosić do przelewu tradycyjnego z fakturą."
+          : "Aktywacja online i zgłoszenia do przelewu tradycyjnego są obecnie w trakcie uruchamiania."}
       </p>
       <p className={styles.checkoutHint}>
         Jeśli firma już istnieje, system pokaże komunikat. Wtedy pobierz formularz zgłoszeniowy:{" "}
@@ -359,18 +374,32 @@ export default function PackageCheckout({
         )}
       </div>
       <div className={styles.checkoutActions}>
-        <button type="button" onClick={handleActivation} disabled={isLoading}>
-          {isLoading
-            ? "Zapisywanie..."
-            : paidPackageSelected && activationMode === "bank_transfer"
-              ? "Zgłoś do przelewu i faktury"
-              : `Aktywuj pakiet ${PACKAGE_LABELS[selectedPackage]}`}
+        <button
+          type="button"
+          onClick={handleActivation}
+          disabled={isLoading || !paymentsEnabled}
+          aria-disabled={!paymentsEnabled ? "true" : undefined}
+        >
+          {!paymentsEnabled
+            ? "Płatności w trakcie uruchamiania"
+            : isLoading
+              ? "Zapisywanie..."
+              : paidPackageSelected && activationMode === "bank_transfer"
+                ? "Zgłoś do przelewu i faktury"
+                : `Aktywuj pakiet ${PACKAGE_LABELS[selectedPackage]}`}
         </button>
+        {!paymentsEnabled && (
+          <Link href={contactHref} className={styles.contactPackageCta}>
+            Skontaktuj się w sprawie pakietu
+          </Link>
+        )}
       </div>
       <p className={styles.checkoutHint}>
-        {paidPackageSelected && activationMode === "bank_transfer"
-          ? "Po wysłaniu formularza administrator otrzyma zgłoszenie do faktury i przelewu tradycyjnego."
-          : "Nie pobieramy płatności. Pakiet zostanie aktywowany od razu po wysłaniu formularza."}
+        {!paymentsEnabled
+          ? "Nie wysyłamy formularza aktywacji ani zgłoszenia do przelewu. Skontaktuj się z PolskiEMS, aby omówić wcześniejszą aktywację pakietu."
+          : paidPackageSelected && activationMode === "bank_transfer"
+            ? "Po wysłaniu formularza administrator otrzyma zgłoszenie do faktury i przelewu tradycyjnego."
+            : "Nie pobieramy płatności. Pakiet zostanie aktywowany od razu po wysłaniu formularza."}
       </p>
       {status?.type === "success" && <p className={styles.success}>{status.text}</p>}
       {status?.type === "error" && <p className={styles.error}>{status.text}</p>}
