@@ -3,6 +3,8 @@ import ProducerSearch from '../components/ProducerSearch/ProducerSearch';
 import styles from './styles.module.css'
 import PageViewTracker from '../components/PageViewTracker';
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Wyszukaj producenta elektroniki w Polsce | Filtry EMS | PolskiEMS",
   description: "Wybierz region, wymagania i skalę produkcji, aby znaleźć najlepszego producenta elektroniki dopasowanego do Twoich potrzeb.",

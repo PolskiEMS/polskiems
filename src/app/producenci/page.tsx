@@ -3,6 +3,8 @@ import FoundProducers from '../components/FoundProducers/FoundProducers';
 import styles from './styles.module.css'
 import Link from 'next/link';
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Firmy EMS i producenci elektroniki w Polsce – wyniki wyszukiwania",
   description:

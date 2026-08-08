@@ -4,6 +4,8 @@ import PageViewTracker from "@/app/components/PageViewTracker";
 import Image from "next/image";
 import { getFeaturedProducers } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 const hiddenDescriptions = new Set([["Twój", "krótki", "opis"].join(" ")]);
 
 const valuePropositions = [
@@ -61,7 +63,13 @@ const getProducerDescription = (description?: string | null) => {
 };
 
 export default async function Home() {
-  const featuredProducers = await getFeaturedProducers(3);
+  let featuredProducers: Awaited<ReturnType<typeof getFeaturedProducers>> = [];
+
+  try {
+    featuredProducers = await getFeaturedProducers(3);
+  } catch (error) {
+    console.error("Failed to load featured producers", error);
+  }
 
   return (
     <main className={styles.page}>
