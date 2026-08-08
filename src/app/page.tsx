@@ -4,6 +4,8 @@ import PageViewTracker from "@/app/components/PageViewTracker";
 import Image from "next/image";
 import { getFeaturedProducers } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 const hiddenDescriptions = new Set([["Twój", "krótki", "opis"].join(" ")]);
 
 const valuePropositions = [

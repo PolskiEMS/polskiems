@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getCompanyRanking } from "@/lib/actions";
 import styles from "./style.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminRankingPage() {
   const data = await getCompanyRanking(30);
 

@@ -3,6 +3,8 @@ import styles from "./style.module.css";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 
+export const dynamic = "force-dynamic";
+
 type DashboardCompany = {
   companyId: number;
   firma: string;
