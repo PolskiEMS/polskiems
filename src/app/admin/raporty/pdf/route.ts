@@ -19,6 +19,13 @@ function formatDate(date: Date) {
   });
 }
 
+function formatPercent(value: number) {
+  return new Intl.NumberFormat("pl-PL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 type ReportPdfData = {
   companyName: string;
   packageType: string;
@@ -121,8 +128,22 @@ function drawHeader(doc: any, data: ReportPdfData, logoPath: string) {
 
 function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
   const y = 168;
+  const rightX = 250;
+  const rightY = y + 18;
+  const rightWidth = 290;
+  const rightLines = [
+    data.companyWebsite ? `WWW: ${data.companyWebsite}` : null,
+    data.companyEmail ? `E-mail: ${data.companyEmail}` : null,
+    data.companyPhone ? `Telefon: ${data.companyPhone}` : null,
+  ].filter(Boolean) as string[];
+  const companyInfo = rightLines.length > 0 ? rightLines.join("\n") : "Dane kontaktowe: brak";
+  const rightTextHeight = doc.heightOfString(companyInfo, {
+    width: rightWidth,
+    align: "left",
+  });
+  const cardHeight = Math.max(58, rightTextHeight + 24);
 
-  doc.roundedRect(50, y, data.contentWidth, 58, 12).fillAndStroke("#ffffff", "#e5e7eb");
+  doc.roundedRect(50, y, data.contentWidth, cardHeight, 12).fillAndStroke("#ffffff", "#e5e7eb");
 
   doc
     .fillColor("#111827")
@@ -140,22 +161,10 @@ function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
     width: 180,
   });
 
-  let rightX = 250;
-  let rightY = y + 18;
-
-  if (data.companyWebsite) {
-    doc.text(`WWW: ${data.companyWebsite}`, rightX, rightY, { width: 290 });
-    rightY += 14;
-  }
-
-  if (data.companyEmail) {
-    doc.text(`Email: ${data.companyEmail}`, rightX, rightY, { width: 290 });
-    rightY += 14;
-  }
-
-  if (data.companyPhone) {
-    doc.text(`Telefon: ${data.companyPhone}`, rightX, rightY, { width: 290 });
-  }
+  doc.text(companyInfo, rightX, rightY, {
+    width: rightWidth,
+    align: "left",
+  });
 }
 
 function drawSectionTitle(doc: any, title: string, y: number, accent = "#111827") {
@@ -178,7 +187,7 @@ function drawKpiCardsStandard(doc: any, data: ReportPdfData, y: number) {
     { label: "Wyświetlenia", value: String(data.views) },
     { label: "Klik WWW", value: String(data.websiteClicks) },
     { label: "Klik Email", value: String(data.emailClicks) },
-    { label: "Łączny CTR", value: `${data.totalCtrPct.toFixed(2)}%` },
+    { label: "Łączny CTR", value: `${formatPercent(data.totalCtrPct)}%` },
   ];
 
   const cardWidth = 114;
@@ -219,7 +228,7 @@ function drawKpiCardsPremium(doc: any, data: ReportPdfData, y: number) {
     { label: "Wyświetlenia", value: String(data.views) },
     { label: "Klik WWW", value: String(data.websiteClicks) },
     { label: "Klik Email", value: String(data.emailClicks) },
-    { label: "CTR WWW", value: `${data.websiteCtrPct.toFixed(2)}%` },
+    { label: "CTR WWW", value: `${formatPercent(data.websiteCtrPct)}%` },
     { label: "Score", value: `${engagementScore}/100` },
   ];
 
@@ -520,7 +529,7 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
     insightBoxW,
     insightBoxH,
     "Łączny CTR",
-    `${data.totalCtrPct.toFixed(2)}%`,
+    `${formatPercent(data.totalCtrPct)}%`,
     "#6d28d9",
     "#faf5ff",
     "#ddd6fe"
@@ -560,50 +569,50 @@ function drawPremiumReport(doc: any, data: ReportPdfData) {
   y += 24;
 
   const recommendation =
-  !data.companyWebsite || !data.companyEmail
-    ? "Uzupełnij dane kontaktowe, aby zwiększyć wiarygodność profilu."
-    : data.totalCtrPct >= 8
-    ? "Wyniki są dobre. Testuj nowe warianty oferty i aktualizuj profil."
-    : "Wzmocnij komunikat oferty, dodaj CTA i rozbuduj opis usług.";
+    !data.companyWebsite || !data.companyEmail
+      ? "Uzupełnij dane kontaktowe, aby zwiększyć wiarygodność profilu."
+      : data.totalCtrPct >= 8
+      ? "Wyniki są dobre. Testuj nowe warianty oferty i aktualizuj profil."
+      : "Wzmocnij komunikat oferty, dodaj CTA i rozbuduj opis usług.";
 
-const recommendationTextWidth = data.contentWidth - 28;
+  const recommendationTextWidth = data.contentWidth - 28;
 
-doc.font("Roboto").fontSize(9.6);
-const recommendationTextHeight = doc.heightOfString(recommendation, {
-  width: recommendationTextWidth,
-  align: "left",
-});
-
-const recommendationBoxHeight = Math.max(56, recommendationTextHeight + 30);
-
-doc
-  .roundedRect(50, y, data.contentWidth, recommendationBoxHeight, 10)
-  .fillAndStroke("#faf5ff", "#ddd6fe");
-
-doc
-  .fillColor("#6d28d9")
-  .font("Roboto-Bold")
-  .fontSize(9.5)
-  .text("Rekomendacja:", 62, y + 10, {
-    width: 120,
-    align: "left",
-  });
-
-doc
-  .fillColor("#4b5563")
-  .font("Roboto")
-  .fontSize(9.4)
-  .text(recommendation, 62, y + 24, {
+  doc.font("Roboto").fontSize(9.6);
+  const recommendationTextHeight = doc.heightOfString(recommendation, {
     width: recommendationTextWidth,
     align: "left",
   });
+
+  const recommendationBoxHeight = Math.max(56, recommendationTextHeight + 30);
+
+  doc
+    .roundedRect(50, y, data.contentWidth, recommendationBoxHeight, 10)
+    .fillAndStroke("#faf5ff", "#ddd6fe");
+
+  doc
+    .fillColor("#6d28d9")
+    .font("Roboto-Bold")
+    .fontSize(9.5)
+    .text("Rekomendacja:", 62, y + 10, {
+      width: 120,
+      align: "left",
+    });
+
+  doc
+    .fillColor("#4b5563")
+    .font("Roboto")
+    .fontSize(9.4)
+    .text(recommendation, 62, y + 24, {
+      width: recommendationTextWidth,
+      align: "left",
+    });
 }
   
 const PRESET_DAYS = [7, 30, 90] as const;
 const isValidIsoDate = (value: string | null) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 
 export async function GET(req: NextRequest) {
-    try {
+  try {
     const companyId = Number(req.nextUrl.searchParams.get("companyId") ?? 0);
     const daysRaw = Number(req.nextUrl.searchParams.get("days") ?? 30);
     const days = PRESET_DAYS.includes(daysRaw as (typeof PRESET_DAYS)[number]) ? daysRaw : 30;
@@ -731,4 +740,4 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
- }
+}
