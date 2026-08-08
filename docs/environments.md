@@ -53,8 +53,14 @@ Minimalny zestaw:
 - `ADMIN_SECRET`
 - `CRON_SECRET`
 - `RESEND_API_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SECRET_KEY`
+- `SUPABASE_JWKS_URL`
 
 > Uwaga: wartości dla Production i Preview mają być różne (zwłaszcza sekrety i baza).
+> Klucz `SUPABASE_SECRET_KEY` należy ustawiać wyłącznie w lokalnym lub wdrożeniowym
+> środowisku serwerowym i nigdy nie udostępniać go kodowi klienta ani repozytorium.
 
 ## 4) Migracje Drizzle per środowisko
 
