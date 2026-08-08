@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 import { getAllProducers } from '../../lib/actions';
 import styles from './styles.module.css'

@@ -3,6 +3,8 @@ import PackageCheckout from '../cennik/PackageCheckout';
 import { getAllDzialaniaEms, getAllProdukcjaScales, getAllRegion } from '@/lib/actions';
 import styles from './styles.module.css';
 
+export const dynamic = "force-dynamic";
+
 type SearchParams = {
   pakiet?: string;
 };
