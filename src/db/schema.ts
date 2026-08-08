@@ -1,87 +1,91 @@
 import {
-  mysqlTable,
+  pgTable,
+  pgEnum,
+  serial,
   varchar,
-  datetime,
+  timestamp,
   text,
-  mediumtext,
   boolean,
-  int,
-  mysqlEnum,
-} from "drizzle-orm/mysql-core";
+  integer,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const wojewodztwa = mysqlTable("wojewodztwa", {
-  id: int().primaryKey().autoincrement(),
+export const wojewodztwa = pgTable("wojewodztwa", {
+  id: serial().primaryKey(),
   nazwa: varchar("nazwa", { length: 100 }).unique().notNull(),
 });
 
-export const dzialaniaEms = mysqlTable("dzialania_ems", {
-  id: int().primaryKey().autoincrement(),
+export const dzialaniaEms = pgTable("dzialania_ems", {
+  id: serial().primaryKey(),
   nazwa: varchar("nazwa", { length: 100 }).unique().notNull(),
 });
 
-export const produkcja = mysqlTable("produkcja", {
-  id: int().primaryKey().autoincrement(),
+export const produkcja = pgTable("produkcja", {
+  id: serial().primaryKey(),
 
   zakres: varchar("zakres", { length: 50 }).unique().notNull(),
 });
 
-export const producenci = mysqlTable("producenci", {
-  id: int().primaryKey().autoincrement(),
+export const producenci = pgTable("producenci", {
+  id: serial().primaryKey(),
   nazwa: varchar("nazwa", { length: 255 }).notNull(),
   opis: text("opis"),
-  wojewodztwoId: int("wojewodztwo_id").references(() => wojewodztwa.id),
+  wojewodztwoId: integer("wojewodztwo_id").references(() => wojewodztwa.id),
   adres: varchar("adres", { length: 255 }),
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
   www: varchar("www", { length: 255 }),
   featured: boolean("featured").default(false),
   isActive: boolean("isActive").default(false),
-  createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
   packageType: varchar("packageType", { length: 20 }).notNull().default("free"),
-  monthlyInquiryLimit: int("monthlyInquiryLimit").notNull().default(0),
-  monthlyInquiryCount: int("monthlyInquiryCount").notNull().default(0),
-  packageValidUntil: datetime("package_valid_until", { mode: "string" }),
+  monthlyInquiryLimit: integer("monthlyInquiryLimit").notNull().default(0),
+  monthlyInquiryCount: integer("monthlyInquiryCount").notNull().default(0),
+  packageValidUntil: timestamp("package_valid_until", { mode: "string" }),
 });
 
-export const producenciEmsDzialania = mysqlTable("producenci_ems_dzialania", {
-  id: int().primaryKey().autoincrement(),
-  companyId: int("company_id").notNull().references(() => producenci.id),
-  dzialanieId: int("dzialanie_id").notNull().references(() => dzialaniaEms.id),
+export const producenciEmsDzialania = pgTable("producenci_ems_dzialania", {
+  id: serial().primaryKey(),
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  dzialanieId: integer("dzialanie_id").notNull().references(() => dzialaniaEms.id),
 });
 
-export const producenciEmsProdukcja = mysqlTable("producenci_ems_produkcja", {
-  id: int().primaryKey().autoincrement(),
-  companyId: int("company_id").notNull().references(() => producenci.id),
-  produkcjaId: int("produkcja_id").notNull().references(() => produkcja.id),
+export const producenciEmsProdukcja = pgTable("producenci_ems_produkcja", {
+  id: serial().primaryKey(),
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  produkcjaId: integer("produkcja_id").notNull().references(() => produkcja.id),
 });
 
-export const statystyki = mysqlTable("statystyki", {
-  id: int().primaryKey().autoincrement(),
+export const statystyki = pgTable("statystyki", {
+  id: serial().primaryKey(),
   wynik: varchar("wynik", { length: 255 }).notNull(),
-  createdAt: datetime("created_at", { mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("created_at", { mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const companyEvents = mysqlTable("company_events", {
-  id: int("id").primaryKey().autoincrement(),
-  companyId: int("company_id").notNull().references(() => producenci.id),
-  eventType: mysqlEnum("event_type", ["view", "phone_click", "email_click", "website_click", "doc_download"]).notNull(),
+export const companyEventType = pgEnum("company_event_type", ["view", "phone_click", "email_click", "website_click", "doc_download"]);
+
+export const companyEvents = pgTable("company_events", {
+  id: serial("id").primaryKey(),
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  eventType: companyEventType("event_type").notNull(),
   referrer: varchar("referrer", { length: 255 }),
   utmSource: varchar("utm_source", { length: 100 }),
   utmCampaign: varchar("utm_campaign", { length: 100 }),
-  createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const pageViews = mysqlTable("page_views", {
-  id: int().primaryKey().autoincrement(),
+export const pageViews = pgTable("page_views", {
+  id: serial().primaryKey(),
   page: varchar("page", { length: 100 }).notNull(),
   referrer: varchar("referrer", { length: 255 }),
   visitorId: varchar("visitor_id", { length: 100 }),
-  createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const inquiries = mysqlTable("inquiries", {
-  id: int("id").primaryKey().autoincrement(),
+export const inquirySource = pgEnum("inquiry_source", ["company_card", "company_profile", "global_form"]);
+
+export const inquiries = pgTable("inquiries", {
+  id: serial("id").primaryKey(),
   customerName: varchar("customer_name", { length: 150 }).notNull(),
   customerCompany: varchar("customer_company", { length: 150 }),
   customerEmail: varchar("customer_email", { length: 150 }).notNull(),
@@ -92,38 +96,44 @@ export const inquiries = mysqlTable("inquiries", {
   hasDocumentation: boolean("has_documentation").notNull().default(false),
   attachmentName: varchar("attachment_name", { length: 255 }),
   attachmentType: varchar("attachment_type", { length: 120 }),
-  attachmentContent: mediumtext("attachment_content"),
+  attachmentContent: text("attachment_content"),
   message: text("message").notNull(),
-  source: mysqlEnum("source", ["company_card", "company_profile", "global_form"]).notNull().default("global_form"),
-  createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: datetime("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  source: inquirySource("source").notNull().default("global_form"),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const inquiryRecipients = mysqlTable("inquiry_recipients", {
-  id: int("id").primaryKey().autoincrement(),
-  inquiryId: int("inquiry_id").notNull().references(() => inquiries.id),
-  companyId: int("company_id").notNull().references(() => producenci.id),
+export const inquiryRecipientStatus = pgEnum("inquiry_recipient_status", ["pending_review", "sent_to_company", "rejected", "failed"]);
+
+export const inquiryRecipients = pgTable("inquiry_recipients", {
+  id: serial("id").primaryKey(),
+  inquiryId: integer("inquiry_id").notNull().references(() => inquiries.id),
+  companyId: integer("company_id").notNull().references(() => producenci.id),
   companyEmail: varchar("company_email", { length: 150 }).notNull(),
-  status: mysqlEnum("status", ["pending_review", "sent_to_company", "rejected", "failed"]).notNull().default("pending_review"),
+  status: inquiryRecipientStatus("status").notNull().default("pending_review"),
   adminNote: text("admin_note"),
-  sentAt: datetime("sent_at", { mode: "string" }),
-  rejectedAt: datetime("rejected_at", { mode: "string" }),
+  sentAt: timestamp("sent_at", { mode: "string" }),
+  rejectedAt: timestamp("rejected_at", { mode: "string" }),
   errorMessage: text("error_message"),
-  updatedAt: datetime("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const packageOrders = mysqlTable("package_orders", {
-  id: int("id").primaryKey().autoincrement(),
-  companyId: int("company_id").references(() => producenci.id),
+export const packageType = pgEnum("package_type", ["standard", "premium"]);
+export const paymentProvider = pgEnum("payment_provider", ["stripe", "przelewy24"]);
+export const paymentStatus = pgEnum("payment_status", ["pending_payment", "paid", "paid_pending_activation", "active", "failed", "canceled"]);
+
+export const packageOrders = pgTable("package_orders", {
+  id: serial("id").primaryKey(),
+  companyId: integer("company_id").references(() => producenci.id),
   companyName: varchar("company_name", { length: 255 }).notNull(),
   companyEmail: varchar("company_email", { length: 150 }).notNull(),
   companyPhone: varchar("company_phone", { length: 50 }),
   companyDescription: text("company_description"),
-  packageType: mysqlEnum("package_type", ["standard", "premium"]).notNull(),
-  provider: mysqlEnum("provider", ["stripe", "przelewy24"]).notNull(),
-  amountGross: int("amount_gross").notNull(),
+  packageType: packageType("package_type").notNull(),
+  provider: paymentProvider("provider").notNull(),
+  amountGross: integer("amount_gross").notNull(),
   currency: varchar("currency", { length: 3 }).notNull().default("PLN"),
-  billingCycleMonths: int("billing_cycle_months").notNull().default(1),
+  billingCycleMonths: integer("billing_cycle_months").notNull().default(1),
   buyerName: varchar("buyer_name", { length: 150 }),
   buyerEmail: varchar("buyer_email", { length: 150 }),
   buyerPhone: varchar("buyer_phone", { length: 50 }),
@@ -133,10 +143,10 @@ export const packageOrders = mysqlTable("package_orders", {
   buyerPostalCode: varchar("buyer_postal_code", { length: 20 }),
   buyerCity: varchar("buyer_city", { length: 120 }),
   buyerCountry: varchar("buyer_country", { length: 120 }),
-  paymentStatus: mysqlEnum("payment_status", ["pending_payment", "paid", "paid_pending_activation", "active", "failed", "canceled"]).notNull().default("pending_payment"),
+  paymentStatus: paymentStatus("payment_status").notNull().default("pending_payment"),
   stripeSessionId: varchar("stripe_session_id", { length: 255 }),
-  paidAt: datetime("paid_at", { mode: "string" }),
-  activatedAt: datetime("activated_at", { mode: "string" }),
-  accessValidUntil: datetime("access_valid_until", { mode: "string" }),
-  createdAt: datetime("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+  paidAt: timestamp("paid_at", { mode: "string" }),
+  activatedAt: timestamp("activated_at", { mode: "string" }),
+  accessValidUntil: timestamp("access_valid_until", { mode: "string" }),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });

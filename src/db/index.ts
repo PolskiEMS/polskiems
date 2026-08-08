@@ -1,4 +1,13 @@
-import 'dotenv/config';
-import { drizzle } from "drizzle-orm/mysql2";
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
-const db = drizzle({ connection: { uri: process.env.DATABASE_URL }});
+const url = process.env.DATABASE_URL;
+
+if (!url) {
+  throw new Error("Missing DATABASE_URL environment variable");
+}
+
+const client = postgres(url, { prepare: false });
+
+export const db = drizzle(client);
