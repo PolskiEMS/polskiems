@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
 
   const amountGross = PACKAGE_PRICE_TOTAL[packageType][billingCycleMonths];
 
-  const orderResult = await db.insert(packageOrders).values({
+  const [createdOrder] = await db.insert(packageOrders).values({
     companyId: null,
     companyName,
     companyEmail,
@@ -142,9 +142,9 @@ export async function POST(req: NextRequest) {
     buyerCity: buyerCity || null,
     buyerCountry: buyerCountry || null,
     paymentStatus: "pending_payment",
-  });
+  }).returning({ id: packageOrders.id });
 
-  const orderId = Number((orderResult as any).insertId);
+  const orderId = createdOrder.id;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const session = await stripe.checkout.sessions.create({

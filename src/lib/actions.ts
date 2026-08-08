@@ -24,25 +24,25 @@ export async function getDashboardStats(days = 30) {
     count: sql<number>`COUNT(*)`,
   })
   .from(producenci)
-  .where(sql`${producenci.isActive} = 1`);
+  .where(sql`${producenci.isActive} = TRUE`);
 
   const pageViewsRows = await db.select({
     count: sql<number>`COUNT(*)`,
   })
   .from(pageViews)
-  .where(sql`${pageViews.page} = 'home' AND ${pageViews.createdAt} >= NOW() - INTERVAL ${days} DAY`);
+  .where(sql`${pageViews.page} = 'home' AND ${pageViews.createdAt} >= NOW() - (${days} * INTERVAL '1 day')`);
 
   const websiteClicksRows = await db.select({
     count: sql<number>`COUNT(*)`,
   })
   .from(companyEvents)
-  .where(sql`${companyEvents.eventType} = 'website_click' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`);
+  .where(sql`${companyEvents.eventType} = 'website_click' AND ${companyEvents.createdAt} >= NOW() - (${days} * INTERVAL '1 day')`);
 
   const emailClicksRows = await db.select({
     count: sql<number>`COUNT(*)`,
   })
   .from(companyEvents)
-  .where(sql`${companyEvents.eventType} = 'email_click' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`);
+  .where(sql`${companyEvents.eventType} = 'email_click' AND ${companyEvents.createdAt} >= NOW() - (${days} * INTERVAL '1 day')`);
 
   const topCompanies = await db
     .select({
@@ -52,7 +52,7 @@ export async function getDashboardStats(days = 30) {
     })
     .from(companyEvents)
     .innerJoin(producenci, eq(producenci.id, companyEvents.companyId))
-    .where(sql`${companyEvents.eventType} = 'view' AND ${companyEvents.createdAt} >= NOW() - INTERVAL ${days} DAY`)
+    .where(sql`${companyEvents.eventType} = 'view' AND ${companyEvents.createdAt} >= NOW() - (${days} * INTERVAL '1 day')`)
     .groupBy(producenci.id, producenci.nazwa)
     .orderBy(desc(sql`COUNT(*)`))
     .limit(5);
@@ -96,7 +96,7 @@ export async function deactivateExpiredPaidCompanies() {
       sql`${producenci.packageType} IN ('standard', 'premium')
           AND ${producenci.packageValidUntil} IS NOT NULL
           AND ${producenci.packageValidUntil} < NOW()
-          AND ${producenci.isActive} = 1`
+          AND ${producenci.isActive} = TRUE`
     );
 }
 
@@ -110,7 +110,7 @@ export async function getPageViewsStats(days = 30) {
     })
     .from(pageViews)
     .where(
-      sql`${pageViews.createdAt} >= NOW() - INTERVAL ${sql.raw(String(days))} DAY`
+      sql`${pageViews.createdAt} >= NOW() - (${days} * INTERVAL '1 day')`
     )
     .groupBy(pageViews.page);
 
@@ -151,22 +151,22 @@ export async function getCompanyStats(days = 30) {
   const db = getDb();
 
   const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+    days > 0 ? sql`NOW() - (${days} * INTERVAL '1 day')` : null;
 
   const viewsExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view')`.as("views");
 
   const websiteClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')`.as("website_clicks");
 
   const emailClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'email_click')`.as("email_clicks");
 
   const websiteCtrExpr = sql<number>`
     COALESCE(
       ROUND(
-        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
-        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        100.0 * COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')
+        / NULLIF(COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view'), 0),
         2
       ),
       0
@@ -176,8 +176,8 @@ export async function getCompanyStats(days = 30) {
   const emailCtrExpr = sql<number>`
     COALESCE(
       ROUND(
-        100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
-        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        100.0 * COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'email_click')
+        / NULLIF(COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view'), 0),
         2
       ),
       0
@@ -201,7 +201,7 @@ export async function getCompanyStats(days = 30) {
         ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
         : sql`${companyEvents.companyId} = ${producenci.id}`
     )
-    .where(sql`${producenci.isActive} = 1`)
+    .where(sql`${producenci.isActive} = TRUE`)
     .groupBy(producenci.id, producenci.nazwa)
     .orderBy(desc(viewsExpr));
 }
@@ -209,7 +209,10 @@ export async function getCompanyStats(days = 30) {
 export async function getAllDzialaniaEms() {
   const db = getDb();
 
-  await db.execute(sql`INSERT IGNORE INTO dzialania_ems (nazwa) VALUES ("Montaż SMT")`);
+  await db
+    .insert(dzialaniaEms)
+    .values({ nazwa: "Montaż SMT" })
+    .onConflictDoNothing({ target: dzialaniaEms.nazwa });
 
   return await db
     .select({
@@ -278,7 +281,7 @@ export const getAllProducers = async () => {
     })
     .from(producenci)
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id))
-    .where(sql`${producenci.isActive} = 1`)
+    .where(sql`${producenci.isActive} = TRUE`)
     .orderBy(
       desc(sql`CASE
         WHEN ${producenci.packageType} = 'premium' THEN 2
@@ -399,7 +402,7 @@ export async function getFilteredProducers(filters: Filters) {
     .from(producenci)
     .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id));
 
-  const whereConditions = [sql`${producenci.isActive} = 1`];
+  const whereConditions = [sql`${producenci.isActive} = TRUE`];
 
   if (regions.length > 0) {
     whereConditions.push(inArray(wojewodztwa.nazwa, regions));
@@ -512,22 +515,22 @@ export async function getCompanyRanking(days = 30) {
   const db = getDb();
 
   const since =
-    days > 0 ? sql`NOW() - INTERVAL ${days} DAY` : null;
+    days > 0 ? sql`NOW() - (${days} * INTERVAL '1 day')` : null;
 
   const viewsExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`.as("views");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view')`.as("views");
 
   const websiteClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`.as("website_clicks");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')`.as("website_clicks");
 
   const emailClicksExpr =
-    sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`.as("email_clicks");
+    sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'email_click')`.as("email_clicks");
 
   const websiteCtrExpr = sql<number>`
     COALESCE(
       ROUND(
-        100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
-        / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+        100.0 * COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')
+        / NULLIF(COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view'), 0),
         2
       ),
       0
@@ -550,7 +553,7 @@ export async function getCompanyRanking(days = 30) {
         ? sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${since}`
         : sql`${companyEvents.companyId} = ${producenci.id}`
     )
-    .where(sql`${producenci.isActive} = 1`)
+    .where(sql`${producenci.isActive} = TRUE`)
     .groupBy(producenci.id, producenci.nazwa);
 
   const normalized = rows.map((row) => ({
@@ -583,8 +586,8 @@ export async function getChartsData(days = 30) {
   const allowedRanges = new Set([7, 30, 90, 365]);
   const safeDays = allowedRanges.has(days) ? days : 30;
 
-  const currentSince = sql`NOW() - INTERVAL ${safeDays} DAY`;
-  const previousStart = sql`NOW() - INTERVAL ${safeDays * 2} DAY`;
+  const currentSince = sql`NOW() - (${safeDays} * INTERVAL '1 day')`;
+  const previousStart = sql`NOW() - (${safeDays * 2} * INTERVAL '1 day')`;
 
   const rows = await db
     .select({
@@ -608,7 +611,7 @@ export async function getChartsData(days = 30) {
     })
     .from(producenci)
     .leftJoin(companyEvents, sql`${companyEvents.companyId} = ${producenci.id} AND ${companyEvents.createdAt} >= ${previousStart}`)
-    .where(sql`${producenci.isActive} = 1`)
+    .where(sql`${producenci.isActive} = TRUE`)
     .groupBy(producenci.id, producenci.nazwa, producenci.opis, producenci.adres, producenci.telefon, producenci.email, producenci.www);
 
   const companies = rows.map((row) => {
@@ -697,7 +700,7 @@ export async function getReportCompanies() {
       nazwa: producenci.nazwa,
     })
     .from(producenci)
-    .where(sql`${producenci.isActive} = 1`)
+    .where(sql`${producenci.isActive} = TRUE`)
     .orderBy(asc(producenci.nazwa));
 }
 
@@ -711,7 +714,7 @@ export async function getCompanyReport(
 
   const hasCustomRange = Boolean(startDate && endDate);
   const safeDays = typeof days === "number" && Number.isFinite(days) ? Math.max(1, Math.floor(days)) : 30;
-  const since = !hasCustomRange ? sql`NOW() - INTERVAL ${safeDays} DAY` : null;
+  const since = !hasCustomRange ? sql`NOW() - (${safeDays} * INTERVAL '1 day')` : null;
   const rangeStart = hasCustomRange ? `${startDate} 00:00:00` : null;
   const rangeEnd = hasCustomRange ? `${endDate} 23:59:59` : null;
 
@@ -723,14 +726,14 @@ export async function getCompanyReport(
       www: producenci.www,
       email: producenci.email,
       telefon: producenci.telefon,
-      views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
-      websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
-      emailClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)`,
+      views: sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view')`,
+      websiteClicks: sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')`,
+      emailClicks: sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'email_click')`,
       websiteCtrPct: sql<number>`
         COALESCE(
           ROUND(
-            100 * COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)
-            / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+            100.0 * COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')
+            / NULLIF(COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view'), 0),
             2
           ),
           0
@@ -739,8 +742,8 @@ export async function getCompanyReport(
       emailCtrPct: sql<number>`
         COALESCE(
           ROUND(
-            100 * COALESCE(SUM(${companyEvents.eventType} = 'email_click'), 0)
-            / NULLIF(COALESCE(SUM(${companyEvents.eventType} = 'view'), 0), 0),
+            100.0 * COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'email_click')
+            / NULLIF(COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view'), 0),
             2
           ),
           0
@@ -982,7 +985,7 @@ export async function createCompanyAction(formData: FormData) {
     throw new Error("Nazwa firmy jest wymagana");
   }
 
-  const result = await db.insert(producenci).values({
+  const [createdCompany] = await db.insert(producenci).values({
     nazwa: nazwa.trim(),
     opis: opis.trim() || null,
     telefon: telefon.trim() || null,
@@ -995,9 +998,9 @@ export async function createCompanyAction(formData: FormData) {
     packageType: packageConfig.packageType,
     monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
     monthlyInquiryCount: 0,
-  });
+  }).returning({ id: producenci.id });
 
-  const companyId = Number((result as any).insertId);
+  const companyId = createdCompany.id;
 
   if (dzialaniaIds.length > 0) {
     await db.insert(producenciEmsDzialania).values(
@@ -1422,7 +1425,7 @@ export async function sendInquiryAction(formData: FormData) {
   }
 
   const now = getCurrentDateTime();
-  const inquiryResult = await db.insert(inquiries).values({
+  const [createdInquiry] = await db.insert(inquiries).values({
     customerName,
     customerCompany: customerCompany || null,
     customerEmail,
@@ -1437,9 +1440,9 @@ export async function sendInquiryAction(formData: FormData) {
     message,
     source,
     updatedAt: now,
-  });
+  }).returning({ id: inquiries.id });
 
-  const inquiryId = Number((inquiryResult as { insertId?: number | string }).insertId);
+  const inquiryId = createdInquiry.id;
 
   await db.insert(inquiryRecipients).values(
     validRecipientCompanies.map((company) => ({

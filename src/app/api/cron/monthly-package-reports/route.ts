@@ -103,8 +103,8 @@ export async function POST(req: NextRequest) {
 
     const statsRows = await db
       .select({
-        views: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'view'), 0)`,
-        websiteClicks: sql<number>`COALESCE(SUM(${companyEvents.eventType} = 'website_click'), 0)`,
+        views: sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'view')`,
+        websiteClicks: sql<number>`COUNT(*) FILTER (WHERE ${companyEvents.eventType} = 'website_click')`,
       })
       .from(companyEvents)
       .where(

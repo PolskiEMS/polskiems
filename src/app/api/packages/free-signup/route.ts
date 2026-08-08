@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
   const isBankTransferOrder = activationMode === "bank_transfer" && isPaidPackage(packageTypeRaw);
   const companyAddress = joinAddress(companyStreet, companyPostalCode, companyCity);
 
-  const insertResult = await db.insert(producenci).values({
+  const [createdCompany] = await db.insert(producenci).values({
     nazwa: companyName,
     email: companyEmail,
     telefon: companyPhone || null,
@@ -145,9 +145,9 @@ export async function POST(req: NextRequest) {
     packageType: packageConfig.packageType,
     monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
     monthlyInquiryCount: 0,
-  });
+  }).returning({ id: producenci.id });
 
-  const companyId = Number((insertResult as any).insertId);
+  const companyId = createdCompany.id;
 
   if (dzialaniaIds.length > 0) {
     await db.insert(producenciEmsDzialania).values(
@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
 
   if (isBankTransferOrder) {
     const amountGross = PACKAGE_PRICE_TOTAL[packageTypeRaw][billingCycleMonths];
-    const orderResult = await db.insert(packageOrders).values({
+    const [createdOrder] = await db.insert(packageOrders).values({
       companyId,
       companyName,
       companyEmail,
@@ -183,12 +183,12 @@ export async function POST(req: NextRequest) {
       buyerCity,
       buyerCountry,
       paymentStatus: "pending_payment",
-    });
+    }).returning({ id: packageOrders.id });
 
     return NextResponse.json({
       ok: true,
       companyId,
-      orderId: Number((orderResult as any).insertId),
+      orderId: createdOrder.id,
       status: "pending_bank_transfer",
       packageType: packageConfig.packageType,
     });

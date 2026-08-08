@@ -21,21 +21,21 @@ Efekt:
 - każdy deploy z `main` idzie na produkcję,
 - każdy deploy z `develop` idzie na środowisko testowe pod `test.polskiems.pl`.
 
-## 2) Osobna baza MySQL dla testów
+## 2) Osobna baza PostgreSQL/Supabase dla testów
 
 Utrzymujemy dwa niezależne connection stringi:
 
 - produkcja: `DATABASE_URL` wskazuje bazę prod,
-- testy: `DATABASE_URL` wskazuje bazę test (`polskiems_test`, osobny user/hasło).
+- testy: `DATABASE_URL` wskazuje osobny projekt Supabase lub testową bazę PostgreSQL.
 
 Przykładowe URI:
 
 ```bash
 # produkcja
-DATABASE_URL=mysql://polskiems_prod:***@db-host:3306/polskiems_prod
+DATABASE_URL=postgresql://postgres.PROJECT_REF:***@POOLER_HOST:6543/postgres
 
 # testy
-DATABASE_URL=mysql://polskiems_test:***@db-host:3306/polskiems_test
+DATABASE_URL=postgresql://postgres.TEST_PROJECT_REF:***@POOLER_HOST:6543/postgres
 ```
 
 ## 3) Osobne ENV-y na Vercel
@@ -68,10 +68,10 @@ Migracje wykonuj osobno dla prod i test, podając odpowiedni `DATABASE_URL`:
 
 ```bash
 # test (lokalnie / CI)
-DATABASE_URL='mysql://.../polskiems_test' npm run db:push
+DATABASE_URL='postgresql://...' npx drizzle-kit push
 
 # produkcja
-DATABASE_URL='mysql://.../polskiems_prod' npm run db:push
+DATABASE_URL='postgresql://...' npx drizzle-kit push
 ```
 
 Dzięki temu schema testowa i produkcyjna nie wpływają na siebie.
@@ -80,6 +80,6 @@ Dzięki temu schema testowa i produkcyjna nie wpływają na siebie.
 
 - [ ] `main` ustawiony jako Production Branch na Vercel
 - [ ] `develop` przypięty do `test.polskiems.pl`
-- [ ] osobna baza MySQL dla testów
+- [ ] osobny projekt Supabase lub baza PostgreSQL dla testów
 - [ ] osobny `DATABASE_URL` dla Production i Preview
 - [ ] osobne sekrety (`ADMIN_*`, `CRON_SECRET`, `RESEND_API_KEY`) dla Production i Preview
