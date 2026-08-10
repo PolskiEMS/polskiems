@@ -207,6 +207,12 @@
   background: rgba(40, 167, 69, 0.4);
 }
 
+.approveBtn:disabled,
+.deleteBtn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .cards {
   display: none;
 }
