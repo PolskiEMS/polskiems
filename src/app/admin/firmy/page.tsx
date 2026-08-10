@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { approveCompanyAction, deleteCompanyAction, getAdminCompanies } from "@/lib/actions";
+import CompanyActions from "./CompanyActions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -108,27 +109,19 @@ function buildDisplayCompanies(companies: AdminCompany[], filters: AdminCompanyF
 
 function renderCompanyActions(company: AdminCompany) {
   return (
-    <div className={styles.actionButtons}>
-      {!company.isActive && (
-        <form action={approveCompanyAction}>
-          <input type="hidden" name="id" value={company.id} />
-          <button type="submit" className={styles.approveBtn}>
-            Akceptuj
-          </button>
-        </form>
-      )}
-
-      <Link href={`/admin/firmy/${company.id}`} className={styles.editBtn}>
-        Edytuj
-      </Link>
-
-      <form action={deleteCompanyAction}>
-        <input type="hidden" name="id" value={company.id} />
-        <button type="submit" className={styles.deleteBtn}>
-          Usuń
-        </button>
-      </form>
-    </div>
+    <CompanyActions
+      companyId={company.id}
+      companyName={company.nazwa || `ID ${company.id}`}
+      isActive={company.isActive}
+      approveAction={approveCompanyAction}
+      deleteAction={deleteCompanyAction}
+      classNames={{
+        actionButtons: styles.actionButtons,
+        approveBtn: styles.approveBtn,
+        editBtn: styles.editBtn,
+        deleteBtn: styles.deleteBtn,
+      }}
+    />
   );
 }
 
