@@ -15,9 +15,11 @@ import {
 } from "@/db/schema";
 import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { inquiries, inquiryRecipients } from "@/db/schema";
 
 export async function getDashboardStats(days = 30) {
+  await requireAdminSession();
   const db = getDb();
 
   const activeCompaniesRows = await db.select({
@@ -101,6 +103,7 @@ export async function deactivateExpiredPaidCompanies() {
 }
 
 export async function getPageViewsStats(days = 30) {
+  await requireAdminSession();
   const db = getDb();
 
   const rows = await db
@@ -148,6 +151,7 @@ export async function getPageViewsStats(days = 30) {
 }
 
 export async function getCompanyStats(days = 30) {
+  await requireAdminSession();
   const db = getDb();
 
   const since =
@@ -209,11 +213,6 @@ export async function getCompanyStats(days = 30) {
 export async function getAllDzialaniaEms() {
   const db = getDb();
 
-  await db
-    .insert(dzialaniaEms)
-    .values({ nazwa: "Montaż SMT" })
-    .onConflictDoNothing({ target: dzialaniaEms.nazwa });
-
   return await db
     .select({
       id: dzialaniaEms.id,
@@ -259,7 +258,6 @@ export async function getCompanyRelations(companyId: number) {
 }
 
 export const getAllProducers = async () => {
-  await deactivateExpiredPaidCompanies();
   const db = getDb();
   return await db
     .select({
@@ -318,7 +316,6 @@ const producerSortOptions = new Set<ProducerSort>([
 ]);
 
 export async function getFeaturedProducers(limit = 6) {
-  await deactivateExpiredPaidCompanies();
   const db = getDb();
 
   return await db
@@ -345,7 +342,6 @@ export async function getFeaturedProducers(limit = 6) {
 }
 
 export async function getFilteredProducers(filters: Filters) {
-  await deactivateExpiredPaidCompanies();
   const db = getDb();
   const { regions = [], requirements = [], scales = [] } = filters;
   const searchQuery = (filters.searchQuery ?? filters.query ?? "").trim();
@@ -502,7 +498,7 @@ export const saveCompanyEvent = async (payload: CompanyEventPayload) => {
 
   await db.insert(companyEvents).values({
     companyId,
-    eventType: eventType as any,
+    eventType: eventType as "view" | "phone_click" | "email_click" | "website_click" | "doc_download",
     referrer,
     utmSource,
     utmCampaign,
@@ -512,6 +508,7 @@ export const saveCompanyEvent = async (payload: CompanyEventPayload) => {
 };
 
 export async function getCompanyRanking(days = 30) {
+  await requireAdminSession();
   const db = getDb();
 
   const since =
@@ -581,6 +578,7 @@ export async function getCompanyRanking(days = 30) {
 }
 
 export async function getChartsData(days = 30) {
+  await requireAdminSession();
   const db = getDb();
 
   const allowedRanges = new Set([7, 30, 90, 365]);
@@ -692,6 +690,7 @@ export async function getChartsData(days = 30) {
 
 
 export async function getReportCompanies() {
+  await requireAdminSession();
   const db = getDb();
 
   return await db
@@ -710,6 +709,7 @@ export async function getCompanyReport(
   startDate?: string | null,
   endDate?: string | null
 ) {
+  await requireAdminSession();
   const db = getDb();
 
   const hasCustomRange = Boolean(startDate && endDate);
@@ -774,7 +774,7 @@ export async function getCompanyReport(
 
 
 export async function getAdminSubscriptions() {
-  await deactivateExpiredPaidCompanies();
+  await requireAdminSession();
   const db = getDb();
 
   const companies = await db
@@ -839,6 +839,7 @@ export async function getAdminSubscriptions() {
 
 export async function updateCompanyPackageValidityAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
 
   const db = getDb();
   const companyId = Number(formData.get("companyId"));
@@ -863,6 +864,7 @@ export async function updateCompanyPackageValidityAction(formData: FormData) {
 }
 
 export async function getAdminCompanies() {
+  await requireAdminSession();
   const db = getDb();
 
   return await db
@@ -882,6 +884,7 @@ export async function getAdminCompanies() {
 }
 
 export async function getCompanyById(id: number) {
+  await requireAdminSession();
   const db = getDb();
 
   const rows = await db
@@ -914,6 +917,7 @@ export async function createCompany(data: {
   email?: string
   www?: string
 }) {
+  await requireAdminSession();
   const db = getDb();
 
   await db.insert(producenci).values({
@@ -937,6 +941,7 @@ export async function updateCompany(
     isActive?: boolean
   }
 ) {
+  await requireAdminSession();
   const db = getDb();
 
   await db
@@ -954,6 +959,7 @@ export async function updateCompany(
 
 export async function createCompanyAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
 
   const db = getDb();
 
@@ -1025,6 +1031,7 @@ export async function createCompanyAction(formData: FormData) {
 
 export async function updateCompanyAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
   const db = getDb();
 
   const id = Number(formData.get("id"));
@@ -1054,6 +1061,10 @@ export async function updateCompanyAction(formData: FormData) {
   .map((v) => Number(v))
   .filter((v) => Number.isFinite(v));
 
+  if (!Number.isFinite(id) || id <= 0 || !nazwa.trim()) {
+    throw new Error("Brak danych firmy");
+  }
+
   await db
     .delete(producenciEmsDzialania).where(
     eq(producenciEmsDzialania.companyId, id)
@@ -1063,10 +1074,6 @@ export async function updateCompanyAction(formData: FormData) {
     .delete(producenciEmsProdukcja).where(
     eq(producenciEmsProdukcja.companyId, id)
   );
-
-  if (!id || !nazwa.trim()) {
-    throw new Error("Brak danych firmy");
-  }
 
   if (dzialaniaId.length > 0) {
     await db.insert(producenciEmsDzialania).values(
@@ -1110,6 +1117,7 @@ export async function updateCompanyAction(formData: FormData) {
 
 export async function deleteCompanyAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
 
   const db = getDb();
   const id = Number(formData.get("id"));
@@ -1136,6 +1144,7 @@ export async function deleteCompanyAction(formData: FormData) {
 
 export async function approveCompanyAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
   const db = getDb();
 
   const id = Number(formData.get("id"));
@@ -1217,6 +1226,7 @@ function getErrorMessage(error: unknown) {
 }
 
 export async function getAdminInquiries() {
+  await requireAdminSession();
   const db = getDb();
 
   return await db
@@ -1464,6 +1474,7 @@ export async function sendInquiryAction(formData: FormData) {
 
 export async function rejectInquiryAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
 
   const recipientId = Number(formData.get("recipientId"));
   const adminNote = String(formData.get("adminNote") ?? "").trim();
@@ -1491,6 +1502,7 @@ export async function rejectInquiryAction(formData: FormData) {
 
 export async function sendInquiryToCompanyAction(formData: FormData) {
   "use server";
+  await requireAdminSession();
 
   const recipientId = Number(formData.get("recipientId"));
   const adminNote = String(formData.get("adminNote") ?? "").trim();

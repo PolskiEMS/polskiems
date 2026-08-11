@@ -46,7 +46,7 @@ export async function POST(req: Request) {
 
     await db.insert(companyEvents).values({
       companyId,
-      eventType: eventType as any, // enum w Drizzle
+      eventType: eventType as "view" | "phone_click" | "email_click" | "website_click" | "doc_download", // enum w Drizzle
       referrer,
       utmSource,
       utmCampaign,

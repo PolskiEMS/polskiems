@@ -40,7 +40,7 @@ export default async function AdminStatsPage({
             </thead>
 
             <tbody>
-              {companies.map((company: any) => (
+              {companies.map((company) => (
                 <tr key={company.companyId}>
                   <td>{company.firma}</td>
                   <td>{company.views}</td>

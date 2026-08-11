@@ -31,11 +31,19 @@ export const metadata: Metadata = {
 };
 
 const Wyszukaj = async () => {
-  const producers = await getAllProducers();
+  let producers: Awaited<ReturnType<typeof getAllProducers>> = [];
+  let databaseUnavailable = false;
+  try {
+    producers = await getAllProducers();
+  } catch {
+    databaseUnavailable = true;
+    console.error("All producers query failed");
+  }
   return (
     <div className={styles.page}>
       <PageViewTracker page="all-producers" />
       <h1>Wszyscy Producenci</h1>
+      {databaseUnavailable && <p role="alert">Lista producentów jest chwilowo niedostępna. Spróbuj ponownie później.</p>}
       <AllProducers producers={producers} />
       <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
     </div>

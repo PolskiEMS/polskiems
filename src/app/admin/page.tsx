@@ -78,7 +78,7 @@ export default async function AdminDashboardPage() {
 
             {Array.isArray(data.topCompanies) && data.topCompanies.length > 0 ? (
               <ol className={styles.topList}>
-                {data.topCompanies.map((company: any) => (
+                {data.topCompanies.map((company) => (
                   <li key={company.companyId} className={styles.topListItem}>
                     {company.firma} — {company.views} views
                   </li>
@@ -103,7 +103,7 @@ export default async function AdminDashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.recentEvents.map((event: any) => (
+                    {data.recentEvents.map((event) => (
                       <tr key={event.id}>
                         <td>{event.firma}</td>
                         <td>{event.eventType}</td>

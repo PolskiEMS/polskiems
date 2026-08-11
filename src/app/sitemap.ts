@@ -47,12 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/produkcja-elektroniki-polska`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/montaz-elektroniki-w-polsce`,
       lastModified: new Date(),
       changeFrequency: "weekly",
