@@ -37,7 +37,7 @@ type ReportPdfData = {
   pageWidth: number;
 };
 
-function drawFooter(doc: any, contentWidth: number, now: Date) {
+function drawFooter(doc: PDFKit.PDFDocument, contentWidth: number, now: Date) {
   doc.switchToPage(doc.bufferedPageRange().count - 1);
 
   const bottomY = doc.page.height - 40;
@@ -57,7 +57,7 @@ function drawFooter(doc: any, contentWidth: number, now: Date) {
     );
 }
 
-function drawHeader(doc: any, data: ReportPdfData, logoPath: string) {
+function drawHeader(doc: PDFKit.PDFDocument, data: ReportPdfData, logoPath: string) {
   const headerBg = data.isPremium ? "#f5f3ff" : "#eff6ff";
   const accent = data.isPremium ? "#6d28d9" : "#2563eb";
   const badgeBg = data.isPremium ? "#6d28d9" : "#dbeafe";
@@ -119,7 +119,7 @@ function drawHeader(doc: any, data: ReportPdfData, logoPath: string) {
     });
 }
 
-function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
+function drawCompanyInfoCard(doc: PDFKit.PDFDocument, data: ReportPdfData) {
   const y = 168;
 
   doc.roundedRect(50, y, data.contentWidth, 58, 12).fillAndStroke("#ffffff", "#e5e7eb");
@@ -140,7 +140,7 @@ function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
     width: 180,
   });
 
-  let rightX = 250;
+  const rightX = 250;
   let rightY = y + 18;
 
   if (data.companyWebsite) {
@@ -158,7 +158,7 @@ function drawCompanyInfoCard(doc: any, data: ReportPdfData) {
   }
 }
 
-function drawSectionTitle(doc: any, title: string, y: number, accent = "#111827") {
+function drawSectionTitle(doc: PDFKit.PDFDocument, title: string, y: number, accent = "#111827") {
   doc
     .fillColor(accent)
     .font("Roboto-Bold")
@@ -173,7 +173,7 @@ function drawSectionTitle(doc: any, title: string, y: number, accent = "#111827"
     .stroke();
 }
 
-function drawKpiCardsStandard(doc: any, data: ReportPdfData, y: number) {
+function drawKpiCardsStandard(doc: PDFKit.PDFDocument, data: ReportPdfData, y: number) {
   const cards = [
     { label: "Wyświetlenia", value: String(data.views) },
     { label: "Klik WWW", value: String(data.websiteClicks) },
@@ -210,7 +210,7 @@ function drawKpiCardsStandard(doc: any, data: ReportPdfData, y: number) {
   });
 }
 
-function drawKpiCardsPremium(doc: any, data: ReportPdfData, y: number) {
+function drawKpiCardsPremium(doc: PDFKit.PDFDocument, data: ReportPdfData, y: number) {
   const engagementScore = Math.round(
     Math.min(100, data.websiteCtrPct * 5 + data.emailCtrPct * 5 + Math.min(30, data.views / 20))
   );
@@ -253,7 +253,7 @@ function drawKpiCardsPremium(doc: any, data: ReportPdfData, y: number) {
 }
 
 function drawActivityChart(
-  doc: any,
+  doc: PDFKit.PDFDocument,
   items: { label: string; value: number; color: string }[],
   y: number
 ) {
@@ -290,7 +290,7 @@ function drawActivityChart(
 }
 
 function drawMiniInfoBox(
-  doc: any,
+  doc: PDFKit.PDFDocument,
   x: number,
   y: number,
   w: number,
@@ -331,7 +331,7 @@ function drawMiniInfoBox(
     });
 }
 
-function drawStandardReport(doc: any, data: ReportPdfData) {
+function drawStandardReport(doc: PDFKit.PDFDocument, data: ReportPdfData) {
   let y = 245;
 
   drawSectionTitle(doc, "Podsumowanie", y);
@@ -463,7 +463,7 @@ function drawStandardReport(doc: any, data: ReportPdfData) {
     );
 }
 
-function drawPremiumReport(doc: any, data: ReportPdfData) {
+function drawPremiumReport(doc: PDFKit.PDFDocument, data: ReportPdfData) {
   let y = 245;
 
   drawSectionTitle(doc, "Podsumowanie Premium", y, "#6d28d9");

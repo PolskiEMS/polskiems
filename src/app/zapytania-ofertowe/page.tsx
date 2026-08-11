@@ -41,31 +41,23 @@ export default async function InquiryPage({ searchParams }: PageProps) {
   const source = normalizeSource(params.source);
   const success = params.success === '1';
   const errorCopy = getErrorCopy(params.error);
-  const db = getDb();
-
-  const activeCompanies = await db
-    .select({
-      id: producenci.id,
-      nazwa: producenci.nazwa,
-    })
-    .from(producenci)
-    .where(and(eq(producenci.isActive, true), sql`${producenci.email} IS NOT NULL`, sql`${producenci.email} <> ''`))
-    .orderBy(asc(producenci.nazwa));
+  let databaseUnavailable = false;
+  let activeCompanies: Array<{ id: number; nazwa: string }> = [];
+  try {
+    const db = getDb();
+    activeCompanies = await db
+      .select({ id: producenci.id, nazwa: producenci.nazwa })
+      .from(producenci)
+      .where(and(eq(producenci.isActive, true), sql`TRIM(${producenci.email}) <> ''`))
+      .orderBy(asc(producenci.nazwa));
+  } catch {
+    databaseUnavailable = true;
+    console.error("Inquiry company list query failed");
+  }
 
   let company: { id: number; nazwa: string } | null = null;
 
-  if (Number.isFinite(companyId) && companyId > 0) {
-    const rows = await db
-      .select({
-        id: producenci.id,
-        nazwa: producenci.nazwa,
-      })
-      .from(producenci)
-      .where(and(eq(producenci.id, companyId), eq(producenci.isActive, true)))
-      .limit(1);
-
-    company = rows[0] ?? null;
-  }
+  if (Number.isFinite(companyId) && companyId > 0) company = activeCompanies.find((item) => item.id === companyId) ?? null;
 
   return (
     <div className={styles.page}>
@@ -76,6 +68,7 @@ export default async function InquiryPage({ searchParams }: PageProps) {
           dopasowanie PolskiEMS — wtedy dobierzemy 3–5 najlepiej pasujących firm, zweryfikujemy
           zapytanie po stronie administratora i przekażemy je dalej.
         </p>
+        {databaseUnavailable && <div role="alert" className={styles.errorBox}>Lista firm jest chwilowo niedostępna. Formularz globalny nadal możesz wypełnić; spróbuj ponownie później, jeśli chcesz wskazać konkretną firmę.</div>}
 
         <section className={styles.processBox} aria-label="Jak obsługujemy zapytanie ofertowe">
           <h2>Jak obsługujemy zapytanie?</h2>

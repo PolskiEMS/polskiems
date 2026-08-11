@@ -14,9 +14,10 @@ export function getDb() {
     const client = postgres(url, {
       prepare: false,
       ssl: "require",
-      max: 1,
-      idle_timeout: 20,
-      connect_timeout: 10,
+      max: 3,
+      idle_timeout: 10,
+      connect_timeout: 5,
+      max_lifetime: 300,
     });
 
     _db = drizzle(client);

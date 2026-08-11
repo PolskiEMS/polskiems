@@ -103,27 +103,6 @@ const ProducerSearch = () => {
         </div>
     );
 
-    const saveStatistics = async () => {
-        const encodeBinary = (category: FilterCategory) => {
-            return filtersData[category]
-                .map(option => selectedFilters[category].includes(option) ? '1' : '0')
-                .join(',');
-        };
-
-        const binaryRegions = encodeBinary('regions');
-        const binaryRequirements = encodeBinary('requirements');
-        const binaryScales = encodeBinary('scales');
-
-        const binaryStats = `${binaryRegions},${binaryRequirements},${binaryScales}`;
-
-        const response = await fetch('/api/saveStatistics', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ stats: binaryStats })
-        });
-
-        const data = await response.json();
-    }
 
     return (
         <div>
