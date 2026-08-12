@@ -11,6 +11,7 @@ import {
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
 type PageProps = {
   params: Promise<{
@@ -37,13 +38,7 @@ export default async function EditCompanyPage({ params }: PageProps) {
     );
   }
 
-  const [company, relations, dzialania, produkcja, regions] = await Promise.all([
-    getCompanyById(companyId),
-    getCompanyRelations(companyId),
-    getAllDzialaniaEms(),
-    getAllProdukcjaScales(),
-    getAllRegion(),
-  ]);
+  const company = await getCompanyById(companyId);
 
   if (!company) {
     return (
@@ -59,6 +54,11 @@ export default async function EditCompanyPage({ params }: PageProps) {
       </div>
     );
   }
+
+  const relations = await getCompanyRelations(companyId);
+  const dzialania = await getAllDzialaniaEms();
+  const produkcja = await getAllProdukcjaScales();
+  const regions = await getAllRegion();
 
   const selectedDzialaniaIds = new Set(relations.dzialaniaIds);
   const selectedProdukcjaIds = new Set(relations.produkcjaIds);
