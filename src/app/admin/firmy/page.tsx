@@ -4,6 +4,7 @@ import CompanyActions from "./CompanyActions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
 type AdminCompany = Awaited<ReturnType<typeof getAdminCompanies>>[number];
 type AdminCompaniesSearchParams = {
