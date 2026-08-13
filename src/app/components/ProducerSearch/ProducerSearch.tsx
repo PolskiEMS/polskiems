@@ -37,9 +37,7 @@ const ProducerSearch = () => {
         setSelectedFilters(prev => {
             const alreadySelected = prev[category].includes(value);
 
-            let updated;
-
-            updated = alreadySelected
+            const updated = alreadySelected
                 ? prev[category].filter(item => item !== value)
                 : [...prev[category], value];
 
