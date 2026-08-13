@@ -1,6 +1,7 @@
 export const SERVICES = [
   "Projekt",
   "Dostarcza PCB",
+  "Dostarcza komponenty",
   "Kupuje komponenty",
   "Montaż SMD",
   "Montaż SMT",
