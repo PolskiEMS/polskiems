@@ -86,11 +86,11 @@ export default async function Home() {
             </article>
           ))}
         </div>
-        <div className={styles.buttons}>
-          <Link href={'/wyszukaj'}><button>Wyszukaj</button></Link>
-          <Link href={'/wszyscy-producenci'}><button>Wszyscy Producenci</button></Link>
+        <div className={styles.heroActions}>
+          <Link href="/wyszukaj" className={styles.heroActionLink}>Wyszukaj</Link>
+          <Link href="/wszyscy-producenci" className={styles.heroActionLink}>Wszyscy producenci</Link>
         </div>
-        <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+        <Link href="/api/formularz-v2" className={styles.companyCta}>Chcę znaleźć się na stronie</Link>
       </section>
 
       <section className={styles.infoSections}>
