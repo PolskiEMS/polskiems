@@ -95,7 +95,11 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                   <p className={styles.addressBadge}>Adres: {producer.adres}</p>
                 )}
 
-                <div className={styles.btnRow}>
+                <div
+                  className={styles.btnRow}
+                  onClick={(event) => event.stopPropagation()}
+                  onKeyDown={(event) => event.stopPropagation()}
+                >
                   {producer.email && (
                     <a
                       href={`mailto:${producer.email}`}
