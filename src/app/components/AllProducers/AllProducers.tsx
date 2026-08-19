@@ -34,7 +34,7 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
   const openProducerProfile = (producerId?: number) => {
     if (producerId) {
-      router.push(`/producent/${producerId}`);
+      router.push(`/producenci/${producerId}`);
     }
   };
 
@@ -103,7 +103,8 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                   {producer.email && (
                     <a
                       href={`mailto:${producer.email}`}
-                      onClick={() => {
+                      onClick={(event) => {
+                        event.stopPropagation();
                         if (producer.id) trackCompanyEvent(producer.id, 'email_click');
                       }}
                       className={styles.contactMeBtn}
@@ -116,6 +117,7 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                     <Link
                       href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
                       className={styles.contactMeBtn}
+                      onClick={(event) => event.stopPropagation()}
                     >
                       Poproś o wycenę
                     </Link>
@@ -126,7 +128,8 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                       href={producer.www.startsWith('http') ? producer.www : `https://${producer.www}`}
                       target="_blank"
                       rel="noreferrer"
-                      onClick={() => {
+                      onClick={(event) => {
+                        event.stopPropagation();
                         if (producer.id) trackCompanyEvent(producer.id, 'website_click');
                       }}
                       className={styles.contactMeBtn}

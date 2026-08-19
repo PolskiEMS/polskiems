@@ -19,6 +19,11 @@
     transform: translateY(-3px);
 }
 
+.producerBlock:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 4px;
+}
+
 .divToMove {
     transform: translateY(-64px);
     display: flex;
