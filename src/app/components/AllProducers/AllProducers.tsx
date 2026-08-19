@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
@@ -29,6 +30,14 @@ type Producer = {
 };
 
 const AllProducers = ({ producers }: { producers: Producer[] }) => {
+  const router = useRouter();
+
+  const openProducerProfile = (producerId?: number) => {
+    if (producerId) {
+      router.push(`/producent/${producerId}`);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.producers}>
@@ -49,6 +58,16 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
             onViewportEnter={() => {
               if (producer.id) trackCompanyEvent(producer.id, 'view');
             }}
+            onClick={() => openProducerProfile(producer.id)}
+            onKeyDown={(event) => {
+              if (producer.id && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                openProducerProfile(producer.id);
+              }
+            }}
+            role={producer.id ? 'link' : undefined}
+            tabIndex={producer.id ? 0 : undefined}
+            aria-label={producer.id ? `Otwórz profil producenta ${producer.nazwa}` : undefined}
             transition={{ duration: 1.2, delay: i <= 2 ? 0.3 * i : 0.3 }}
           >
             <div className={styles.divToMove}>
@@ -76,21 +95,29 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                   <p className={styles.addressBadge}>Adres: {producer.adres}</p>
                 )}
 
-                <div className={styles.btnRow}>
+                <div
+                  className={styles.btnRow}
+                  onClick={(event) => event.stopPropagation()}
+                  onKeyDown={(event) => event.stopPropagation()}
+                >
                   {producer.email && (
                     <a
                       href={`mailto:${producer.email}`}
                       onClick={() => {
                         if (producer.id) trackCompanyEvent(producer.id, 'email_click');
                       }}
+                      className={styles.contactMeBtn}
                     >
-                      <button className={styles.contactMeBtn}>Skontaktuj się</button>
+                      Skontaktuj się
                     </a>
                   )}
 
                   {producer.id && (
-                    <Link href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}>
-                      <button className={styles.contactMeBtn}>Poproś o wycenę</button>
+                    <Link
+                      href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
+                      className={styles.contactMeBtn}
+                    >
+                      Poproś o wycenę
                     </Link>
                   )}
 
@@ -102,8 +129,9 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
                       onClick={() => {
                         if (producer.id) trackCompanyEvent(producer.id, 'website_click');
                       }}
+                      className={styles.contactMeBtn}
                     >
-                      <button className={styles.contactMeBtn}>Strona firmy</button>
+                      Strona firmy
                     </a>
                   )}
                 </div>
