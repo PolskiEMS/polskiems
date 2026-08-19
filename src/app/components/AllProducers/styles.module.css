@@ -12,6 +12,16 @@
     min-height: 360px;
     height: auto;   
     transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.producerBlock:hover {
+    transform: translateY(-3px);
+}
+
+.producerBlock:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 4px;
 }
 
 .divToMove {
@@ -80,6 +90,9 @@
     background-color: rgb(6, 122, 255);
     cursor: pointer;
     border-radius: 4px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
 }
 
 .contactMeBtn:hover {
