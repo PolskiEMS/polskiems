@@ -11,12 +11,14 @@
     position: relative;
     min-height: 360px;
     height: auto;   
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
     cursor: pointer;
 }
 
 .producerBlock:hover {
     transform: translateY(-3px);
+    filter: brightness(0.82);
+    box-shadow: 0 18px 38px rgba(9, 3, 24, 0.32);
 }
 
 .producerBlock:focus-visible {
@@ -82,7 +84,10 @@
 }
 
 .contactMeBtn {
-    margin-top: 30px;
+    margin: 30px auto 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 300px;
     padding: 10px 14px;
     padding-block: 8px;
@@ -282,6 +287,7 @@
     }
 
     .contactMeBtn {
+        grid-area: actions;
         margin-top: 0;
         width: 100%;
         min-height: 40px;

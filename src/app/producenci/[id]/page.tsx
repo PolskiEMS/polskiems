@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPublicCompanyProfile } from "@/lib/actions";
 import styles from "./style.module.css";
@@ -25,17 +26,6 @@ function getVisibleValue(value?: string | null, hiddenValues?: Set<string>) {
   const normalizedValue = value?.trim();
   if (!normalizedValue || hiddenValues?.has(normalizedValue)) return "Brak danych";
   return normalizedValue;
-}
-
-function getPackageLabel(packageType?: string | null) {
-  switch (packageType) {
-    case "premium":
-      return "Premium";
-    case "standard":
-      return "Standard";
-    default:
-      return "Free";
-  }
 }
 
 export default async function ProducerProfilePage({ params }: PageProps) {
@@ -67,13 +57,24 @@ export default async function ProducerProfilePage({ params }: PageProps) {
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <Link href="/wszyscy-producenci" className={styles.backLink}>
-          ← Powrót do producentów
-        </Link>
-        <h1>{company.nazwa}</h1>
-        <div className={styles.badges}>
-          {company.featured && <span className={styles.featuredBadge}>Polecany Producent</span>}
-          <span className={styles.packageBadge}>Pakiet: {getPackageLabel(company.packageType)}</span>
+        <Link href="/wszyscy-producenci" className={styles.backLink}>← Powrót do producentów</Link>
+        <div className={styles.heroContent}>
+          <Image
+            src={`/images/producers/${company.nazwa}.jpg`}
+            width={210}
+            height={210}
+            alt={`Logo producenta ${company.nazwa}`}
+            className={styles.logo}
+            priority
+          />
+          <div>
+            <h1>{company.nazwa}</h1>
+            {company.featured && (
+              <div className={styles.badges}>
+                <span className={styles.featuredBadge}>Polecany Producent</span>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

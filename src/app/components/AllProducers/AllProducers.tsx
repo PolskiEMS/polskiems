@@ -7,24 +7,9 @@ import { motion } from 'motion/react';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
 
-const hiddenDescriptions = new Set([['Twój', 'krótki', 'opis'].join(' ')]);
-
-const getProducerDescription = (description?: string | null) => {
-  if (!description || hiddenDescriptions.has(description.trim())) {
-    return null;
-  }
-
-  return description;
-};
-
 type Producer = {
   id?: number;
   nazwa: string;
-  opis?: string | null;
-  wojewodztwo?: string | null;
-  adres?: string | null;
-  email?: string | null;
-  www?: string | null;
   featured?: boolean | null;
   packageType?: string | null;
 };
@@ -84,61 +69,15 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
               <h2>{producer.nazwa}</h2>
 
-              <div className={styles.bottom}>
-                {getProducerDescription(producer.opis) && (
-                  <p className={styles.description}>{getProducerDescription(producer.opis)}</p>
-                )}
-                {producer.wojewodztwo && (
-                  <p className={styles.regionBadge}>Województwo: {producer.wojewodztwo}</p>
-                )}
-                {producer.adres && (
-                  <p className={styles.addressBadge}>Adres: {producer.adres}</p>
-                )}
-
-                <div
-                  className={styles.btnRow}
+              {producer.id && (
+                <Link
+                  href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
+                  className={styles.contactMeBtn}
                   onClick={(event) => event.stopPropagation()}
-                  onKeyDown={(event) => event.stopPropagation()}
                 >
-                  {producer.email && (
-                    <a
-                      href={`mailto:${producer.email}`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        if (producer.id) trackCompanyEvent(producer.id, 'email_click');
-                      }}
-                      className={styles.contactMeBtn}
-                    >
-                      Skontaktuj się
-                    </a>
-                  )}
-
-                  {producer.id && (
-                    <Link
-                      href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
-                      className={styles.contactMeBtn}
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      Poproś o wycenę
-                    </Link>
-                  )}
-
-                  {producer.www && (
-                    <a
-                      href={producer.www.startsWith('http') ? producer.www : `https://${producer.www}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        if (producer.id) trackCompanyEvent(producer.id, 'website_click');
-                      }}
-                      className={styles.contactMeBtn}
-                    >
-                      Strona firmy
-                    </a>
-                  )}
-                </div>
-              </div>
+                  Poproś o wycenę
+                </Link>
+              )}
             </div>
           </motion.div>
         ))}
