@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageViewTracker from "@/app/components/PageViewTracker";
 import Image from "next/image";
 import { getFeaturedProducers } from "@/lib/actions";
+import { companyNameToSlug } from "@/lib/companySlug";
 
 export const dynamic = "force-dynamic";
 
@@ -130,7 +131,7 @@ export default async function Home() {
                   <p>{getProducerDescription(featuredProducer.opis) || "Sprawdź profil producenta i poproś o wycenę."}</p>
                   <div className={styles.recommendedActions}>
                     <Link
-                      href={featuredProducer.id ? `/producenci/${featuredProducer.id}` : "/wszyscy-producenci"}
+                      href={featuredProducer.id ? `/producenci/${companyNameToSlug(featuredProducer.nazwa)}` : "/wszyscy-producenci"}
                     >
                       Zobacz profil
                     </Link>

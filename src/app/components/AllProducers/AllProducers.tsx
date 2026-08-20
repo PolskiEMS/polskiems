@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
+import { companyNameToSlug } from '@/lib/companySlug';
 
 type Producer = {
   id?: number;
@@ -17,9 +18,9 @@ type Producer = {
 const AllProducers = ({ producers }: { producers: Producer[] }) => {
   const router = useRouter();
 
-  const openProducerProfile = (producerId?: number) => {
+  const openProducerProfile = (producerName: string, producerId?: number) => {
     if (producerId) {
-      router.push(`/producenci/${producerId}`);
+      router.push(`/producenci/${companyNameToSlug(producerName)}`);
     }
   };
 
@@ -43,11 +44,11 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
             onViewportEnter={() => {
               if (producer.id) trackCompanyEvent(producer.id, 'view');
             }}
-            onClick={() => openProducerProfile(producer.id)}
+            onClick={() => openProducerProfile(producer.nazwa, producer.id)}
             onKeyDown={(event) => {
               if (producer.id && (event.key === 'Enter' || event.key === ' ')) {
                 event.preventDefault();
-                openProducerProfile(producer.id);
+                openProducerProfile(producer.nazwa, producer.id);
               }
             }}
             role={producer.id ? 'link' : undefined}

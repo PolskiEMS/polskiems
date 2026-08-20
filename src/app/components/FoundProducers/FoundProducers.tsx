@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
+import { companyNameToSlug } from '@/lib/companySlug';
 
 type Producer = {
   id?: number;
@@ -22,8 +23,8 @@ const SearchContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const openProducerProfile = (producerId?: number) => {
-    if (producerId) router.push(`/producenci/${producerId}`);
+  const openProducerProfile = (producerName: string, producerId?: number) => {
+    if (producerId) router.push(`/producenci/${companyNameToSlug(producerName)}`);
   };
 
   const regions = searchParams.getAll('regions');
@@ -96,11 +97,11 @@ const SearchContent = () => {
                   role={producer.id ? 'link' : undefined}
                   tabIndex={producer.id ? 0 : undefined}
                   aria-label={producer.id ? `Otwórz profil producenta ${producer.nazwa}` : undefined}
-                  onClick={() => openProducerProfile(producer.id)}
+                  onClick={() => openProducerProfile(producer.nazwa, producer.id)}
                   onKeyDown={(event) => {
                     if (producer.id && (event.key === 'Enter' || event.key === ' ')) {
                       event.preventDefault();
-                      openProducerProfile(producer.id);
+                      openProducerProfile(producer.nazwa, producer.id);
                     }
                   }}
                   transition={{ duration: 1.2, delay: i <= 2 ? 0.3 * i : 0.3 }}
