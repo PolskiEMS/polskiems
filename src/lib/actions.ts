@@ -17,7 +17,7 @@ import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { inquiries, inquiryRecipients } from "@/db/schema";
-import { companyNameToSlug } from "@/lib/companySlug";
+import { companyIdFromSlug, companyProfileSlug } from "@/lib/companySlug";
 
 export async function getDashboardStats(days = 30) {
   await requireAdminSession();
@@ -334,17 +334,8 @@ export async function getPublicCompanyProfile(companyId: number) {
 }
 
 export async function getPublicCompanyProfileBySlug(companySlug: string) {
-  const db = getDb();
-  const activeCompanies = await db
-    .select({ id: producenci.id, nazwa: producenci.nazwa })
-    .from(producenci)
-    .where(eq(producenci.isActive, true));
-
-  const matchedCompany = activeCompanies.find(
-    (company) => companyNameToSlug(company.nazwa) === companySlug
-  );
-
-  return matchedCompany ? getPublicCompanyProfile(matchedCompany.id) : null;
+  const companyId = companyIdFromSlug(companySlug);
+  return companyId ? getPublicCompanyProfile(companyId) : null;
 }
 
 export const saveStatistics = async (data: string) => {
@@ -1173,7 +1164,7 @@ export async function updateCompanyAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/wszyscy-producenci");
   revalidatePath("/wyszukaj");
-  revalidatePath(`/producenci/${companyNameToSlug(nazwa)}`);
+  revalidatePath(`/producenci/${companyProfileSlug(nazwa, id)}`);
 
   redirect("/admin/firmy");
 }

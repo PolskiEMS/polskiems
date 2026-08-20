@@ -7,7 +7,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
-import { companyNameToSlug } from '@/lib/companySlug';
+import { companyProfileSlug } from '@/lib/companySlug';
 
 type Producer = {
   id?: number;
@@ -24,7 +24,7 @@ const SearchContent = () => {
   const router = useRouter();
 
   const openProducerProfile = (producerName: string, producerId?: number) => {
-    if (producerId) router.push(`/producenci/${companyNameToSlug(producerName)}`);
+    if (producerId) router.push(`/producenci/${companyProfileSlug(producerName, producerId)}`);
   };
 
   const regions = searchParams.getAll('regions');
