@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
-import { companyNameToSlug } from '@/lib/companySlug';
+import { companyProfileSlug } from '@/lib/companySlug';
 
 type Producer = {
   id?: number;
@@ -20,7 +20,7 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
   const openProducerProfile = (producerName: string, producerId?: number) => {
     if (producerId) {
-      router.push(`/producenci/${companyNameToSlug(producerName)}`);
+      router.push(`/producenci/${companyProfileSlug(producerName, producerId)}`);
     }
   };
 

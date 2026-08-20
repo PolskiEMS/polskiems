@@ -8,3 +8,12 @@ export function companyNameToSlug(companyName: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export function companyProfileSlug(companyName: string, companyId: number) {
+  return `${companyNameToSlug(companyName)}-${companyId}`;
+}
+
+export function companyIdFromSlug(slug: string) {
+  const match = slug.match(/(?:^|-)([1-9]\d*)$/);
+  return match ? Number(match[1]) : null;
+}

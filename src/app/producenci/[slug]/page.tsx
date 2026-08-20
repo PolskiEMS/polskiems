@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getPublicCompanyProfileBySlug } from "@/lib/actions";
+import { companyProfileSlug } from "@/lib/companySlug";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +12,26 @@ export const maxDuration = 30;
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const company = await getPublicCompanyProfileBySlug(slug);
+
+  if (!company) return {};
+
+  const canonicalPath = `/producenci/${companyProfileSlug(company.nazwa, company.id)}`;
+  return {
+    title: company.nazwa,
+    description: `Profil firmy ${company.nazwa} w katalogu producentów elektroniki i firm EMS PolskiEMS.`,
+    alternates: { canonical: canonicalPath },
+    openGraph: {
+      title: `${company.nazwa} | PolskiEMS`,
+      description: `Profil firmy ${company.nazwa} w katalogu producentów elektroniki i firm EMS PolskiEMS.`,
+      url: canonicalPath,
+      type: "website",
+    },
+  };
+}
 
 const hiddenDescriptions = new Set([["Twój", "krótki", "opis"].join(" ")]);
 const hiddenPhones = new Set([["Twój", "numer", "telefonu"].join(" ")]);
@@ -46,6 +68,9 @@ export default async function ProducerProfilePage({ params }: PageProps) {
 
   const company = await getPublicCompanyProfileBySlug(slug);
   if (!company) notFound();
+
+  const canonicalSlug = companyProfileSlug(company.nazwa, company.id);
+  if (slug !== canonicalSlug) permanentRedirect(`/producenci/${canonicalSlug}`);
 
   const websiteHref = company.www?.trim()
     ? company.www.startsWith("http")
