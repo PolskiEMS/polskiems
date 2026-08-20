@@ -17,6 +17,7 @@ import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { inquiries, inquiryRecipients } from "@/db/schema";
+import { companyNameToSlug } from "@/lib/companySlug";
 
 export async function getDashboardStats(days = 30) {
   await requireAdminSession();
@@ -290,6 +291,61 @@ export const getAllProducers = async () => {
       asc(producenci.id)
     );
 };
+
+export async function getPublicCompanyProfile(companyId: number) {
+  const db = getDb();
+
+  const companyRows = await db
+    .select({
+      id: producenci.id,
+      nazwa: producenci.nazwa,
+      opis: producenci.opis,
+      wojewodztwo: wojewodztwa.nazwa,
+      adres: producenci.adres,
+      telefon: producenci.telefon,
+      email: producenci.email,
+      www: producenci.www,
+      featured: producenci.featured,
+      packageType: producenci.packageType,
+      isActive: producenci.isActive,
+    })
+    .from(producenci)
+    .leftJoin(wojewodztwa, eq(producenci.wojewodztwoId, wojewodztwa.id))
+    .where(and(eq(producenci.id, companyId), eq(producenci.isActive, true)));
+
+  const company = companyRows[0] ?? null;
+  if (!company) return null;
+
+  const dzialania = await db
+    .select({ id: dzialaniaEms.id, nazwa: dzialaniaEms.nazwa })
+    .from(producenciEmsDzialania)
+    .innerJoin(dzialaniaEms, eq(producenciEmsDzialania.dzialanieId, dzialaniaEms.id))
+    .where(eq(producenciEmsDzialania.companyId, companyId))
+    .orderBy(asc(dzialaniaEms.nazwa));
+
+  const produkcjaRows = await db
+    .select({ id: produkcja.id, zakres: produkcja.zakres })
+    .from(producenciEmsProdukcja)
+    .innerJoin(produkcja, eq(producenciEmsProdukcja.produkcjaId, produkcja.id))
+    .where(eq(producenciEmsProdukcja.companyId, companyId))
+    .orderBy(asc(produkcja.zakres));
+
+  return { ...company, dzialania, produkcja: produkcjaRows };
+}
+
+export async function getPublicCompanyProfileBySlug(companySlug: string) {
+  const db = getDb();
+  const activeCompanies = await db
+    .select({ id: producenci.id, nazwa: producenci.nazwa })
+    .from(producenci)
+    .where(eq(producenci.isActive, true));
+
+  const matchedCompany = activeCompanies.find(
+    (company) => companyNameToSlug(company.nazwa) === companySlug
+  );
+
+  return matchedCompany ? getPublicCompanyProfile(matchedCompany.id) : null;
+}
 
 export const saveStatistics = async (data: string) => {
   const db = getDb();
@@ -1110,6 +1166,14 @@ export async function updateCompanyAction(formData: FormData) {
       ...(resetInquiryCount ? { monthlyInquiryCount: 0 } : {}),
     })
     .where(eq(producenci.id, id));
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/firmy");
+  revalidatePath(`/admin/firmy/${id}`);
+  revalidatePath("/");
+  revalidatePath("/wszyscy-producenci");
+  revalidatePath("/wyszukaj");
+  revalidatePath(`/producenci/${companyNameToSlug(nazwa)}`);
 
   redirect("/admin/firmy");
 }

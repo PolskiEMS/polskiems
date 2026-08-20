@@ -11,7 +11,19 @@
     position: relative;
     min-height: 360px;
     height: auto;   
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    cursor: pointer;
+}
+
+.producerBlock:hover {
+    transform: translateY(-3px);
+    filter: brightness(0.82);
+    box-shadow: 0 18px 38px rgba(9, 3, 24, 0.32);
+}
+
+.producerBlock:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 4px;
 }
 
 .divToMove {
@@ -72,7 +84,10 @@
 }
 
 .contactMeBtn {
-    margin-top: 30px;
+    margin: 30px auto 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 300px;
     padding: 10px 14px;
     padding-block: 8px;
@@ -80,6 +95,9 @@
     background-color: rgb(6, 122, 255);
     cursor: pointer;
     border-radius: 4px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
 }
 
 .contactMeBtn:hover {
@@ -269,6 +287,7 @@
     }
 
     .contactMeBtn {
+        grid-area: actions;
         margin-top: 0;
         width: 100%;
         min-height: 40px;

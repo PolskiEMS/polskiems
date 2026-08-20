@@ -2,33 +2,28 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import styles from './styles.module.css';
 import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
-
-const hiddenDescriptions = new Set([['Twój', 'krótki', 'opis'].join(' ')]);
-
-const getProducerDescription = (description?: string | null) => {
-  if (!description || hiddenDescriptions.has(description.trim())) {
-    return null;
-  }
-
-  return description;
-};
+import { companyNameToSlug } from '@/lib/companySlug';
 
 type Producer = {
   id?: number;
   nazwa: string;
-  opis?: string | null;
-  wojewodztwo?: string | null;
-  adres?: string | null;
-  email?: string | null;
-  www?: string | null;
   featured?: boolean | null;
   packageType?: string | null;
 };
 
 const AllProducers = ({ producers }: { producers: Producer[] }) => {
+  const router = useRouter();
+
+  const openProducerProfile = (producerName: string, producerId?: number) => {
+    if (producerId) {
+      router.push(`/producenci/${companyNameToSlug(producerName)}`);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.producers}>
@@ -49,6 +44,16 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
             onViewportEnter={() => {
               if (producer.id) trackCompanyEvent(producer.id, 'view');
             }}
+            onClick={() => openProducerProfile(producer.nazwa, producer.id)}
+            onKeyDown={(event) => {
+              if (producer.id && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                openProducerProfile(producer.nazwa, producer.id);
+              }
+            }}
+            role={producer.id ? 'link' : undefined}
+            tabIndex={producer.id ? 0 : undefined}
+            aria-label={producer.id ? `Otwórz profil producenta ${producer.nazwa}` : undefined}
             transition={{ duration: 1.2, delay: i <= 2 ? 0.3 * i : 0.3 }}
           >
             <div className={styles.divToMove}>
@@ -65,49 +70,15 @@ const AllProducers = ({ producers }: { producers: Producer[] }) => {
 
               <h2>{producer.nazwa}</h2>
 
-              <div className={styles.bottom}>
-                {getProducerDescription(producer.opis) && (
-                  <p className={styles.description}>{getProducerDescription(producer.opis)}</p>
-                )}
-                {producer.wojewodztwo && (
-                  <p className={styles.regionBadge}>Województwo: {producer.wojewodztwo}</p>
-                )}
-                {producer.adres && (
-                  <p className={styles.addressBadge}>Adres: {producer.adres}</p>
-                )}
-
-                <div className={styles.btnRow}>
-                  {producer.email && (
-                    <a
-                      href={`mailto:${producer.email}`}
-                      onClick={() => {
-                        if (producer.id) trackCompanyEvent(producer.id, 'email_click');
-                      }}
-                    >
-                      <button className={styles.contactMeBtn}>Skontaktuj się</button>
-                    </a>
-                  )}
-
-                  {producer.id && (
-                    <Link href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}>
-                      <button className={styles.contactMeBtn}>Poproś o wycenę</button>
-                    </Link>
-                  )}
-
-                  {producer.www && (
-                    <a
-                      href={producer.www.startsWith('http') ? producer.www : `https://${producer.www}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => {
-                        if (producer.id) trackCompanyEvent(producer.id, 'website_click');
-                      }}
-                    >
-                      <button className={styles.contactMeBtn}>Strona firmy</button>
-                    </a>
-                  )}
-                </div>
-              </div>
+              {producer.id && (
+                <Link
+                  href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
+                  className={styles.contactMeBtn}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  Poproś o wycenę
+                </Link>
+              )}
             </div>
           </motion.div>
         ))}
