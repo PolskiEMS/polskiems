@@ -39,7 +39,7 @@ const Wyszukaj = () => {
     <div className={styles.page}>
       <h1>Wyszukani Producenci</h1>
       <FoundProducers />
-      <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+      <Link href={'/dodaj-producenta'}><button className={styles.chceZnalezcSie}>Dodaj firmę EMS</button></Link>
     </div>
   );
 }
