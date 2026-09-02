@@ -49,18 +49,22 @@ export default function PackageCheckout({
   regions = [],
   dzialania = [],
   produkcja = [],
+  producerSignupMode = false,
 }: {
   initialPackage?: PackageType;
   regions?: SelectOption[];
   dzialania?: SelectOption[];
   produkcja?: SelectOption[];
+  producerSignupMode?: boolean;
 }) {
   const searchParams = useSearchParams();
   const packageFromQuery = searchParams.get("pakiet");
   const resolvedPackage = resolvePackage(packageFromQuery, initialPackage);
 
   const [selectedPackage, setSelectedPackage] = useState<PackageType>(resolvedPackage);
-  const [activationMode, setActivationMode] = useState<ActivationMode>("no_payment");
+  const [activationMode, setActivationMode] = useState<ActivationMode>(
+    producerSignupMode && isPaidPackage(resolvedPackage) ? "bank_transfer" : "no_payment"
+  );
   const [billingCycleMonths, setBillingCycleMonths] = useState<BillingCycleMonths>(1);
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
@@ -85,6 +89,8 @@ export default function PackageCheckout({
   const [isLoading, setIsLoading] = useState(false);
 
   const paidPackageSelected = isPaidPackage(selectedPackage);
+  const requiresBankTransferDetails = paidPackageSelected && (producerSignupMode || activationMode === "bank_transfer");
+  const canSubmit = paymentsEnabled || producerSignupMode;
   const total = paidPackageSelected ? PACKAGE_PRICE_TOTAL[selectedPackage][billingCycleMonths] : 0;
   const monthlyAverage = paidPackageSelected ? Math.round((total / billingCycleMonths) * 100) / 100 : 0;
 
@@ -100,17 +106,23 @@ export default function PackageCheckout({
     setSelectedPackage(packageType);
     if (packageType === "free") {
       setActivationMode("no_payment");
+    } else if (producerSignupMode) {
+      setActivationMode("bank_transfer");
     }
   }
 
   async function handleActivation() {
-    if (!paymentsEnabled) {
+    if (!canSubmit) {
       setStatus({ type: "error", text: "Płatności są obecnie w trakcie uruchamiania. Skontaktuj się z PolskiEMS w sprawie wcześniejszej aktywacji pakietu." });
       return;
     }
 
     setIsLoading(true);
     setStatus(null);
+
+    const submittedActivationMode: ActivationMode = producerSignupMode && paidPackageSelected
+      ? "bank_transfer"
+      : activationMode;
 
     try {
       const res = await fetch("/api/packages/free-signup", {
@@ -127,7 +139,7 @@ export default function PackageCheckout({
           companyCity,
           regionId: regionId ? Number(regionId) : null,
           packageType: selectedPackage,
-          activationMode,
+          activationMode: submittedActivationMode,
           billingCycleMonths,
           dzialaniaIds: selectedDzialaniaIds,
           produkcjaIds: selectedProdukcjaIds,
@@ -148,21 +160,25 @@ export default function PackageCheckout({
         if (data?.code === "COMPANY_EXISTS") {
           setStatus({
             type: "error",
-            text: "Firma o podanej nazwie lub adresie e-mail już istnieje w katalogu. Pobierz formularz zgłoszeniowy i wyślij go do administratora, aby zaktualizować lub aktywować pakiet.",
+            text: "Firma o podanej nazwie lub adresie e-mail już istnieje w katalogu. Skontaktuj się z administratorem, aby zaktualizować profil albo zmienić pakiet.",
           });
         } else if (data?.code === "VALIDATION_ERROR") {
           setStatus({ type: "error", text: data?.error || "Uzupełnij wymagane dane aktywacji." });
         } else {
-          setStatus({ type: "error", text: "Nie udało się zapisać aktywacji. Spróbuj ponownie albo skontaktuj się z nami." });
+          setStatus({ type: "error", text: "Nie udało się zapisać zgłoszenia. Spróbuj ponownie albo skontaktuj się z nami." });
         }
         return;
       }
 
       setStatus({
         type: "success",
-        text: data.status === "pending_bank_transfer"
-          ? `Zgłoszenie pakietu ${PACKAGE_LABELS[selectedPackage]} zostało zapisane. Wyślemy dane do przelewu tradycyjnego i przygotujemy fakturę na podstawie podanych danych.`
-          : `Pakiet ${PACKAGE_LABELS[selectedPackage]} został aktywowany bez opłaty. Firma została dodana do katalogu.`,
+        text: producerSignupMode
+          ? data.status === "pending_bank_transfer"
+            ? `Zgłoszenie firmy i pakietu ${PACKAGE_LABELS[selectedPackage]} zostało zapisane. Skontaktujemy się w sprawie przelewu, faktury i aktywacji profilu.`
+            : `Zgłoszenie firmy zostało zapisane. Profil ${PACKAGE_LABELS[selectedPackage]} trafi do katalogu PolskiEMS.`
+          : data.status === "pending_bank_transfer"
+            ? `Zgłoszenie pakietu ${PACKAGE_LABELS[selectedPackage]} zostało zapisane. Wyślemy dane do przelewu tradycyjnego i przygotujemy fakturę na podstawie podanych danych.`
+            : `Pakiet ${PACKAGE_LABELS[selectedPackage]} został aktywowany bez opłaty. Firma została dodana do katalogu.`,
       });
       setCompanyName("");
       setCompanyEmail("");
@@ -192,21 +208,24 @@ export default function PackageCheckout({
 
   return (
     <section className={styles.checkoutSection}>
-      <h3>Dane aktywacji</h3>
-      {!paymentsEnabled && (
+      <h3>{producerSignupMode ? "Formularz zgłoszeniowy producenta" : "Dane aktywacji"}</h3>
+      {!paymentsEnabled && !producerSignupMode && (
         <div className={styles.paymentsNotice}>
           Zakup pakietów online jest obecnie w trakcie uruchamiania. Cennik pozostaje aktualny. W sprawie wcześniejszej aktywacji pakietu skontaktuj się z PolskiEMS.
         </div>
       )}
       <p className={styles.checkoutHint}>
-        {paymentsEnabled
-          ? "Uzupełnij dane firmy. Pakiet Standard lub Premium możesz aktywować bez opłaty albo zgłosić do przelewu tradycyjnego z fakturą."
-          : "Aktywacja online i zgłoszenia do przelewu tradycyjnego są obecnie w trakcie uruchamiania."}
+        {producerSignupMode
+          ? "Wypełnij formularz online. Dla pakietów Standard i Premium zgłoszenie zapisze dane do późniejszej aktywacji i kontaktu w sprawie rozliczenia."
+          : paymentsEnabled
+            ? "Uzupełnij dane firmy. Pakiet Standard lub Premium możesz aktywować bez opłaty albo zgłosić do przelewu tradycyjnego z fakturą."
+            : "Aktywacja online i zgłoszenia do przelewu tradycyjnego są obecnie w trakcie uruchamiania."}
       </p>
-      <p className={styles.checkoutHint}>
-        Jeśli firma już istnieje, system pokaże komunikat. Wtedy pobierz formularz zgłoszeniowy:{" "}
-        <Link href="/api/formularz-v2" className={styles.inlineLink}>Pobierz formularz</Link>
-      </p>
+      {!producerSignupMode && (
+        <p className={styles.checkoutHint}>
+          Jeśli firma już istnieje, system pokaże komunikat. Wtedy skontaktuj się z PolskiEMS, aby zaktualizować profil albo aktywować pakiet.
+        </p>
+      )}
 
       <div className={styles.checkoutGrid}>
         <label className={styles.field}>
@@ -218,7 +237,7 @@ export default function PackageCheckout({
           </select>
         </label>
 
-        {paidPackageSelected && (
+        {paidPackageSelected && !producerSignupMode && (
           <label className={styles.field}>
             <span>Sposób aktywacji</span>
             <select value={activationMode} onChange={(e) => setActivationMode(e.target.value as ActivationMode)}>
@@ -228,7 +247,7 @@ export default function PackageCheckout({
           </label>
         )}
 
-        {paidPackageSelected && activationMode === "bank_transfer" && (
+        {requiresBankTransferDetails && (
           <label className={styles.field}>
             <span>Okres subskrypcji</span>
             <select value={billingCycleMonths} onChange={(e) => setBillingCycleMonths(Number(e.target.value) as BillingCycleMonths)}>
@@ -323,7 +342,7 @@ export default function PackageCheckout({
         </div>
       </div>
 
-      {paidPackageSelected && activationMode === "bank_transfer" && (
+      {requiresBankTransferDetails && (
         <div className={styles.invoiceSection}>
           <h4>Dane do faktury</h4>
           <div className={styles.checkoutGrid}>
@@ -364,42 +383,50 @@ export default function PackageCheckout({
       )}
 
       <div className={styles.checkoutSummary}>
-        {paidPackageSelected && activationMode === "bank_transfer" ? (
+        {requiresBankTransferDetails ? (
           <>
             Podsumowanie: <strong>{PACKAGE_LABELS[selectedPackage]}</strong> — <strong>{total} zł brutto / {billingCycleMonths} mies.</strong><br />
             Średnia miesięczna: <strong>{monthlyAverage.toFixed(2)} zł / mies.</strong>
           </>
         ) : (
-          <>Podsumowanie: <strong>{PACKAGE_LABELS[selectedPackage]}</strong> — aktywacja bez opłaty.</>
+          <>Podsumowanie: <strong>{PACKAGE_LABELS[selectedPackage]}</strong> — zgłoszenie bez opłaty.</>
         )}
       </div>
       <div className={styles.checkoutActions}>
         <button
           type="button"
           onClick={handleActivation}
-          disabled={isLoading || !paymentsEnabled}
-          aria-disabled={!paymentsEnabled ? "true" : undefined}
+          disabled={isLoading || !canSubmit}
+          aria-disabled={!canSubmit ? "true" : undefined}
         >
-          {!paymentsEnabled
+          {!canSubmit
             ? "Płatności w trakcie uruchamiania"
             : isLoading
               ? "Zapisywanie..."
-              : paidPackageSelected && activationMode === "bank_transfer"
-                ? "Zgłoś do przelewu i faktury"
-                : `Aktywuj pakiet ${PACKAGE_LABELS[selectedPackage]}`}
+              : producerSignupMode
+                ? paidPackageSelected
+                  ? `Wyślij zgłoszenie ${PACKAGE_LABELS[selectedPackage]}`
+                  : "Wyślij zgłoszenie firmy"
+                : requiresBankTransferDetails
+                  ? "Zgłoś do przelewu i faktury"
+                  : `Aktywuj pakiet ${PACKAGE_LABELS[selectedPackage]}`}
         </button>
-        {!paymentsEnabled && (
+        {!paymentsEnabled && !producerSignupMode && (
           <Link href={contactHref} className={styles.contactPackageCta}>
             Skontaktuj się w sprawie pakietu
           </Link>
         )}
       </div>
       <p className={styles.checkoutHint}>
-        {!paymentsEnabled
-          ? "Nie wysyłamy formularza aktywacji ani zgłoszenia do przelewu. Skontaktuj się z PolskiEMS, aby omówić wcześniejszą aktywację pakietu."
-          : paidPackageSelected && activationMode === "bank_transfer"
-            ? "Po wysłaniu formularza administrator otrzyma zgłoszenie do faktury i przelewu tradycyjnego."
-            : "Nie pobieramy płatności. Pakiet zostanie aktywowany od razu po wysłaniu formularza."}
+        {producerSignupMode
+          ? requiresBankTransferDetails
+            ? "Po wysłaniu formularza zapisujemy zgłoszenie pakietu i dane do kontaktu/faktury. Profil zostanie aktywowany po potwierdzeniu warunków."
+            : "Po wysłaniu formularza firma zostanie zapisana w katalogu jako podstawowy profil."
+          : !paymentsEnabled
+            ? "Nie wysyłamy formularza aktywacji ani zgłoszenia do przelewu. Skontaktuj się z PolskiEMS, aby omówić wcześniejszą aktywację pakietu."
+            : requiresBankTransferDetails
+              ? "Po wysłaniu formularza administrator otrzyma zgłoszenie do faktury i przelewu tradycyjnego."
+              : "Nie pobieramy płatności. Pakiet zostanie aktywowany od razu po wysłaniu formularza."}
       </p>
       {status?.type === "success" && <p className={styles.success}>{status.text}</p>}
       {status?.type === "error" && <p className={styles.error}>{status.text}</p>}
