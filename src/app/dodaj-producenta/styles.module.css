@@ -1,0 +1,145 @@
+.page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 0 54px;
+}
+
+.hero {
+  margin: 0 auto 28px;
+  padding: 34px 22px;
+  border: 1px solid rgba(199, 210, 254, 0.28);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(14, 165, 233, 0.22), transparent 34%),
+    linear-gradient(135deg, rgba(39, 32, 92, 0.88), rgba(84, 63, 160, 0.52));
+  box-shadow: 0 24px 70px rgba(20, 16, 55, 0.24);
+  text-align: center;
+}
+
+.kicker {
+  width: fit-content;
+  margin: 0 auto 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 219, 254, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  color: #bfdbfe;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.hero h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.2rem, 7vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+}
+
+.lead {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: rgba(248, 247, 255, 0.84);
+  font-size: clamp(1rem, 2.6vw, 1.22rem);
+  line-height: 1.65;
+}
+
+.heroActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.primaryAction,
+.secondaryAction {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.primaryAction {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(14, 165, 233, 0.24);
+}
+
+.secondaryAction {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.steps article {
+  padding: 18px;
+  border: 1px solid rgba(199, 210, 254, 0.24);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.steps span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.18);
+  color: #bfdbfe;
+  font-weight: 900;
+}
+
+.steps h2 {
+  margin: 12px 0 6px;
+  color: #ffffff;
+  font-size: 1.08rem;
+}
+
+.steps p {
+  margin: 0;
+  color: rgba(248, 247, 255, 0.78);
+  line-height: 1.5;
+}
+
+.formAnchor {
+  scroll-margin-top: 110px;
+}
+
+@media (max-width: 760px) {
+  .page {
+    width: min(100% - 24px, 1120px);
+    padding-top: 24px;
+  }
+
+  .hero {
+    padding: 28px 16px;
+    border-radius: 24px;
+  }
+
+  .heroActions {
+    display: grid;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
