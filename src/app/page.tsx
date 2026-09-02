@@ -91,7 +91,7 @@ export default async function Home() {
           <Link href="/wyszukaj" className={styles.heroActionLink}>Wyszukaj</Link>
           <Link href="/wszyscy-producenci" className={styles.heroActionLink}>Wszyscy producenci</Link>
         </div>
-        <Link href="/api/formularz-v2" className={styles.companyCta}>Chcę znaleźć się na stronie</Link>
+        <Link href="/dodaj-producenta" className={styles.companyCta}>Dodaj firmę EMS</Link>
       </section>
 
       <section className={styles.infoSections}>
