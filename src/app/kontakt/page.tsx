@@ -51,7 +51,7 @@ const Kontakt = () => {
 
       <div className={styles.actions}>
         <a href="mailto:info@polskiems.pl" className={styles.primaryBtn}>Napisz e-mail</a>
-        <Link href="/api/formularz-v2" className={styles.secondaryBtn}>Pobierz formularz zgłoszeniowy</Link>
+        <Link href="/dodaj-producenta" className={styles.secondaryBtn}>Wypełnij formularz online</Link>
       </div>
     </section>
   );
