@@ -45,7 +45,7 @@ const Wyszukaj = async () => {
       <h1>Wszyscy Producenci</h1>
       {databaseUnavailable && <p role="alert">Lista producentów jest chwilowo niedostępna. Spróbuj ponownie później.</p>}
       <AllProducers producers={producers} />
-      <Link href={'/api/formularz-v2'}><button className={styles.chceZnalezcSie}>Chcę znaleźć się na stronie</button></Link>
+      <Link href={'/dodaj-producenta'}><button className={styles.chceZnalezcSie}>Dodaj firmę EMS</button></Link>
     </div>
   );
 }
