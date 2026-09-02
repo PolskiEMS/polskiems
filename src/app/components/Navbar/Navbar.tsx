@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./styles.module.css";
@@ -17,6 +18,8 @@ type NavGroup = {
   children: NavChild[];
 };
 
+const producerSignupHref = "/dodaj-producenta";
+
 const navGroups: NavGroup[] = [
   {
     label: "Platforma",
@@ -30,7 +33,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Dla firm EMS",
     children: [
-      { href: "/api/formularz-v2", label: "Dodaj firmę EMS", icon: "+", description: "Zgłoś producenta do katalogu" },
+      { href: producerSignupHref, label: "Dodaj firmę EMS", icon: "+", description: "Formularz zgłoszeniowy online" },
       { href: "/cennik", label: "Pakiety i cennik", icon: "◇", description: "Free, Standard i Premium" },
       { href: "/kontakt", label: "Kontakt", icon: "✉", description: "Zapytaj o współpracę" },
     ],
@@ -122,7 +125,16 @@ export default function Navbar() {
 
         <aside id="polskiems-sidebar" className={styles.sidebar} aria-label="Boczna nawigacja PolskiEMS">
           <div className={styles.sidebarBrand}>
-            <div className={styles.sidebarLogo} aria-hidden="true">PE</div>
+            <Link href="/" className={styles.sidebarLogo} onClick={closeSidebar} aria-label="PolskiEMS — strona główna">
+              <Image
+                src="/images/logo.png"
+                alt="PolskiEMS"
+                width={58}
+                height={58}
+                className={styles.sidebarLogoImage}
+                priority
+              />
+            </Link>
             <div>
               <p className={styles.sidebarTitle}>PolskiEMS</p>
               <p className={styles.sidebarSubtitle}>Platforma producentów elektroniki</p>
@@ -163,9 +175,9 @@ export default function Navbar() {
           <div className={styles.sidebarCard}>
             <p className={styles.cardKicker}>Dla producentów EMS</p>
             <h2>Chcesz dodać firmę?</h2>
-            <p>Uzupełnij zgłoszenie, wybierz pakiet i pokaż ofertę klientom szukającym wykonawcy elektroniki.</p>
-            <Link href="/api/formularz-v2" className={styles.cardButton} onClick={closeSidebar}>
-              Dodaj firmę EMS
+            <p>Wypełnij formularz online, wybierz pakiet i pokaż ofertę klientom szukającym wykonawcy elektroniki.</p>
+            <Link href={producerSignupHref} className={styles.cardButton} onClick={closeSidebar}>
+              Przejdź do formularza
             </Link>
           </div>
         </aside>
