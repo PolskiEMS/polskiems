@@ -22,8 +22,8 @@ export const dzialaniaEms = pgTable("dzialania_ems", {
 
 export const produkcja = pgTable("produkcja", {
   id: serial().primaryKey(),
-
   zakres: varchar("zakres", { length: 50 }).unique().notNull(),
+  sortOrder: integer("sort_order"),
 });
 
 export const producenci = pgTable("producenci", {
@@ -35,6 +35,7 @@ export const producenci = pgTable("producenci", {
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
   www: varchar("www", { length: 255 }),
+  companyType: varchar("companyType", { length: 64 }).notNull().default("unclassified"),
   featured: boolean("featured").default(false),
   isActive: boolean("isActive").default(false),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
