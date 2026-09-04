@@ -30,6 +30,26 @@ export async function POST(req: NextRequest) {
     if (input.sort !== undefined && (typeof input.sort !== "string" || !allowedSorts.has(input.sort))) {
       return NextResponse.json({ error: "Nieprawidłowe sortowanie" }, { status: 400 });
     }
+
+    const regions = Array.isArray(input.regions) ? input.regions : [];
+    const requirements = Array.isArray(input.requirements) ? input.requirements : [];
+    const scales = Array.isArray(input.scales) ? input.scales : [];
+    const searchQuery = typeof input.searchQuery === "string"
+      ? input.searchQuery.trim()
+      : typeof input.query === "string"
+        ? input.query.trim()
+        : "";
+
+    const hasSearchCriteria =
+      regions.length > 0 ||
+      requirements.length > 0 ||
+      scales.length > 0 ||
+      searchQuery.length > 0;
+
+    if (!hasSearchCriteria) {
+      return NextResponse.json([]);
+    }
+
     return NextResponse.json(await getFilteredProducers(input));
   } catch (error) {
     if (error instanceof SyntaxError) return NextResponse.json({ error: "Nieprawidłowy JSON" }, { status: 400 });
