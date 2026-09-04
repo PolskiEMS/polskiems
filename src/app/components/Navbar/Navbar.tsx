@@ -27,7 +27,6 @@ const navGroups: NavGroup[] = [
       { href: "/", label: "Start", icon: "⌂", description: "Strona główna PolskiEMS" },
       { href: "/wyszukaj", label: "Wyszukaj producenta", icon: "⌕", description: "Filtry usług, regionów i skali produkcji" },
       { href: "/wszyscy-producenci", label: "Wszyscy producenci", icon: "▦", description: "Pełna baza firm EMS" },
-      { href: "/producenci", label: "Wyniki wyszukiwania", icon: "▤", description: "Lista dopasowanych producentów" },
     ],
   },
   {
@@ -56,12 +55,6 @@ const navGroups: NavGroup[] = [
       { href: "/ems-dolnoslaskie", label: "EMS dolnośląskie", icon: "⌖" },
       { href: "/ems-pomorskie", label: "EMS pomorskie", icon: "⌖" },
       { href: "/ems-wielkopolskie", label: "EMS wielkopolskie", icon: "⌖" },
-    ],
-  },
-  {
-    label: "Administracja",
-    children: [
-      { href: "/admin", label: "Panel administratora", icon: "▥", description: "Zarządzanie producentami i zapytaniami" },
     ],
   },
 ];
