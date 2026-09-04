@@ -76,8 +76,32 @@
 }
 
 
-.searchBtn {
+.searchBtn,
+.searchButton {
     background-color: rgb(6, 122, 255);
+}
+
+.searchButton {
+    color: #ffffff;
+}
+
+.searchButtonDisabled {
+    opacity: 0.58;
+}
+
+.searchButtonDisabled:hover {
+    background-color: rgb(6, 122, 255) !important;
+}
+
+.searchError {
+    margin: 0;
+    padding: 11px 12px;
+    border: 1px solid rgba(245, 158, 11, 0.52);
+    border-radius: 8px;
+    background: rgba(245, 158, 11, 0.12);
+    color: #fef3c7;
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
 
 .allProducentsBtn {
@@ -85,7 +109,8 @@
 }
 
 
-.searchBtn button:hover {
+.searchBtn button:hover,
+.searchButton:hover {
     background-color: rgb(11, 108, 219);
 }
 
