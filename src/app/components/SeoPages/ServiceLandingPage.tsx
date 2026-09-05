@@ -36,9 +36,15 @@ export default function ServiceLandingPage({
     <main className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <p className={styles.eyebrow}>Usługi EMS w Polsce</p>
+          <p className={styles.eyebrow}>Baza wiedzy PolskiEMS</p>
           <h1>{title}</h1>
           <p className={styles.lead}>{lead}</p>
+
+          <div className={styles.heroMeta} aria-label="Główne zastosowania">
+            <span>Dobór dostawcy</span>
+            <span>Wycena projektu</span>
+            <span>Produkcja B2B</span>
+          </div>
 
           <div className={styles.ctaRow}>
             <Link href={searchHref} className={styles.primaryBtn}>
@@ -63,14 +69,22 @@ export default function ServiceLandingPage({
       </section>
 
       <section className={styles.content}>
-        {sections.map((section) => (
-          <article key={section.heading} className={styles.section}>
-            <h2>{section.heading}</h2>
-            {section.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </article>
-        ))}
+        <div className={styles.contentHeader}>
+          <p>Przewodnik</p>
+          <h2>Najważniejsze informacje przed wyborem firmy EMS</h2>
+        </div>
+
+        <div className={styles.sectionGrid}>
+          {sections.map((section, index) => (
+            <article key={section.heading} className={styles.section}>
+              <span className={styles.sectionNumber}>{index + 1}</span>
+              <h3>{section.heading}</h3>
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </article>
+          ))}
+        </div>
 
         <div className={styles.cardGrid}>
           {cards.map((card) => (
@@ -83,6 +97,7 @@ export default function ServiceLandingPage({
       </section>
 
       <section className={styles.bottomCta}>
+        <p className={styles.eyebrow}>Następny krok</p>
         <h2>Porównaj firmy i wybierz partnera do projektu</h2>
         <p>
           Sprawdź producentów EMS, którzy realizują {title.toLowerCase()} i skróć
@@ -92,8 +107,8 @@ export default function ServiceLandingPage({
           <Link href={searchHref} className={styles.primaryBtn}>
             Znajdź partnera
           </Link>
-          <Link href="/kontakt" className={styles.secondaryBtn}>
-            Skontaktuj się z nami
+          <Link href="/dodaj-producenta" className={styles.secondaryBtn}>
+            Dodaj firmę EMS
           </Link>
         </div>
       </section>
