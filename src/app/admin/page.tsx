@@ -1,97 +1,142 @@
 import Link from "next/link";
 import { getDashboardStats, getPageViewsStats } from "@/lib/actions";
+import { getTaxonomyHealthSummary } from "@/lib/adminCompanyTaxonomyActions";
 import styles from "./style.module.css";
 import LogoutButton from "@/app/components/admin/LogoutButton";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
+
+const menuItems = [
+  {
+    href: "/admin/firmy",
+    title: "Firmy i dostawcy",
+    description: "Edycja profili, pakietów, typów firm i taksonomii.",
+  },
+  {
+    href: "/admin/zapytania",
+    title: "Zapytania ofertowe",
+    description: "Obsługa zgłoszeń klientów i przekazywania do firm.",
+  },
+  {
+    href: "/admin/subskrypcje",
+    title: "Subskrypcje",
+    description: "Pakiety Standard/Premium, płatności i aktywacje.",
+  },
+  {
+    href: "/admin/statystyki",
+    title: "Statystyki",
+    description: "Ruch, kliknięcia i podstawowe dane katalogu.",
+  },
+  {
+    href: "/admin/wykresy",
+    title: "Wykresy",
+    description: "Trendy ruchu i kliknięć w wybranym zakresie dni.",
+  },
+  {
+    href: "/admin/ranking",
+    title: "Ranking firm",
+    description: "Najczęściej oglądane profile i kliknięcia WWW/email.",
+  },
+  {
+    href: "/admin/raporty",
+    title: "Raporty",
+    description: "Raporty PDF dla firm i pakietów płatnych.",
+  },
+];
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("pl-PL").format(value);
+}
 
 export default async function AdminDashboardPage() {
   const data = await getDashboardStats(30);
   const pageViewsStats = await getPageViewsStats(30);
+  const taxonomyHealth = await getTaxonomyHealthSummary();
+
+  const statCards = [
+    { label: "Aktywne firmy", value: data.activeCompanies, hint: "profile widoczne publicznie" },
+    { label: "Klik WWW", value: data.websiteClicks, hint: "ostatnie 30 dni" },
+    { label: "Klik Email", value: data.emailClicks, hint: "ostatnie 30 dni" },
+    { label: "Firmy z typem", value: taxonomyHealth.typedCompanies, hint: `${taxonomyHealth.totalCompanies} wszystkich profili` },
+  ];
 
   return (
-    <div className={styles.page}>
+    <main className={styles.page}>
       <div className={styles.container}>
+        <div className={styles.logoutTop}>
+          <LogoutButton />
+        </div>
 
-      <div className={styles.logoutTop}>
-           <LogoutButton />
-      </div>
+        <section className={styles.hero}>
+          <p className={styles.eyebrow}>PolskiEMS Admin</p>
+          <h1>Panel zarządzania platformą</h1>
+          <p>
+            Zarządzaj firmami, zapytaniami, pakietami i jakością danych pod nowy model platformy B2B dla producentów elektroniki.
+          </p>
+        </section>
 
-        <h1 className={styles.title}>Panel Admina</h1>
-        
-        <div className={styles.adminMenu}>
-          <Link href="/admin/statystyki" className={styles.adminBox}>
-            Statystyki
-          </Link>
+        <section className={styles.statGrid} aria-label="Najważniejsze liczby">
+          {statCards.map((card) => (
+            <article key={card.label} className={styles.statCard}>
+              <span>{card.label}</span>
+              <strong>{formatNumber(Number(card.value ?? 0))}</strong>
+              <small>{card.hint}</small>
+            </article>
+          ))}
+        </section>
 
-          <Link href="/admin/ranking" className={styles.adminBox}>
-            Ranking firm
-          </Link>
-
-          <Link href="/admin/wykresy" className={styles.adminBox}>
-            Wykresy
-          </Link>
-
-          <Link href="/admin/raporty" className={styles.adminBox}>
-            Raporty
-          </Link>
-
-          <Link href="/admin/firmy" className={styles.adminBox}>
-          Firmy
-          </Link>
-
-          <Link href="/admin/zapytania" className={styles.adminBox}>
-            Zapytania ofertowe
-          </Link>
-
-          <Link href="/admin/subskrypcje" className={styles.adminBox}>
-            Subskrypcje
-          </Link>
-        </div>       
-
-        <div className={styles.dashboardGrid}>
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Liczby główne</h2>
-
+        <section className={styles.healthCard}>
+          <div>
+            <p className={styles.sectionKicker}>Etap 3 / taksonomia</p>
+            <h2>Porządkowanie profili firm</h2>
             <p>
-              <strong>Aktywne firmy:</strong> {data.activeCompanies}
-            </p>
-
-            <div>
-              <h3>Wyświetlenia strony PolskiEMS (30 dni)</h3>
-              <p>Home Page: {pageViewsStats.home}</p>
-              <p>Wszyscy Producenci: {pageViewsStats["all-producers"]}</p>
-              <p>Wyszukiwanie Producentów: {pageViewsStats.search}</p>
-            </div>
-
-            <p>
-              <strong>Klik WWW (30 dni):</strong> {data.websiteClicks}
-            </p>
-
-            <p>
-              <strong>Klik Email (30 dni):</strong> {data.emailClicks}
+              W adminie można teraz prowadzić dane pod docelowe sekcje: typ firmy, usługi, możliwości technologiczne, branże i certyfikaty.
             </p>
           </div>
+          <div className={styles.healthMetrics}>
+            <span>Usługi: {taxonomyHealth.companiesWithServices}</span>
+            <span>Branże: {taxonomyHealth.companiesWithIndustries}</span>
+          </div>
+        </section>
 
-          <div className={styles.card}>
+        <section className={styles.adminMenu} aria-label="Nawigacja panelu administratora">
+          {menuItems.map((item) => (
+            <Link href={item.href} className={styles.adminBox} key={item.href}>
+              <strong>{item.title}</strong>
+              <span>{item.description}</span>
+            </Link>
+          ))}
+        </section>
+
+        <section className={styles.dashboardGrid}>
+          <article className={styles.card}>
+            <h2 className={styles.cardTitle}>Wyświetlenia stron / 30 dni</h2>
+            <div className={styles.metricList}>
+              <p><strong>Home:</strong> {formatNumber(pageViewsStats.home)}</p>
+              <p><strong>Wszyscy producenci:</strong> {formatNumber(pageViewsStats["all-producers"])}</p>
+              <p><strong>Wyszukiwarka:</strong> {formatNumber(pageViewsStats.search)}</p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
             <h2 className={styles.cardTitle}>Top 5 firm</h2>
-
             {Array.isArray(data.topCompanies) && data.topCompanies.length > 0 ? (
               <ol className={styles.topList}>
                 {data.topCompanies.map((company) => (
                   <li key={company.companyId} className={styles.topListItem}>
-                    {company.firma} — {company.views} views
+                    <span>{company.firma}</span>
+                    <strong>{formatNumber(Number(company.views ?? 0))} views</strong>
                   </li>
                 ))}
               </ol>
             ) : (
-              <p>Brak danych</p>
+              <p className={styles.emptyState}>Brak danych o wyświetleniach profili.</p>
             )}
-          </div>
+          </article>
 
-          <div className={`${styles.card} ${styles.fullWidth}`}>
+          <article className={`${styles.card} ${styles.fullWidth}`}>
             <h2 className={styles.cardTitle}>Ostatnie eventy</h2>
-
             {Array.isArray(data.recentEvents) && data.recentEvents.length > 0 ? (
               <div className={styles.tableWrapper}>
                 <table className={styles.table}>
@@ -114,11 +159,11 @@ export default async function AdminDashboardPage() {
                 </table>
               </div>
             ) : (
-              <p>Brak eventów</p>
+              <p className={styles.emptyState}>Brak eventów.</p>
             )}
-          </div>
-        </div>
+          </article>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
