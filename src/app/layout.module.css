@@ -13,6 +13,13 @@
 
 @media (max-width: 959px) {
   .main {
+    padding-top: calc(var(--header-height) + 14px);
     padding-bottom: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .main {
+    padding-top: calc(var(--header-height) + 10px);
   }
 }
