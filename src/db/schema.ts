@@ -7,6 +7,7 @@ import {
   text,
   boolean,
   integer,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -22,8 +23,17 @@ export const dzialaniaEms = pgTable("dzialania_ems", {
 
 export const produkcja = pgTable("produkcja", {
   id: serial().primaryKey(),
-
   zakres: varchar("zakres", { length: 50 }).unique().notNull(),
+  sortOrder: integer("sort_order"),
+});
+
+export const taxonomySections = pgTable("taxonomy_sections", {
+  key: varchar("key", { length: 64 }).primaryKey(),
+  name: varchar("name", { length: 120 }).unique().notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const producenci = pgTable("producenci", {
@@ -35,6 +45,7 @@ export const producenci = pgTable("producenci", {
   telefon: varchar("telefon", { length: 30 }),
   email: varchar("email", { length: 100 }),
   www: varchar("www", { length: 255 }),
+  companyType: varchar("companyType", { length: 64 }).notNull().default("unclassified"),
   featured: boolean("featured").default(false),
   isActive: boolean("isActive").default(false),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
@@ -55,6 +66,70 @@ export const producenciEmsProdukcja = pgTable("producenci_ems_produkcja", {
   companyId: integer("company_id").notNull().references(() => producenci.id),
   produkcjaId: integer("produkcja_id").notNull().references(() => produkcja.id),
 });
+
+export const services = pgTable("services", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).unique().notNull(),
+  name: varchar("name", { length: 160 }).unique().notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order"),
+});
+
+export const capabilities = pgTable("capabilities", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).unique().notNull(),
+  name: varchar("name", { length: 180 }).unique().notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order"),
+});
+
+export const industries = pgTable("industries", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).unique().notNull(),
+  name: varchar("name", { length: 160 }).unique().notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order"),
+});
+
+export const certifications = pgTable("certifications", {
+  id: serial("id").primaryKey(),
+  code: varchar("code", { length: 100 }).unique().notNull(),
+  name: varchar("name", { length: 180 }).notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order"),
+});
+
+export const producerServices = pgTable("producer_services", {
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  serviceId: integer("service_id").notNull().references(() => services.id),
+  source: varchar("source", { length: 50 }).notNull().default("listed"),
+}, (table) => [
+  primaryKey({ columns: [table.companyId, table.serviceId] }),
+]);
+
+export const producerCapabilities = pgTable("producer_capabilities", {
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  capabilityId: integer("capability_id").notNull().references(() => capabilities.id),
+  source: varchar("source", { length: 50 }).notNull().default("listed"),
+}, (table) => [
+  primaryKey({ columns: [table.companyId, table.capabilityId] }),
+]);
+
+export const producerIndustries = pgTable("producer_industries", {
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  industryId: integer("industry_id").notNull().references(() => industries.id),
+  source: varchar("source", { length: 50 }).notNull().default("listed"),
+}, (table) => [
+  primaryKey({ columns: [table.companyId, table.industryId] }),
+]);
+
+export const producerCertifications = pgTable("producer_certifications", {
+  companyId: integer("company_id").notNull().references(() => producenci.id),
+  certificationId: integer("certification_id").notNull().references(() => certifications.id),
+  status: varchar("status", { length: 32 }).notNull().default("listed"),
+}, (table) => [
+  primaryKey({ columns: [table.companyId, table.certificationId] }),
+]);
 
 export const statystyki = pgTable("statystyki", {
   id: serial().primaryKey(),
@@ -103,7 +178,7 @@ export const inquiries = pgTable("inquiries", {
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const inquiryRecipientStatus = pgEnum("inquiry_recipient_status", ["pending_review", "sent_to_company", "rejected", "failed"]);
+export const inquiryRecipientStatus = pgEnum("inquiry_status", ["pending_review", "sent_to_company", "rejected", "failed"]);
 
 export const inquiryRecipients = pgTable("inquiry_recipients", {
   id: serial("id").primaryKey(),
@@ -118,9 +193,9 @@ export const inquiryRecipients = pgTable("inquiry_recipients", {
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const packageType = pgEnum("package_type", ["standard", "premium"]);
+export const packageType = pgEnum("package_order_type", ["standard", "premium"]);
 export const paymentProvider = pgEnum("payment_provider", ["stripe", "przelewy24"]);
-export const paymentStatus = pgEnum("payment_status", ["pending_payment", "paid", "paid_pending_activation", "active", "failed", "canceled"]);
+export const paymentStatus = pgEnum("payment_status_type", ["pending_payment", "paid", "paid_pending_activation", "active", "failed", "canceled"]);
 
 export const packageOrders = pgTable("package_orders", {
   id: serial("id").primaryKey(),
