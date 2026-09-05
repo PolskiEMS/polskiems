@@ -27,17 +27,20 @@ export const metadata: Metadata = {
   },
 };
 
-
 const Wyszukaj = () => {
   return (
-    <div className={styles.page}>
+    <main className={styles.page}>
       <PageViewTracker page="search" />
-      <div className={styles.topPage}>
-        <h1>Wyszukaj Producenta</h1>
-        <p>Wpisz nazwę firmy, usługę lub wybierz filtry, aby znaleźć dopasowanego producenta elektroniki.</p>
-      </div>
+      <section className={styles.hero}>
+        <p className={styles.kicker}>Wyszukiwarka EMS</p>
+        <h1>Znajdź producenta elektroniki dopasowanego do projektu</h1>
+        <p className={styles.lead}>
+          Wpisz nazwę firmy, usługę albo wybierz filtry. PolskiEMS pomoże zawęzić listę producentów według lokalizacji,
+          usług EMS i skali produkcji.
+        </p>
+      </section>
       <ProducerSearch />
-    </div>
+    </main>
   );
 }
 
