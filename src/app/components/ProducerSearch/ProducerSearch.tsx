@@ -86,53 +86,41 @@ const ProducerSearch = () => {
     };
 
 
-    const renderFilterGroup = (title: string, category: FilterCategory, items: string[]) => (
-        <div>
-            <h3>{title}</h3>
-            <button
-                type="button"
-                className={styles.selectAllBtn}
-                onClick={() => selectAll(category)}
-            >
-                Zaznacz wszystkie
-            </button>
-            <div className={styles.oneGroup}>
-                {items.map(item => (
-                    <button
-                        type="button"
-                        key={item}
-                        onClick={() => toggleFilter(category, item)}
-                        className={` ${selectedFilters[category].includes(item)
-                            ? `${styles.clicked}`
-                            : `${styles.noClicked}`
-                            }`}
-                    >
-                        {item}
-                    </button>
-                ))}
-                {
-                    category === 'scales' &&
-                    <div className={styles.buttons}>
-                        {searchError && <p className={styles.searchError}>{searchError}</p>}
+    const renderFilterGroup = (title: string, category: FilterCategory, items: string[]) => {
+        const selectedCount = selectedFilters[category].length;
+
+        return (
+            <section className={styles.filterGroup}>
+                <div className={styles.filterHeader}>
+                    <h3>{title}</h3>
+                    <span>{selectedCount ? `${selectedCount} wybrane` : 'Opcjonalnie'}</span>
+                </div>
+                <button
+                    type="button"
+                    className={styles.selectAllBtn}
+                    onClick={() => selectAll(category)}
+                >
+                    {selectedCount === items.length ? 'Odznacz wszystkie' : 'Zaznacz wszystkie'}
+                </button>
+                <div className={styles.oneGroup}>
+                    {items.map(item => (
                         <button
                             type="button"
-                            className={`${styles.searchButton} ${!hasSearchCriteria ? styles.searchButtonDisabled : ''}`}
-                            onClick={handleSearch}
-                            aria-disabled={!hasSearchCriteria}
+                            key={item}
+                            onClick={() => toggleFilter(category, item)}
+                            className={selectedFilters[category].includes(item) ? styles.clicked : styles.noClicked}
                         >
-                            Wyszukaj
+                            {item}
                         </button>
-                        <Link href={'/wszyscy-producenci'} className={styles.allProducentsBtn}><button type="button">Wszyscy Producenci</button></Link>
-                        <Link href={'/dodaj-producenta'}><button type="button" className={styles.chceZnalezcSie}>Dodaj firmę EMS</button></Link>
-                    </div>
-                }
-            </div>
-        </div>
-    );
+                    ))}
+                </div>
+            </section>
+        );
+    };
 
 
     return (
-        <div>
+        <section className={styles.searchBox} aria-label="Wyszukiwarka producentów EMS">
             <div className={styles.searchControls}>
                 <label className={styles.controlLabel}>
                     <span>Szukaj producentów</span>
@@ -143,7 +131,7 @@ const ProducerSearch = () => {
                             setSearchError('');
                             setSearchQuery(event.target.value);
                         }}
-                        placeholder="Szukaj po nazwie, opisie lub usługach"
+                        placeholder="Np. montaż SMD, testowanie, nazwa firmy"
                         className={styles.searchInput}
                     />
                 </label>
@@ -154,7 +142,7 @@ const ProducerSearch = () => {
                         onChange={(event) => setSort(event.target.value as SortOption)}
                         className={styles.sortSelect}
                     >
-                        <option value="default">Domyślnie</option>
+                        <option value="default">Najtrafniejsze</option>
                         <option value="name-asc">Nazwa A-Z</option>
                         <option value="name-desc">Nazwa Z-A</option>
                         <option value="newest">Najnowsze</option>
@@ -162,12 +150,27 @@ const ProducerSearch = () => {
                     </select>
                 </label>
             </div>
+
             <div className={styles.allFiltersGroup}>
-                {renderFilterGroup("Region", "regions", filtersData.regions)}
+                {renderFilterGroup("Lokalizacja", "regions", filtersData.regions)}
                 {renderFilterGroup("Usługi EMS", "requirements", filtersData.requirements)}
                 {renderFilterGroup("Skala produkcji", "scales", filtersData.scales)}
             </div>
-        </div >
+
+            <div className={styles.buttons}>
+                {searchError && <p className={styles.searchError}>{searchError}</p>}
+                <button
+                    type="button"
+                    className={`${styles.searchButton} ${!hasSearchCriteria ? styles.searchButtonDisabled : ''}`}
+                    onClick={handleSearch}
+                    aria-disabled={!hasSearchCriteria}
+                >
+                    Wyszukaj producenta
+                </button>
+                <Link href="/wszyscy-producenci" className={styles.allProducentsBtn}>Pokaż wszystkie firmy</Link>
+                <Link href="/dodaj-producenta" className={styles.companySignupBtn}>Dodaj firmę EMS</Link>
+            </div>
+        </section>
     );
 };
 
