@@ -33,15 +33,23 @@ export const metadata: Metadata = {
   },
 };
 
-
-const Wyszukaj = () => {
+const Producenci = () => {
   return (
-    <div className={styles.page}>
-      <h1>Wyszukani Producenci</h1>
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <p className={styles.kicker}>Dopasowane firmy</p>
+        <h1>Wyniki wyszukiwania producentów</h1>
+        <p className={styles.lead}>
+          Poniżej zobaczysz firmy pasujące do wybranych kryteriów. Otwórz profil producenta albo wyślij zapytanie ofertowe.
+        </p>
+        <div className={styles.heroActions}>
+          <Link href="/wyszukaj" className={styles.primaryAction}>Zmień kryteria</Link>
+          <Link href="/dodaj-producenta" className={styles.secondaryAction}>Dodaj firmę EMS</Link>
+        </div>
+      </section>
       <FoundProducers />
-      <Link href={'/dodaj-producenta'}><button className={styles.chceZnalezcSie}>Dodaj firmę EMS</button></Link>
-    </div>
+    </main>
   );
 }
 
-export default Wyszukaj;
+export default Producenci;
