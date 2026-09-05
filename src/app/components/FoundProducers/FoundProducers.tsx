@@ -1,41 +1,35 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { motion } from 'motion/react';
-import { Suspense, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import ProducerCard, { type ProducerCardData } from '../ProducerCard/ProducerCard';
 import styles from './styles.module.css';
-import { trackCompanyEvent } from '@/lib/trackCompanyEvent';
-import { companyProfileSlug } from '@/lib/companySlug';
-
-type Producer = {
-  id?: number;
-  nazwa: string;
-  featured?: boolean | null;
-  packageType?: string | null;
-};
 
 const SearchContent = () => {
-  const [producers, setProducers] = useState<Producer[]>([]);
+  const [producers, setProducers] = useState<ProducerCardData[]>([]);
   const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();
-  const router = useRouter();
 
-  const openProducerProfile = (producerName: string, producerId?: number) => {
-    if (producerId) router.push(`/producenci/${companyProfileSlug(producerName, producerId)}`);
-  };
-
-  const regions = searchParams.getAll('regions');
-  const requirements = searchParams.getAll('requirements');
-  const scales = searchParams.getAll('scales');
+  const regions = useMemo(() => searchParams.getAll('regions'), [searchParams]);
+  const requirements = useMemo(() => searchParams.getAll('requirements'), [searchParams]);
+  const scales = useMemo(() => searchParams.getAll('scales'), [searchParams]);
   const searchQuery = searchParams.get('searchQuery') ?? searchParams.get('query') ?? '';
   const sort = searchParams.get('sort') ?? 'default';
+
+  const hasSearchCriteria =
+    searchQuery.trim().length > 0 || regions.length > 0 || requirements.length > 0 || scales.length > 0;
 
   const getProducers = async () => {
     setIsLoading(true);
     setNotFound(false);
+
+    if (!hasSearchCriteria) {
+      setProducers([]);
+      setNotFound(false);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/searchProducers', {
@@ -72,82 +66,35 @@ const SearchContent = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  if (isLoading) {
+    return <p className={styles.stateMessage}>Ładowanie wyników...</p>;
+  }
+
   return (
-    <div className={styles.page}>
-      {!isLoading ? (
-        <div>
-          {producers.length > 0 && (
-            <div className={styles.producers}>
-              {producers.map((producer, i) => (
-                <motion.div
-                  className={`${styles.producerBlock} ${
-                    producer.packageType === 'premium'
-                      ? styles.premiumBlock
-                      : producer.packageType === 'standard'
-                        ? styles.standardBlock
-                        : ''
-                  }`}
-                  key={producer.id ?? i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  onViewportEnter={() => {
-                    if (producer.id) trackCompanyEvent(producer.id, 'view');
-                  }}
-                  role={producer.id ? 'link' : undefined}
-                  tabIndex={producer.id ? 0 : undefined}
-                  aria-label={producer.id ? `Otwórz profil producenta ${producer.nazwa}` : undefined}
-                  onClick={() => openProducerProfile(producer.nazwa, producer.id)}
-                  onKeyDown={(event) => {
-                    if (producer.id && (event.key === 'Enter' || event.key === ' ')) {
-                      event.preventDefault();
-                      openProducerProfile(producer.nazwa, producer.id);
-                    }
-                  }}
-                  transition={{ duration: 1.2, delay: i <= 2 ? 0.3 * i : 0.3 }}
-                >
-                  <div className={styles.divToMove}>
-                    <Image
-                      src={`/images/producers/${producer.nazwa}.jpg`}
-                      width={210}
-                      height={210}
-                      alt={`Producent ${producer.nazwa}`}
-                    />
-
-                    {producer.featured && (
-                      <div className={styles.featuredBadge}>Polecany Producent</div>
-                    )}
-
-                    <h2>{producer.nazwa}</h2>
-
-                    {producer.id && (
-                      <Link
-                        href={`/zapytania-ofertowe?companyId=${producer.id}&source=company_card`}
-                        className={styles.contactMeBtn}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        Poproś o wycenę
-                      </Link>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {notFound && <p className={styles.notFound}>Nie znaleziono takich producentów</p>}
-          {!notFound && producers.length === 0 && <div style={{ marginBottom: '420px' }} />}
+    <section className={styles.page} aria-label="Wyniki wyszukiwania producentów">
+      {!hasSearchCriteria && (
+        <div className={styles.emptyState}>
+          <h2>Wybierz kryteria wyszukiwania</h2>
+          <p>Wróć do wyszukiwarki i zaznacz przynajmniej jeden filtr albo wpisz frazę, aby zobaczyć dopasowane firmy.</p>
         </div>
-      ) : (
-        <p className={styles.notFound}>Ładowanie...</p>
       )}
-    </div>
+
+      {producers.length > 0 && (
+        <div className={styles.producers}>
+          {producers.map((producer, index) => (
+            <ProducerCard producer={producer} index={index} key={producer.id ?? `${producer.nazwa}-${index}`} />
+          ))}
+        </div>
+      )}
+
+      {notFound && <p className={styles.stateMessage}>Nie znaleziono producentów dla wybranych kryteriów.</p>}
+    </section>
   );
 };
 
 const FoundProducers = () => {
   return (
-    <Suspense fallback={<div>Ładowanie...</div>}>
+    <Suspense fallback={<p className={styles.stateMessage}>Ładowanie wyników...</p>}>
       <SearchContent />
     </Suspense>
   );
