@@ -1,105 +1,12 @@
 .page {
   min-height: 100vh;
-  padding: 36px 20px 60px;
+  padding: 34px 16px 64px;
 }
 
 .container {
-  max-width: 1200px;
+  width: min(1220px, 100%);
   margin: 0 auto;
   position: relative;
-}
-
-.title {
-  text-align: center;
-  color: white;
-  font-size: 2.8rem;
-  font-weight: 800;
-  margin-bottom: 35px;
-}
-
-.adminMenu {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.adminBox {
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  min-height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 1.35rem;
-  font-weight: 700;
-  text-decoration: none;
-  color: white;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  transition: 0.2s ease;
-  backdrop-filter: blur(6px);
-}
-
-.adminBox:hover {
-  transform: scale(1.02);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.dashboardGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 40px;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 14px;
-  padding: 20px;
-  color: white;
-  backdrop-filter: blur(6px);
-}
-
-.cardTitle {
-  margin-top: 0;
-  margin-bottom: 18px;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.fullWidth {
-  grid-column: 1 / -1;
-}
-
-.topList {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.topListItem {
-  margin-bottom: 8px;
-}
-
-.tableWrapper {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  color: white;
-}
-
-.table th,
-.table td {
-  text-align: left;
-  padding: 10px 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.table th {
-  font-weight: 700;
 }
 
 .logoutTop {
@@ -109,13 +16,283 @@
   z-index: 5;
 }
 
-@media (max-width: 900px) {
-  .adminMenu {
-    grid-template-columns: repeat(2, 1fr);
+.hero {
+  padding: clamp(28px, 5vw, 46px) 22px;
+  border: 1px solid rgba(199, 210, 254, 0.28);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(14, 165, 233, 0.22), transparent 34%),
+    radial-gradient(circle at 82% 18%, rgba(124, 58, 237, 0.22), transparent 30%),
+    linear-gradient(135deg, rgba(39, 32, 92, 0.92), rgba(84, 63, 160, 0.55));
+  box-shadow: 0 26px 70px rgba(16, 12, 46, 0.24);
+  text-align: center;
+}
+
+.eyebrow,
+.sectionKicker {
+  width: fit-content;
+  margin: 0 auto 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 219, 254, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  color: #bfdbfe;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.sectionKicker {
+  margin-inline: 0;
+}
+
+.hero h1 {
+  max-width: 860px;
+  margin: 0 auto;
+  color: #ffffff;
+  font-size: clamp(2.25rem, 6vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+}
+
+.hero p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: rgba(248, 247, 255, 0.82);
+  font-size: clamp(1rem, 2.4vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.statCard,
+.healthCard,
+.card,
+.adminBox {
+  border: 1px solid rgba(199, 210, 254, 0.22);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.055));
+  box-shadow: 0 22px 55px rgba(16, 12, 46, 0.2);
+  color: #ffffff;
+}
+
+.statCard {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 24px;
+}
+
+.statCard span {
+  color: rgba(248, 247, 255, 0.68);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statCard strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.statCard small {
+  color: rgba(248, 247, 255, 0.62);
+  line-height: 1.35;
+}
+
+.healthCard {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: 28px;
+}
+
+.healthCard h2,
+.cardTitle {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.healthCard p:not(.sectionKicker) {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: rgba(248, 247, 255, 0.78);
+  line-height: 1.6;
+}
+
+.healthMetrics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.healthMetrics span {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.16);
+  color: #bfdbfe;
+  font-weight: 900;
+}
+
+.adminMenu {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.adminBox {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 24px;
+  text-decoration: none;
+  transition: transform 0.18s ease, filter 0.18s ease, background-color 0.18s ease;
+}
+
+.adminBox:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.adminBox strong {
+  color: #ffffff;
+  font-size: 1.08rem;
+  line-height: 1.2;
+}
+
+.adminBox span {
+  color: rgba(248, 247, 255, 0.68);
+  line-height: 1.45;
+  font-size: 0.94rem;
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.card {
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.cardTitle {
+  margin-bottom: 18px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.metricList {
+  display: grid;
+  gap: 10px;
+}
+
+.metricList p {
+  margin: 0;
+  color: rgba(248, 247, 255, 0.82);
+}
+
+.topList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topListItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.topListItem span {
+  min-width: 0;
+  color: rgba(248, 247, 255, 0.84);
+}
+
+.topListItem strong {
+  white-space: nowrap;
+  color: #bfdbfe;
+}
+
+.emptyState {
+  margin: 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(248, 247, 255, 0.72);
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  color: white;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.table th {
+  color: rgba(248, 247, 255, 0.66);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 1020px) {
+  .adminMenu,
+  .statGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .dashboardGrid {
+  .dashboardGrid,
+  .healthCard {
     grid-template-columns: 1fr;
+  }
+
+  .healthMetrics {
+    justify-content: flex-start;
   }
 
   .fullWidth {
@@ -124,34 +301,49 @@
 }
 
 @media (max-width: 600px) {
+  .page {
+    padding: 24px 12px 48px;
+  }
+
   .logoutTop {
     position: static;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
-  .title {
-    font-size: 2.2rem;
-    margin-bottom: 24px;
+  .hero {
+    border-radius: 24px;
+    padding: 28px 16px;
   }
 
-  .adminBox {
-    min-height: 80px;
-    font-size: 1.1rem;
+  .adminMenu,
+  .statGrid {
+    grid-template-columns: 1fr;
   }
 
-  .card {
+  .sectionKicker {
+    margin-inline: auto;
+  }
+
+  .healthCard {
+    text-align: center;
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .healthMetrics {
+    justify-content: center;
+  }
+
+  .card,
+  .adminBox,
+  .statCard {
     padding: 16px;
+    border-radius: 22px;
   }
 
-  .cardTitle {
-    font-size: 1.2rem;
-  }
-
-  .table th,
-  .table td {
-    font-size: 0.95rem;
-    padding: 8px 4px;
+  .topListItem {
+    display: grid;
   }
 }
