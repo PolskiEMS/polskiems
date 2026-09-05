@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
 };
 
-const Wyszukaj = async () => {
+const WszyscyProducenci = async () => {
   let producers: Awaited<ReturnType<typeof getAllProducers>> = [];
   let databaseUnavailable = false;
   try {
@@ -40,14 +40,27 @@ const Wyszukaj = async () => {
     console.error("All producers query failed");
   }
   return (
-    <div className={styles.page}>
+    <main className={styles.page}>
       <PageViewTracker page="all-producers" />
-      <h1>Wszyscy Producenci</h1>
-      {databaseUnavailable && <p role="alert">Lista producentów jest chwilowo niedostępna. Spróbuj ponownie później.</p>}
+      <section className={styles.hero}>
+        <p className={styles.kicker}>Baza producentów</p>
+        <h1>Wszyscy producenci elektroniki w PolskiEMS</h1>
+        <p className={styles.lead}>
+          Przeglądaj firmy EMS i producentów elektroniki w Polsce. Wejdź w profil, sprawdź opis, lokalizację i wyślij zapytanie ofertowe.
+        </p>
+        <div className={styles.heroActions}>
+          <Link href="/wyszukaj" className={styles.primaryAction}>Przejdź do wyszukiwarki</Link>
+          <Link href="/dodaj-producenta" className={styles.secondaryAction}>Dodaj firmę EMS</Link>
+        </div>
+      </section>
+
+      {databaseUnavailable && (
+        <p className={styles.alert} role="alert">Lista producentów jest chwilowo niedostępna. Spróbuj ponownie później.</p>
+      )}
+
       <AllProducers producers={producers} />
-      <Link href={'/dodaj-producenta'}><button className={styles.chceZnalezcSie}>Dodaj firmę EMS</button></Link>
-    </div>
+    </main>
   );
 }
 
-export default Wyszukaj;
+export default WszyscyProducenci;
