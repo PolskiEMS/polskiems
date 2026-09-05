@@ -1,41 +1,113 @@
 .page {
-    display: block;
+  width: 100%;
+  padding-bottom: 56px;
 }
 
-.page h1 {
-    text-align: center;
-    margin-inline: 5px;
-    font-size: 2.8em;
-    width: 400px;
-    margin: 24px auto 0;
+.hero {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 34px 22px;
+  border: 1px solid rgba(199, 210, 254, 0.28);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(14, 165, 233, 0.22), transparent 34%),
+    linear-gradient(135deg, rgba(39, 32, 92, 0.88), rgba(84, 63, 160, 0.52));
+  box-shadow: 0 24px 70px rgba(20, 16, 55, 0.24);
+  text-align: center;
 }
 
-.chceZnalezcSie {
-    margin-top: 60px;
-    padding: 10px 10px;
-    border: 1px solid rgb(0, 56, 120);
-    background-color: rgb(0, 86, 188);
-    color: #ffffff;
-    font-weight: 700;
-    transition: 0.06s ease-in-out;
-    width: 250px;
-    text-align: center;
-    display: block;
-    margin: 24px auto 0;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 30px;
-
+.kicker {
+  width: fit-content;
+  margin: 0 auto 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 219, 254, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  color: #bfdbfe;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 900;
 }
 
-.chceZnalezcSie:hover {
-    background-color: rgb(0, 73, 156);
+.hero h1 {
+  max-width: 880px;
+  margin: 0 auto;
+  color: #ffffff;
+  font-size: clamp(2.1rem, 6vw, 4.55rem);
+  line-height: 1;
+  letter-spacing: -0.065em;
 }
 
-@media screen and (max-width: 768px) {
-    .page h1 {
-        margin-top: 16px;
-        font-size: 2.4em;
-        width: 100%;
-    }
+.lead {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: rgba(248, 247, 255, 0.84);
+  font-size: clamp(1rem, 2.4vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.heroActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.primaryAction,
+.secondaryAction {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.primaryAction {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(14, 165, 233, 0.24);
+}
+
+.secondaryAction {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.alert {
+  width: min(720px, calc(100% - 32px));
+  margin: 28px auto 0;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fde68a;
+  text-align: center;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding-bottom: 42px;
+  }
+
+  .hero {
+    width: min(100% - 24px, 1120px);
+    padding: 28px 16px;
+    border-radius: 24px;
+  }
+
+  .heroActions {
+    display: grid;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
 }
