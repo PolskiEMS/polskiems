@@ -37,13 +37,6 @@ const audienceItems = [
   "Firma potrzebująca prototypu",
 ];
 
-const quickLinks = [
-  { label: "Montaż SMT", href: "/montaz-smt-polska" },
-  { label: "Montaż THT", href: "/montaz-tht-polska" },
-  { label: "Produkcja PCB", href: "/produkcja-pcb-polska" },
-  { label: "Montaż elektroniki", href: "/montaz-elektroniki-w-polsce" },
-];
-
 const faqItems = [
   {
     question: "Czy muszę samodzielnie wybierać firmę EMS?",
@@ -86,12 +79,6 @@ export default async function Home() {
         <div className={styles.heroActions}>
           <Link href="/wyszukaj" className={styles.primaryAction}>Znajdź producenta</Link>
           <Link href="/dodaj-producenta" className={styles.secondaryAction}>Dodaj firmę EMS</Link>
-        </div>
-
-        <div className={styles.quickLinks} aria-label="Popularne obszary">
-          {quickLinks.map((item) => (
-            <Link href={item.href} key={item.href}>{item.label}</Link>
-          ))}
         </div>
       </section>
 
