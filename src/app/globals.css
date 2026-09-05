@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #26255a;
+  --foreground: #ededed;
   --header-height: 88px;
+  --page-max-width: 1120px;
+  --page-gutter: 32px;
 }
 
 @theme inline {
@@ -13,30 +15,62 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* @media (prefers-color-scheme: dark) { */
-  :root {
-    --background: #26255a;
-    --foreground: #ededed;
-  }
-/* } */
-
-body {
-  margin: 0;
-  background: var(--background);
-  background-image: linear-gradient(rgba(47, 28, 78, 0.397), rgba(0, 0, 0, 0.13)), url('/images/gradient.jpg');
-  background-size: cover;
-  background-attachment: fixed;
-  color: var(--foreground);
-  font-family: var(--font-geist-sans);
-}
-
-
-@media (max-width: 959px) {
-  :root {
-    --header-height: 80px;
-  }
+* {
+  box-sizing: border-box;
 }
 
 html {
   scroll-padding-top: calc(var(--header-height) + 24px);
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: var(--background);
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(14, 165, 233, 0.18), transparent 32%),
+    linear-gradient(rgba(47, 28, 78, 0.42), rgba(0, 0, 0, 0.16)),
+    url('/images/gradient.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans);
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+@media (max-width: 959px) {
+  :root {
+    --header-height: 80px;
+    --page-gutter: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    background-attachment: scroll;
+  }
 }
