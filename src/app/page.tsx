@@ -1,30 +1,31 @@
 import styles from './styles.module.css'
 import Link from "next/link";
 import PageViewTracker from "@/app/components/PageViewTracker";
-import Image from "next/image";
 import { getFeaturedProducers } from "@/lib/actions";
-import { companyProfileSlug } from "@/lib/companySlug";
+import ProducerCard from "@/app/components/ProducerCard/ProducerCard";
 
 export const dynamic = "force-dynamic";
-
-const hiddenDescriptions = new Set([["Twój", "krótki", "opis"].join(" ")]);
 
 const valuePropositions = [
   {
     audience: "Dla firm szukających producenta",
-    benefit: "Szybciej porównujesz dostawców.",
+    benefit: "Porównujesz dostawców według usług, lokalizacji i skali produkcji.",
   },
   {
-    audience: "Dla firm EMS",
-    benefit: "Zyskujesz widoczność i zapytania ofertowe.",
+    audience: "Dla producentów EMS",
+    benefit: "Budujesz widoczność, profil firmowy i źródło zapytań ofertowych.",
+  },
+  {
+    audience: "Dla zakupów i R&D",
+    benefit: "Szybciej zawężasz firmy pasujące do projektu elektronicznego.",
   },
 ];
 
 const howItWorksSteps = [
-  "Wybierasz usługę",
-  "Filtrujesz firmy",
-  "Wysyłasz zapytanie",
-  "Otrzymujesz kontakt lub ofertę",
+  "Wybierasz usługę lub wpisujesz potrzebę projektu",
+  "Filtrujesz firmy po regionie, usługach i skali produkcji",
+  "Sprawdzasz profil producenta",
+  "Wysyłasz zapytanie ofertowe do wybranej firmy",
 ];
 
 const audienceItems = [
@@ -36,32 +37,31 @@ const audienceItems = [
   "Firma potrzebująca prototypu",
 ];
 
+const quickLinks = [
+  { label: "Montaż SMT", href: "/montaz-smt-polska" },
+  { label: "Montaż THT", href: "/montaz-tht-polska" },
+  { label: "Produkcja PCB", href: "/produkcja-pcb-polska" },
+  { label: "Montaż elektroniki", href: "/montaz-elektroniki-w-polsce" },
+];
+
 const faqItems = [
   {
     question: "Czy muszę samodzielnie wybierać firmę EMS?",
-    answer: "Nie. Możesz wskazać konkretną firmę albo wysłać zapytanie do dopasowania — PolskiEMS dobierze 3–5 najlepiej pasujących firm na podstawie potrzeb projektu.",
+    answer: "Możesz wskazać konkretną firmę albo wysłać zapytanie do dopasowania. PolskiEMS pomaga uporządkować potrzeby projektu i skrócić listę producentów.",
   },
   {
     question: "Co dzieje się z zapytaniem ofertowym po wysłaniu?",
-    answer: "Zapytanie trafia najpierw do weryfikacji administratora. Po sprawdzeniu kompletności i jakości zostaje przekazane dalej do wybranych lub dopasowanych firm EMS.",
+    answer: "Zapytanie trafia do systemu PolskiEMS. Docelowo może być weryfikowane i przekazywane do wybranych lub dopasowanych producentów.",
   },
   {
     question: "Jakie informacje warto uzupełnić w formularzu?",
-    answer: "Najważniejsze są: typ usługi, skala produkcji, termin, dokumentacja techniczna, wymagania jakościowe, testy oraz opis ograniczeń projektu.",
+    answer: "Najważniejsze są: typ usługi, skala produkcji, termin, dokumentacja techniczna, wymagania jakościowe, testy i opis ograniczeń projektu.",
   },
   {
     question: "Co zyskuje firma EMS obecna w PolskiEMS?",
-    answer: "Firma EMS zwiększa widoczność w katalogu i może otrzymywać zweryfikowane zapytania ofertowe od klientów szukających produkcji elektroniki.",
+    answer: "Firma EMS otrzymuje profesjonalny profil, lepszą widoczność w katalogu i możliwość prezentacji swojej oferty klientom szukającym produkcji elektroniki.",
   },
 ];
-
-const getProducerDescription = (description?: string | null) => {
-  if (!description || hiddenDescriptions.has(description.trim())) {
-    return null;
-  }
-
-  return description;
-};
 
 export default async function Home() {
   let featuredProducers: Awaited<ReturnType<typeof getFeaturedProducers>> = [];
@@ -77,26 +77,37 @@ export default async function Home() {
       <PageViewTracker page="home" />
 
       <section className={styles.hero}>
-        <h1>Polski <br /> EMS</h1>
-        <h2>Porównaj firmy EMS i znajdź wykonawcę dopasowanego do Twoich potrzeb</h2>
-        <div className={styles.valueProposition}>
-          {valuePropositions.map((item) => (
-            <article key={item.audience} className={styles.valueCard}>
-              <strong>{item.audience}</strong>
-              <span>{item.benefit}</span>
-            </article>
+        <p className={styles.kicker}>Platforma B2B dla elektroniki</p>
+        <h1>Znajdź producenta elektroniki dopasowanego do projektu.</h1>
+        <p className={styles.lead}>
+          PolskiEMS pomaga porównywać firmy EMS w Polsce według usług, lokalizacji, skali produkcji i możliwości wykonania projektu.
+        </p>
+
+        <div className={styles.heroActions}>
+          <Link href="/wyszukaj" className={styles.primaryAction}>Znajdź producenta</Link>
+          <Link href="/dodaj-producenta" className={styles.secondaryAction}>Dodaj firmę EMS</Link>
+        </div>
+
+        <div className={styles.quickLinks} aria-label="Popularne obszary">
+          {quickLinks.map((item) => (
+            <Link href={item.href} key={item.href}>{item.label}</Link>
           ))}
         </div>
-        <div className={styles.heroActions}>
-          <Link href="/wyszukaj" className={styles.heroActionLink}>Wyszukaj</Link>
-          <Link href="/wszyscy-producenci" className={styles.heroActionLink}>Wszyscy producenci</Link>
-        </div>
-        <Link href="/dodaj-producenta" className={styles.companyCta}>Dodaj firmę EMS</Link>
+      </section>
+
+      <section className={styles.valueProposition} aria-label="Korzyści PolskiEMS">
+        {valuePropositions.map((item) => (
+          <article key={item.audience} className={styles.valueCard}>
+            <strong>{item.audience}</strong>
+            <span>{item.benefit}</span>
+          </article>
+        ))}
       </section>
 
       <section className={styles.infoSections}>
         <article className={styles.infoCard}>
-          <h3>Jak działa PolskiEMS?</h3>
+          <p className={styles.sectionKicker}>Proces</p>
+          <h2>Jak działa PolskiEMS?</h2>
           <ol className={styles.stepsList}>
             {howItWorksSteps.map((step) => (
               <li key={step}>{step}</li>
@@ -105,7 +116,8 @@ export default async function Home() {
         </article>
 
         <article className={styles.infoCard}>
-          <h3>Dla kogo?</h3>
+          <p className={styles.sectionKicker}>Dla kogo</p>
+          <h2>Kto skorzysta z platformy?</h2>
           <ul className={styles.audienceList}>
             {audienceItems.map((item) => (
               <li key={item}>{item}</li>
@@ -116,33 +128,11 @@ export default async function Home() {
 
       {featuredProducers.length > 0 && (
         <section className={styles.recommendedSection}>
-          <h3>Polecani producenci</h3>
+          <p className={styles.sectionKicker}>Widoczność producentów</p>
+          <h2>Polecani producenci</h2>
           <div className={styles.recommendedGrid}>
             {featuredProducers.map((featuredProducer, index) => (
-              <div key={featuredProducer.id ?? index} className={styles.recommendedCard}>
-                <Image
-                  src={`/images/producers/${featuredProducer.nazwa}.jpg`}
-                  width={110}
-                  height={110}
-                  alt={`Polecany producent ${featuredProducer.nazwa}`}
-                />
-                <div className={styles.recommendedContent}>
-                  <h4>{featuredProducer.nazwa}</h4>
-                  <p>{getProducerDescription(featuredProducer.opis) || "Sprawdź profil producenta i poproś o wycenę."}</p>
-                  <div className={styles.recommendedActions}>
-                    <Link
-                      href={featuredProducer.id ? `/producenci/${companyProfileSlug(featuredProducer.nazwa, featuredProducer.id)}` : "/wszyscy-producenci"}
-                    >
-                      Zobacz profil
-                    </Link>
-                    {featuredProducer.id && (
-                      <Link href={`/zapytania-ofertowe?companyId=${featuredProducer.id}&source=company_card`}>
-                        Poproś o wycenę
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <ProducerCard producer={featuredProducer} index={index} key={featuredProducer.id ?? `${featuredProducer.nazwa}-${index}`} />
             ))}
           </div>
         </section>
@@ -150,24 +140,24 @@ export default async function Home() {
 
       <section className={styles.rfqSection}>
         <div className={styles.recommendedCta}>
-          <h4 className={styles.recommendedCtaTitle}>Zapytanie ofertowe</h4>
+          <p className={styles.sectionKicker}>Zapytanie ofertowe</p>
+          <h2>Szukasz partnera EMS do projektu?</h2>
           <p>
-            Szukasz partnera EMS do projektu seryjnego lub prototypowego? Uzupełnij potrzeby w formularzu,
-            a PolskiEMS dopasuje zapytanie do 3–5 najlepiej pasujących firm, zweryfikuje je po stronie
-            administratora i przekaże dalej.
+            Opisz potrzeby projektu, skalę produkcji, termin i wymagania techniczne. Formularz pomoże zebrać dane potrzebne do rozmowy z producentem elektroniki.
           </p>
-          <Link href="/zapytania-ofertowe" className={styles.recommendedCtaButton}>
+          <Link href="/zapytania-ofertowe" className={styles.primaryAction}>
             Dodaj zapytanie ofertowe
           </Link>
         </div>
       </section>
 
       <section className={styles.faqSection}>
-        <h3>FAQ</h3>
+        <p className={styles.sectionKicker}>FAQ</p>
+        <h2>Najczęstsze pytania</h2>
         <div className={styles.faqGrid}>
           {faqItems.map((item) => (
             <article key={item.question} className={styles.faqCard}>
-              <h4>{item.question}</h4>
+              <h3>{item.question}</h3>
               <p>{item.answer}</p>
             </article>
           ))}
@@ -175,7 +165,8 @@ export default async function Home() {
       </section>
 
       <section className={styles.seoSection}>
-        <h3>Najczęściej wyszukiwane usługi EMS</h3>
+        <p className={styles.sectionKicker}>Usługi EMS</p>
+        <h2>Najczęściej wyszukiwane obszary</h2>
         <div className={styles.seoLinks}>
           <Link href="/produkcja-pcb-polska">Produkcja PCB w Polsce</Link>
           <Link href="/montaz-smt-polska">Montaż SMT w Polsce</Link>
