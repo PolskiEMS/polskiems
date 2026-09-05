@@ -1,0 +1,225 @@
+.card {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(199, 210, 254, 0.22);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(14, 165, 233, 0.16), transparent 36%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.055));
+  box-shadow: 0 22px 55px rgba(16, 12, 46, 0.24);
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(191, 219, 254, 0.42);
+  box-shadow: 0 28px 65px rgba(16, 12, 46, 0.34);
+}
+
+.card:focus-visible {
+  outline: 3px solid rgba(191, 219, 254, 0.92);
+  outline-offset: 4px;
+}
+
+.premiumCard {
+  border-color: rgba(251, 191, 36, 0.5);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(251, 191, 36, 0.22), transparent 36%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.065));
+}
+
+.standardCard {
+  border-color: rgba(96, 165, 250, 0.52);
+}
+
+.topRow {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.logo,
+.logoFallback {
+  width: 92px;
+  height: 92px;
+  border-radius: 22px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 14px 34px rgba(10, 8, 32, 0.22);
+}
+
+.logoFallback {
+  display: grid;
+  place-items: center;
+  color: #211b4f;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.headerContent {
+  min-width: 0;
+}
+
+.badge {
+  width: fit-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(191, 219, 254, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #bfdbfe;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.card h2 {
+  margin: 10px 0 0;
+  color: #ffffff;
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.location {
+  margin: 8px 0 0;
+  color: rgba(248, 247, 255, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  flex: 1;
+  margin: 0;
+  color: rgba(248, 247, 255, 0.78);
+  line-height: 1.58;
+  font-size: 0.96rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.primaryAction,
+.secondaryAction {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.18s ease, filter 0.18s ease, background-color 0.18s ease;
+}
+
+.primaryAction {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(14, 165, 233, 0.22);
+}
+
+.secondaryAction {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.primaryAction:hover,
+.secondaryAction:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  outline: 3px solid rgba(191, 219, 254, 0.95);
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .card {
+    gap: 15px;
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .topRow {
+    grid-template-columns: 74px 1fr;
+    gap: 13px;
+  }
+
+  .logo,
+  .logoFallback {
+    width: 74px;
+    height: 74px;
+    border-radius: 18px;
+  }
+
+  .badge {
+    min-height: 27px;
+    padding: 0 10px;
+    font-size: 0.64rem;
+  }
+
+  .card h2 {
+    margin-top: 8px;
+    font-size: 1.12rem;
+  }
+
+  .location {
+    font-size: 0.86rem;
+  }
+
+  .description {
+    -webkit-line-clamp: 5;
+    font-size: 0.92rem;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .topRow {
+    grid-template-columns: 1fr;
+  }
+
+  .logo,
+  .logoFallback {
+    width: 82px;
+    height: 82px;
+  }
+}
