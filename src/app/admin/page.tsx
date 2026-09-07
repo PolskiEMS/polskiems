@@ -14,6 +14,11 @@ const menuItems = [
     description: "Edycja profili, pakietów, typów firm i taksonomii.",
   },
   {
+    href: "/admin/taksonomia",
+    title: "Cleanup taksonomii",
+    description: "Kontrola braków w usługach, możliwościach, branżach, certyfikatach i skali produkcji.",
+  },
+  {
     href: "/admin/zapytania",
     title: "Zapytania ofertowe",
     description: "Obsługa zgłoszeń klientów i przekazywania do firm.",
@@ -88,15 +93,16 @@ export default async function AdminDashboardPage() {
 
         <section className={styles.healthCard}>
           <div>
-            <p className={styles.sectionKicker}>Etap 3 / taksonomia</p>
+            <p className={styles.sectionKicker}>Etap 6B / jakość danych</p>
             <h2>Porządkowanie profili firm</h2>
             <p>
-              W adminie można teraz prowadzić dane pod docelowe sekcje: typ firmy, usługi, możliwości technologiczne, branże i certyfikaty.
+              Uzupełniaj dane pod docelowe sekcje: typ firmy, usługi, możliwości technologiczne, branże, certyfikaty i skala produkcji.
             </p>
           </div>
           <div className={styles.healthMetrics}>
             <span>Usługi: {taxonomyHealth.companiesWithServices}</span>
             <span>Branże: {taxonomyHealth.companiesWithIndustries}</span>
+            <Link href="/admin/taksonomia" className={styles.healthLink}>Otwórz cleanup</Link>
           </div>
         </section>
 
