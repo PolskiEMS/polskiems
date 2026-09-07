@@ -72,15 +72,24 @@
   margin-top: 18px;
 }
 
-.featuredBadge {
+.featuredBadge,
+.typeBadge {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
   padding: 8px 14px;
   font-weight: 900;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.featuredBadge {
   background: linear-gradient(135deg, #0ea5e9, #2563eb);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.typeBadge {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(248, 247, 255, 0.9);
 }
 
 .grid {
