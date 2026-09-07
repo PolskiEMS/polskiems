@@ -83,6 +83,16 @@
   line-height: 1.2;
 }
 
+.filterHeader p {
+  margin: 6px 0 0;
+  color: rgba(248, 247, 255, 0.62);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 .filterHeader span {
   flex-shrink: 0;
   padding: 5px 9px;
@@ -151,6 +161,12 @@
   color: #ffffff !important;
   border-color: rgba(191, 219, 254, 0.55) !important;
   box-shadow: 0 10px 24px rgba(14, 165, 233, 0.18);
+}
+
+.emptyGroup {
+  margin: 0;
+  color: rgba(248, 247, 255, 0.66);
+  line-height: 1.55;
 }
 
 .buttons {
