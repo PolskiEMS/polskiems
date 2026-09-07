@@ -1,33 +1,40 @@
-import { Metadata } from 'next';
-import ProducerSearch from '../components/ProducerSearch/ProducerSearch';
-import styles from './styles.module.css'
-import PageViewTracker from '../components/PageViewTracker';
+import { Metadata } from "next";
+import ProducerSearch from "../components/ProducerSearch/ProducerSearch";
+import PageViewTracker from "../components/PageViewTracker";
+import { getPublicSupplierSearchOptions } from "@/lib/publicSupplierTaxonomyActions";
+import styles from "./styles.module.css";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
 export const metadata: Metadata = {
   title: "Wyszukaj producenta elektroniki w Polsce | Filtry EMS | PolskiEMS",
-  description: "Wybierz region, wymagania i skalę produkcji, aby znaleźć najlepszego producenta elektroniki dopasowanego do Twoich potrzeb.",
+  description:
+    "Wybierz usługi, możliwości technologiczne, branże, certyfikaty, typ firmy, lokalizację i skalę produkcji, aby znaleźć producenta elektroniki w Polsce.",
   keywords: [
     "wyszukiwarka producentów elektroniki",
     "EMS wyszukiwanie",
     "produkcja elektroniki Polska",
-    "filtruj producentów PCB"
+    "filtruj producentów PCB",
+    "certyfikaty EMS",
+    "możliwości technologiczne EMS",
   ],
   openGraph: {
     title: "Wyszukiwarka Producentów Elektroniki",
-    description: "Znajdź producenta elektroniki według lokalizacji, wymagań i skali produkcji.",
+    description: "Znajdź producenta elektroniki według usług, możliwości, branż, certyfikatów, lokalizacji i skali produkcji.",
     url: "https://polskiems.pl/wyszukaj",
     siteName: "Wyszukiwarka Producentów",
     locale: "pl_PL",
-    type: "website"
+    type: "website",
   },
   alternates: {
     canonical: "https://polskiems.pl/wyszukaj",
   },
 };
 
-const Wyszukaj = () => {
+export default async function Wyszukaj() {
+  const options = await getPublicSupplierSearchOptions();
+
   return (
     <main className={styles.page}>
       <PageViewTracker page="search" />
@@ -35,13 +42,11 @@ const Wyszukaj = () => {
         <p className={styles.kicker}>Wyszukiwarka EMS</p>
         <h1>Znajdź producenta elektroniki dopasowanego do projektu</h1>
         <p className={styles.lead}>
-          Wpisz nazwę firmy, usługę albo wybierz filtry. PolskiEMS pomoże zawęzić listę producentów według lokalizacji,
-          usług EMS i skali produkcji.
+          Wpisz nazwę firmy, usługę albo wybierz filtry. PolskiEMS pomaga zawęzić listę producentów według usług,
+          możliwości technologicznych, branż, certyfikatów, typu firmy, lokalizacji i skali produkcji.
         </p>
       </section>
-      <ProducerSearch />
+      <ProducerSearch options={options} />
     </main>
   );
 }
-
-export default Wyszukaj;
