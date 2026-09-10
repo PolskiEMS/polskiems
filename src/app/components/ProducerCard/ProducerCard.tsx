@@ -15,6 +15,7 @@ export type ProducerCardData = {
   opis?: string | null;
   wojewodztwo?: string | null;
   adres?: string | null;
+  www?: string | null;
   featured?: boolean | null;
   packageType?: string | null;
 };
@@ -56,6 +57,12 @@ function getLocationLabel(producer: ProducerCardData) {
   return "Polska";
 }
 
+function getWebsiteHref(url?: string | null) {
+  const normalized = url?.trim();
+  if (!normalized) return null;
+  return /^https?:\/\//i.test(normalized) ? normalized : `https://${normalized}`;
+}
+
 function ProducerLogo({ name }: { name: string }) {
   const [imageFailed, setImageFailed] = useState(false);
 
@@ -83,6 +90,7 @@ export default function ProducerCard({ producer, index = 0 }: ProducerCardProps)
   const inquiryHref = producer.id
     ? `/zapytania-ofertowe?companyId=${producer.id}&source=company_card`
     : "/zapytania-ofertowe";
+  const websiteHref = getWebsiteHref(producer.www);
 
   const openProfile = () => {
     router.push(profileHref);
@@ -128,7 +136,21 @@ export default function ProducerCard({ producer, index = 0 }: ProducerCardProps)
 
       <p className={styles.description}>{getVisibleDescription(producer.opis)}</p>
 
-      <div className={styles.actions}>
+      <div className={`${styles.actions} ${websiteHref ? styles.hasWebsiteAction : ""}`}>
+        {websiteHref ? (
+          <a
+            href={websiteHref}
+            className={styles.secondaryAction}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => {
+              event.stopPropagation();
+              if (producer.id) trackCompanyEvent(producer.id, "website_click");
+            }}
+          >
+            Zobacz WWW
+          </a>
+        ) : null}
         <Link href={inquiryHref} className={styles.primaryAction} onClick={(event) => event.stopPropagation()}>
           Poproś o wycenę
         </Link>
