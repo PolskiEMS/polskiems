@@ -129,9 +129,6 @@ export default function ProducerCard({ producer, index = 0 }: ProducerCardProps)
       <p className={styles.description}>{getVisibleDescription(producer.opis)}</p>
 
       <div className={styles.actions}>
-        <Link href={profileHref} className={styles.secondaryAction} onClick={(event) => event.stopPropagation()}>
-          Zobacz profil
-        </Link>
         <Link href={inquiryHref} className={styles.primaryAction} onClick={(event) => event.stopPropagation()}>
           Poproś o wycenę
         </Link>
