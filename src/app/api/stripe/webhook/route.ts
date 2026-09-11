@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { getStripeClient } from "@/lib/stripe";
 import { packageOrders, producenci } from "@/db/schema";
+import { getPaidPackageConfig, parseBillingCycleMonths } from "@/lib/packagePlans";
 
 export const runtime = "nodejs";
 
@@ -46,10 +47,10 @@ export async function POST(req: NextRequest) {
 
   const session = event.data.object as Stripe.Checkout.Session;
   const orderId = Number(session.metadata?.orderId || 0);
-  const packageType = session.metadata?.packageType;
-  const billingCycleMonths = Number(session.metadata?.billingCycleMonths || 1);
+  const packageConfig = getPaidPackageConfig(session.metadata?.packageType);
+  const billingCycleMonths = parseBillingCycleMonths(session.metadata?.billingCycleMonths) ?? 1;
 
-  if (!orderId || !packageType || (packageType !== "standard" && packageType !== "premium")) {
+  if (!orderId || !packageConfig) {
     console.error("Stripe webhook missing critical metadata", session.id);
     return NextResponse.json({ ok: true }, { status: 200 });
   }
@@ -113,12 +114,12 @@ export async function POST(req: NextRequest) {
   await db
     .update(producenci)
     .set({
-      packageType,
+      packageType: packageConfig.packageType,
       isActive: true,
-      featured: true,
+      featured: packageConfig.featured,
       packageValidUntil: validUntilSql,
       monthlyInquiryCount: 0,
-      monthlyInquiryLimit: packageType === "standard" ? 20 : 999999,
+      monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
     })
     .where(eq(producenci.id, order.companyId));
 
