@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PACKAGE_PRICE_TOTAL } from '@/lib/packagePlans';
 import styles from './styles.module.css'
 
 const packages = [
@@ -21,13 +22,13 @@ const packages = [
     name: 'STANDARD',
     ctaLabel: 'Wybierz Standard',
     badge: 'Najczęściej wybierany',
-    price: '199 zł / msc.',
-    description: 'Dla firm, które chcą lepiej zaprezentować ofertę i zbudować bardziej profesjonalny profil w katalogu.',
+    price: `${PACKAGE_PRICE_TOTAL.standard[1]} zł / msc.`,
+    description: 'Dla firm, które chcą lepiej zaprezentować ofertę, dostać lepszą widoczność w katalogu i mierzyć efekty.',
     features: [
-      'Cennik okresów: 1 mies. 199 zł | 3 mies. 549 zł | 6 mies. 999 zł | 12 mies. 1799 zł',
+      `Cennik okresów: 1 mies. ${PACKAGE_PRICE_TOTAL.standard[1]} zł | 3 mies. ${PACKAGE_PRICE_TOTAL.standard[3]} zł | 6 mies. ${PACKAGE_PRICE_TOTAL.standard[6]} zł | 12 mies. ${PACKAGE_PRICE_TOTAL.standard[12]} zł`,
       'Profesjonalny profil firmy',
-      'Lepsza widoczność w katalogu',
-      'Wyróżniona prezentacja oferty',
+      'Lepsza pozycja niż Free w standardowej kolejności wyników',
+      'Badge „Zweryfikowany profil”',
       'Do 20 zapytań ofertowych miesięcznie',
       'Miesięczny raport statystyk',
     ]
@@ -37,12 +38,12 @@ const packages = [
     name: 'PREMIUM',
     ctaLabel: 'Wybierz Premium',
     badge: 'Największa widoczność',
-    price: '299 zł / msc.',
-    description: 'Dla firm, które chcą wyróżnić się w katalogu, zwiększyć widoczność i korzystać z rozszerzonej analityki profilu.',
+    price: `${PACKAGE_PRICE_TOTAL.premium[1]} zł / msc.`,
+    description: 'Dla firm, które chcą wyróżnić się na stronie głównej, zwiększyć widoczność i korzystać z rozszerzonej analityki profilu.',
     features: [
-      'Cennik okresów: 1 mies. 299 zł | 3 mies. 849 zł | 6 mies. 1599 zł | 12 mies. 2999 zł',
-      'Najwyższa widoczność w katalogu',
-      'Priorytetowe pozycjonowanie firmy',
+      `Cennik okresów: 1 mies. ${PACKAGE_PRICE_TOTAL.premium[1]} zł | 3 mies. ${PACKAGE_PRICE_TOTAL.premium[3]} zł | 6 mies. ${PACKAGE_PRICE_TOTAL.premium[6]} zł | 12 mies. ${PACKAGE_PRICE_TOTAL.premium[12]} zł`,
+      'Widoczność w sekcji „Polecani producenci”',
+      'Priorytetowe pozycjonowanie firmy w wynikach',
       'Wyróżniona karta producenta',
       'Nielimitowane zapytania ofertowe',
       'Rozszerzony raport i zaawansowana analityka',
@@ -54,8 +55,8 @@ const comparisonRows = [
   {
     feature: 'Cena miesięczna',
     free: '0 zł',
-    standard: '199 zł',
-    premium: '299 zł',
+    standard: `${PACKAGE_PRICE_TOTAL.standard[1]} zł`,
+    premium: `${PACKAGE_PRICE_TOTAL.premium[1]} zł`,
   },
   {
     feature: 'Okresy płatności',
@@ -72,8 +73,14 @@ const comparisonRows = [
   {
     feature: 'Widoczność w katalogu',
     free: 'Standardowa',
-    standard: 'Lepsza widoczność',
+    standard: 'Lepsza niż Free',
     premium: 'Najwyższa widoczność i priorytet',
+  },
+  {
+    feature: 'Strona główna — Polecani producenci',
+    free: '—',
+    standard: '—',
+    premium: 'Tak',
   },
   {
     feature: 'Zapytania ofertowe miesięcznie',
