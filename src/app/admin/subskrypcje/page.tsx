@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   getAdminSubscriptions,
   updateCompanyPackageValidityAction,
-} from "@/lib/actions";
+} from "@/lib/adminSubscriptions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +50,7 @@ export default async function AdminSubscriptionsPage() {
                       <td>{company.id}</td>
                       <td>
                         <strong>{company.nazwa}</strong>
-                        <div className={styles.smallText}>{company.featured ? "Wyróżniona" : "Bez wyróżnienia"}</div>
+                        <div className={styles.smallText}>{company.featured ? "Polecana na głównej" : "Bez polecenia na głównej"}</div>
                       </td>
                       <td>
                         <div>{company.email || "-"}</div>
@@ -67,7 +67,9 @@ export default async function AdminSubscriptionsPage() {
                       <td>
                         <span className={styles.packageBadge}>{company.packageType}</span>
                       </td>
-                      <td>{company.monthlyInquiryLimit ?? 0}</td>
+                      <td>
+                        {company.monthlyInquiryCount ?? 0} / {company.monthlyInquiryLimit ?? 0}
+                      </td>
                       <td>{company.packageValidUntil || "bezterminowo"}</td>
                       <td>{company.isActive ? "Aktywna" : "Oczekuje"}</td>
                       <td>
