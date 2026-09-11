@@ -7,46 +7,20 @@ import {
   producenciEmsProdukcja,
 } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
+import {
+  getPackageConfig,
+  getPackagePriceTotal,
+  isPaidPackageType,
+  isPublicPackageType,
+  parseBillingCycleMonths,
+} from "@/lib/packagePlans";
 
 export const runtime = "nodejs";
 
-type PackageType = "free" | "standard" | "premium";
-type PaidPackage = "standard" | "premium";
 type ActivationMode = "no_payment" | "bank_transfer";
-type BillingCycleMonths = 1 | 3 | 6 | 12;
-
-const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
-  standard: { 1: 199, 3: 549, 6: 999, 12: 1799 },
-  premium: { 1: 299, 3: 849, 6: 1599, 12: 2999 },
-};
-
-function isPackageType(value: string): value is PackageType {
-  return value === "free" || value === "standard" || value === "premium";
-}
-
-function isPaidPackage(value: PackageType): value is PaidPackage {
-  return value === "standard" || value === "premium";
-}
 
 function parseActivationMode(value: unknown): ActivationMode {
   return value === "bank_transfer" ? "bank_transfer" : "no_payment";
-}
-
-function parseBillingCycleMonths(value: unknown): BillingCycleMonths {
-  const months = Number(value);
-  return months === 1 || months === 3 || months === 6 || months === 12 ? months : 1;
-}
-
-function getPackageConfig(packageType: PackageType) {
-  switch (packageType) {
-    case "standard":
-      return { packageType, featured: true, monthlyInquiryLimit: 20 };
-    case "premium":
-      return { packageType, featured: true, monthlyInquiryLimit: 999999 };
-    case "free":
-    default:
-      return { packageType: "free" as const, featured: false, monthlyInquiryLimit: 5 };
-  }
 }
 
 function parseIds(value: unknown) {
@@ -74,7 +48,7 @@ export async function POST(req: NextRequest) {
   const companyCity = String(body?.companyCity ?? "").trim();
   const packageTypeRaw = String(body?.packageType ?? "free").trim();
   const activationMode = parseActivationMode(body?.activationMode);
-  const billingCycleMonths = parseBillingCycleMonths(body?.billingCycleMonths);
+  const billingCycleMonths = parseBillingCycleMonths(body?.billingCycleMonths) ?? 1;
   const regionIdRaw = Number(body?.regionId);
   const regionId = Number.isFinite(regionIdRaw) && regionIdRaw > 0 ? regionIdRaw : null;
   const dzialaniaIds = parseIds(body?.dzialaniaIds);
@@ -89,14 +63,14 @@ export async function POST(req: NextRequest) {
   const buyerCity = String(body?.buyerCity ?? "").trim();
   const buyerCountry = String(body?.buyerCountry ?? "Polska").trim() || "Polska";
 
-  if (!companyName || !companyEmail || !isPackageType(packageTypeRaw)) {
+  if (!companyName || !companyEmail || !isPublicPackageType(packageTypeRaw)) {
     return NextResponse.json(
       { ok: false, code: "VALIDATION_ERROR", error: "Uzupełnij nazwę, e-mail firmy i poprawny pakiet." },
       { status: 400 }
     );
   }
 
-  if (activationMode === "bank_transfer" && !isPaidPackage(packageTypeRaw)) {
+  if (activationMode === "bank_transfer" && !isPaidPackageType(packageTypeRaw)) {
     return NextResponse.json(
       { ok: false, code: "VALIDATION_ERROR", error: "Przelew tradycyjny jest dostępny tylko dla pakietów Standard i Premium." },
       { status: 400 }
@@ -129,7 +103,7 @@ export async function POST(req: NextRequest) {
   }
 
   const packageConfig = getPackageConfig(packageTypeRaw);
-  const isBankTransferOrder = activationMode === "bank_transfer" && isPaidPackage(packageTypeRaw);
+  const isBankTransferOrder = activationMode === "bank_transfer" && isPaidPackageType(packageTypeRaw);
   const companyAddress = joinAddress(companyStreet, companyPostalCode, companyCity);
 
   const [createdCompany] = await db.insert(producenci).values({
@@ -162,7 +136,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (isBankTransferOrder) {
-    const amountGross = PACKAGE_PRICE_TOTAL[packageTypeRaw][billingCycleMonths];
+    const amountGross = getPackagePriceTotal(packageTypeRaw, billingCycleMonths);
     const [createdOrder] = await db.insert(packageOrders).values({
       companyId,
       companyName,
