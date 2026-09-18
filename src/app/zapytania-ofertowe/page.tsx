@@ -10,7 +10,7 @@ import {
   wojewodztwa,
 } from "@/db/schema";
 import { getDb } from "@/lib/db";
-import { sendInquiryAction } from "@/lib/actions";
+import { sendInquiryAction } from "@/lib/rfqActions";
 import styles from "./style.module.css";
 
 export const dynamic = "force-dynamic";
