@@ -165,7 +165,7 @@ export const inquiries = pgTable("inquiries", {
   customerCompany: varchar("customer_company", { length: 150 }),
   customerEmail: varchar("customer_email", { length: 150 }).notNull(),
   customerPhone: varchar("customer_phone", { length: 50 }),
-  serviceType: varchar("service_type", { length: 100 }).notNull(),
+  serviceType: text("service_type").notNull(),
   matchingMode: varchar("matching_mode", { length: 32 }).notNull().default("auto_match"),
   preferredCompanyId: integer("preferred_company_id").references(() => producenci.id),
   serviceSlugs: text("service_slugs").array().notNull().default(sql`ARRAY[]::text[]`),
