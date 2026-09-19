@@ -26,8 +26,7 @@ export default async function AktywacjaPakietuPage({
     : resolvedSearchParams.pakiet === 'free'
       ? 'free'
       : 'standard';
-  const [dzialania, produkcja, regions] = await Promise.all([
-    getAllDzialaniaEms(),
+  const [produkcja, regions] = await Promise.all([
     getAllProdukcjaScales(),
     getAllRegion(),
   ]);
@@ -44,7 +43,7 @@ export default async function AktywacjaPakietuPage({
         <p className={styles.muted}>FREE jest bezpłatny. Pakiety Standard i Premium wymagają płatnej aktywacji; publiczna aktywacja bez opłaty została wyłączona.</p>
       </section>
 
-      <PackageCheckout initialPackage={selectedPackage} regions={regions} dzialania={dzialania} produkcja={produkcja} />
+      <PackageCheckout initialPackage={selectedPackage} regions={regions} produkcja={produkcja} />
 
       <p className={styles.backLinkWrap}>
         <Link href={`/cennik?pakiet=${selectedPackage}`} className={styles.backLink}>Wróć do cennika</Link>
