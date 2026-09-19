@@ -96,13 +96,13 @@ export async function sendMonthlyReportEmail(data: SendMonthlyReportEmailData) {
     subject: `Miesięczny raport PDF – ${data.companyName}`,
     html: `
       <h2>Miesięczny raport PolskiEMS</h2>
-      <p>Firma: <strong>${data.companyName}</strong></p>
-      <p>Zakres: ${data.periodLabel}</p>
+      <p>Firma: <strong>${escapeHtml(data.companyName)}</strong></p>
+      <p>Zakres: ${escapeHtml(data.periodLabel)}</p>
       <p>W załączniku znajdziesz raport PDF.</p>
     `,
     attachments: [
       {
-        filename: `raport-${data.companyName.replace(/\\s+/g, "-").toLowerCase()}.pdf`,
+        filename: `raport-${data.companyName.replace(/\s+/g, "-").toLowerCase()}.pdf`,
         content: data.pdfBase64,
       },
     ],
