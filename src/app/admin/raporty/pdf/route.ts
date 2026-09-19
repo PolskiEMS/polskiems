@@ -183,7 +183,7 @@ function drawKpiCardsStandard(doc: PDFKit.PDFDocument, data: ReportPdfData, y: n
     { label: "Łączny CTR", value: `${data.totalCtrPct.toFixed(2)}%` },
   ];
 
-  const cardWidth = 92;
+  const cardWidth = 91;
   const cardHeight = 62;
   const gap = 9;
 
