@@ -1,161 +1,137 @@
-import Link from 'next/link';
-import styles from './styles.module.css'
+import Link from "next/link";
+import styles from "./styles.module.css";
+import { PACKAGE_PLANS, type PackageType } from "@/lib/packagePlans";
 
-const packages = [
-  {
-    key: 'free',
-    name: 'FREE',
-    ctaLabel: 'Wybierz Free',
-    price: '0 zł / msc.',
-    description: 'Dla firm, które chcą być obecne w katalogu PolskiEMS i umożliwić podstawowy kontakt.',
-    features: [
-      'Obecność firmy w katalogu',
-      'Podstawowy profil firmy',
-      'Dane kontaktowe i zakres usług',
-      'Do 5 zapytań ofertowych miesięcznie',
-      'Start bez opłat miesięcznych',
-    ]
-  },
-  {
-    key: 'standard',
-    name: 'STANDARD',
-    ctaLabel: 'Wybierz Standard',
-    badge: 'Najczęściej wybierany',
-    price: '199 zł / msc.',
-    description: 'Dla firm, które chcą lepiej zaprezentować ofertę i zbudować bardziej profesjonalny profil w katalogu.',
-    features: [
-      'Cennik okresów: 1 mies. 199 zł | 3 mies. 549 zł | 6 mies. 999 zł | 12 mies. 1799 zł',
-      'Profesjonalny profil firmy',
-      'Lepsza widoczność w katalogu',
-      'Wyróżniona prezentacja oferty',
-      'Do 20 zapytań ofertowych miesięcznie',
-      'Miesięczny raport statystyk',
-    ]
-  },
-  {
-    key: 'premium',
-    name: 'PREMIUM',
-    ctaLabel: 'Wybierz Premium',
-    badge: 'Największa widoczność',
-    price: '299 zł / msc.',
-    description: 'Dla firm, które chcą wyróżnić się w katalogu, zwiększyć widoczność i korzystać z rozszerzonej analityki profilu.',
-    features: [
-      'Cennik okresów: 1 mies. 299 zł | 3 mies. 849 zł | 6 mies. 1599 zł | 12 mies. 2999 zł',
-      'Najwyższa widoczność w katalogu',
-      'Priorytetowe pozycjonowanie firmy',
-      'Wyróżniona karta producenta',
-      'Nielimitowane zapytania ofertowe',
-      'Rozszerzony raport i zaawansowana analityka',
-    ]
-  }
-];
+const packageOrder: PackageType[] = ["free", "standard", "premium"];
 
 const comparisonRows = [
   {
-    feature: 'Cena miesięczna',
-    free: '0 zł',
-    standard: '199 zł',
-    premium: '299 zł',
+    feature: "Cena miesięczna",
+    free: "0 zł",
+    standard: "199 zł",
+    premium: "299 zł",
   },
   {
-    feature: 'Okresy płatności',
-    free: 'Bez opłat miesięcznych',
-    standard: '1, 3, 6 lub 12 miesięcy',
-    premium: '1, 3, 6 lub 12 miesięcy',
+    feature: "Profil firmy",
+    free: "Podstawowy",
+    standard: "Pełny",
+    premium: "Pełny i wyróżniony",
   },
   {
-    feature: 'Profil firmy',
-    free: 'Podstawowy',
-    standard: 'Profesjonalny',
-    premium: 'Profesjonalny i wyróżniony',
+    feature: "Zakres danych profilu",
+    free: "Podstawowe dane i usługi",
+    standard: "Usługi, technologie, branże i certyfikaty",
+    premium: "Pełny zakres + wyróżnienie",
   },
   {
-    feature: 'Widoczność w katalogu',
-    free: 'Standardowa',
-    standard: 'Lepsza widoczność',
-    premium: 'Najwyższa widoczność i priorytet',
+    feature: "Widoczność w katalogu",
+    free: "Standardowa",
+    standard: "Wyżej niż Free",
+    premium: "Najwyższy priorytet domyślnego sortowania",
   },
   {
-    feature: 'Zapytania ofertowe miesięcznie',
-    free: 'Do 5',
-    standard: 'Do 20',
-    premium: 'Bez limitu',
+    feature: "Zapytania ofertowe miesięcznie",
+    free: "Do 5",
+    standard: "Do 20",
+    premium: "Bez limitu",
   },
   {
-    feature: 'Raport statystyk',
-    free: '—',
-    standard: 'Miesięczny raport',
-    premium: 'Rozszerzony raport i analityka',
+    feature: "Raport statystyk",
+    free: "—",
+    standard: "Miesięczny raport skuteczności",
+    premium: "Rozszerzony raport i analityka",
+  },
+  {
+    feature: "Analityka",
+    free: "—",
+    standard: "Wyświetlenia, kliknięcia i podstawowy CTR",
+    premium: "CTR, potencjał leadowy i rekomendacje",
+  },
+  {
+    feature: "RFQ auto-match",
+    free: "Dopasowanie techniczne",
+    standard: "Dopasowanie techniczne",
+    premium: "Dopasowanie techniczne + priorytet pomocniczy przy remisie",
   },
 ];
 
-const activationFlow = [
-  {
-    title: '1. Wybór pakietu',
-    description: 'Wybierz pakiet najlepiej dopasowany do potrzeb Twojej firmy.'
-  },
-  {
-    title: '2. Kontakt',
-    description: 'Do czasu uruchomienia płatności online skontaktuj się z PolskiEMS w sprawie wcześniejszej aktywacji pakietu.'
-  },
-  {
-    title: '3. Potwierdzenie',
-    description: 'Administrator potwierdzi dostępność pakietu i przekaże dalsze kroki aktywacji.'
-  },
-  {
-    title: '4. Aktywacja',
-    description: 'Pakiet zostaje aktywowany, a konto firmy otrzymuje odpowiednie limity i funkcje.'
-  }
-];
+const paymentsEnabled = process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === "true";
 
-const paymentsEnabled = process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === 'true';
-const contactHref = '/kontakt';
+function priceLine(packageType: PackageType) {
+  if (packageType === "free") return "0 zł / mies.";
+  const plan = PACKAGE_PLANS[packageType];
+  return `${plan.priceMonthly} zł / mies.`;
+}
 
-const CennikPage = () => {
+function periodPricing(packageType: PackageType) {
+  if (packageType === "free") return null;
+  const prices = PACKAGE_PLANS[packageType].prices;
+  return `1 mies. ${prices[1]} zł | 3 mies. ${prices[3]} zł | 6 mies. ${prices[6]} zł | 12 mies. ${prices[12]} zł`;
+}
+
+export default function CennikPage() {
   return (
     <div className={styles.page}>
       <h1>Cennik pakietów</h1>
-      <p className={styles.note}>Wybierz rozwiązanie dopasowane do etapu rozwoju Twojej firmy.</p>
+      <p className={styles.note}>
+        FREE daje podstawową obecność. STANDARD rozwija profil i analitykę. PREMIUM zwiększa ekspozycję i możliwości pozyskiwania projektów.
+      </p>
 
       {!paymentsEnabled && (
         <div className={styles.paymentsNotice}>
-          Zakup pakietów online jest obecnie w trakcie uruchamiania. Cennik pozostaje aktualny. W sprawie wcześniejszej aktywacji pakietu skontaktuj się z PolskiEMS.
+          Pakiet FREE można zgłosić bezpłatnie. Aktywacja płatnych pakietów Standard i Premium online jest obecnie w trakcie uruchamiania.
         </div>
       )}
 
       <section className={styles.packageGrid}>
-        {packages.map((item) => (
-          <article
-            key={item.key}
-            className={`${styles.packageCard} ${item.key === 'premium' ? styles.premiumCard : ''}`}
-          >
-            <div className={styles.packageHeader}>
-              <h2>{item.name}</h2>
-              {'badge' in item && item.badge && <span className={styles.packageBadge}>{item.badge}</span>}
-            </div>
-            <div className={styles.price}>{item.price}</div>
-            {'description' in item && item.description && <p>{item.description}</p>}
-            <ul>
-              {item.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
-            </ul>
-            <div className={styles.packageActions}>
-              {paymentsEnabled ? (
-                <Link href={`/aktywacja_pakietu?pakiet=${item.key}`} className={styles.packageCta}>
-                  Wybierz pakiet
-                </Link>
-              ) : (
-                <button type="button" className={styles.disabledPackageCta} disabled aria-disabled="true">
-                  Płatności w trakcie uruchamiania
-                </button>
-              )}
-              <Link href={contactHref} className={styles.contactPackageCta}>
-                Skontaktuj się w sprawie pakietu
-              </Link>
-            </div>
-          </article>
-        ))}
+        {packageOrder.map((key) => {
+          const plan = PACKAGE_PLANS[key];
+          const paidPricing = periodPricing(key);
+
+          return (
+            <article
+              key={key}
+              className={`${styles.packageCard} ${key === "premium" ? styles.premiumCard : ""}`}
+            >
+              <div className={styles.packageHeader}>
+                <h2>{plan.name}</h2>
+                {key === "standard" && <span className={styles.packageBadge}>Pełny profil</span>}
+                {key === "premium" && <span className={styles.packageBadge}>Największa ekspozycja</span>}
+              </div>
+
+              <div className={styles.price}>{priceLine(key)}</div>
+              <p>{plan.description}</p>
+
+              <ul>
+                {paidPricing && <li>{paidPricing}</li>}
+                {plan.publicBenefits.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+
+              <div className={styles.packageActions}>
+                {key === "free" ? (
+                  <Link href="/dodaj-producenta?pakiet=free#formularz" className={styles.packageCta}>
+                    Dodaj firmę bezpłatnie
+                  </Link>
+                ) : paymentsEnabled ? (
+                  <Link href={`/aktywacja_pakietu?pakiet=${key}`} className={styles.packageCta}>
+                    Wybierz {plan.name}
+                  </Link>
+                ) : (
+                  <>
+                    <button type="button" className={styles.disabledPackageCta} disabled aria-disabled="true">
+                      Płatności w trakcie uruchamiania
+                    </button>
+                    <Link href="/kontakt" className={styles.contactPackageCta}>
+                      Zapytaj o {plan.name}
+                    </Link>
+                  </>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </section>
 
       <section className={styles.comparisonSection}>
@@ -185,42 +161,35 @@ const CennikPage = () => {
       </section>
 
       <section className={styles.flowSection}>
-        <h3>Jak działa aktywacja pakietu</h3>
+        <h3>Jak działa publikacja firmy</h3>
         <div className={styles.flowGrid}>
-          {activationFlow.map((step) => (
-            <article key={step.title} className={styles.flowCard}>
-              <h4>{step.title}</h4>
-              <p>{step.description}</p>
-            </article>
-          ))}
+          <article className={styles.flowCard}>
+            <h4>1. Zgłoszenie</h4>
+            <p>Firma uzupełnia dane, kompetencje i wybiera pakiet.</p>
+          </article>
+          <article className={styles.flowCard}>
+            <h4>2. Weryfikacja</h4>
+            <p>Każde nowe zgłoszenie jest sprawdzane przez administratora przed publikacją.</p>
+          </article>
+          <article className={styles.flowCard}>
+            <h4>3. Aktywacja</h4>
+            <p>FREE jest bezpłatny. Standard i Premium wymagają potwierdzenia płatnej aktywacji.</p>
+          </article>
+          <article className={styles.flowCard}>
+            <h4>4. Publikacja i RFQ</h4>
+            <p>Po aktywacji profil bierze udział w wyszukiwaniu i dopasowaniach zapytań ofertowych.</p>
+          </article>
         </div>
       </section>
 
-      <section className={styles.benefitsSection}>
-        <h3>Dlaczego firmy wybierają PolskiEMS?</h3>
-        <ul className={styles.benefitsList}>
-          <li>Jeden katalog, w którym klienci łatwo porównują producentów i szybko znajdują właściwego partnera.</li>
-          <li>Przejrzyste pakiety, które można skalować wraz z rozwojem firmy — od FREE do PREMIUM.</li>
-          <li>Prosty proces aktywacji i szybkie uruchomienie profilu bez zbędnych formalności.</li>
-        </ul>
-      </section>
-
       <section className={styles.ctaSection}>
-        <h3>Gotowy na aktywację?</h3>
-        <p>{paymentsEnabled ? 'Przejdź dalej i dokończ aktywację pakietu dla swojej firmy.' : 'Aktywacja online jest tymczasowo wyłączona — skontaktuj się z nami, aby omówić pakiet.'}</p>
-        {paymentsEnabled ? (
-          <Link href="/aktywacja_pakietu" className={styles.finalCta}>Przejdź do aktywacji pakietu</Link>
-        ) : (
-          <div className={styles.finalActions}>
-            <button type="button" className={styles.disabledFinalCta} disabled aria-disabled="true">
-              Płatności w trakcie uruchamiania
-            </button>
-            <Link href={contactHref} className={styles.finalCta}>Skontaktuj się w sprawie pakietu</Link>
-          </div>
-        )}
+        <h3>Chcesz dołączyć firmę?</h3>
+        <p>Zacznij od zgłoszenia danych i kompetencji. Profil zostanie opublikowany po weryfikacji.</p>
+        <div className={styles.finalActions}>
+          <Link href="/dodaj-producenta" className={styles.finalCta}>Dodaj firmę do PolskiEMS</Link>
+          <Link href="/kontakt" className={styles.contactPackageCta}>Skontaktuj się z PolskiEMS</Link>
+        </div>
       </section>
     </div>
   );
 }
-
-export default CennikPage;
