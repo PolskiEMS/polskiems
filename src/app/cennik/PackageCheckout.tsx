@@ -149,7 +149,7 @@ export default function PackageCheckout({
       return;
     }
 
-    if (selectedServiceIds.length === 0) {
+    if (producerSignupMode && selectedServiceIds.length === 0) {
       setStatus({ type: "error", text: "Wybierz co najmniej jedną usługę firmy." });
       return;
     }
