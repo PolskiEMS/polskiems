@@ -3,22 +3,12 @@ import { getDb } from "@/lib/db";
 import { packageOrders, producenci } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { getStripeClient } from "@/lib/stripe";
+import { getPackagePrice, isPaidPackage, type BillingCycleMonths, type PaidPackage } from "@/lib/packagePlans";
 
 export const runtime = "nodejs";
 
-type PaidPackage = "standard" | "premium";
-type BillingCycleMonths = 1 | 3 | 6 | 12;
-
 type Provider = "stripe" | "przelewy24";
 
-const PACKAGE_PRICE_TOTAL: Record<PaidPackage, Record<BillingCycleMonths, number>> = {
-  standard: { 1: 199, 3: 549, 6: 999, 12: 1799 },
-  premium: { 1: 299, 3: 849, 6: 1599, 12: 2999 },
-};
-
-function isPackageType(value: string): value is PaidPackage {
-  return value === "standard" || value === "premium";
-}
 
 function isProvider(value: string): value is Provider {
   return value === "stripe" || value === "przelewy24";
@@ -60,7 +50,7 @@ export async function POST(req: NextRequest) {
   const buyerCity = String(body?.buyerCity ?? "").trim();
   const buyerCountry = String(body?.buyerCountry ?? "Polska").trim();
 
-  if (!companyName || !companyEmail || !isPackageType(packageType) || !billingCycleMonths) {
+  if (!companyName || !companyEmail || !isPaidPackage(packageType as PaidPackage) || !billingCycleMonths) {
     return NextResponse.json(
       {
         ok: false,
@@ -120,7 +110,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const amountGross = PACKAGE_PRICE_TOTAL[packageType][billingCycleMonths];
+  const amountGross = getPackagePrice(packageType as PaidPackage, billingCycleMonths);
 
   const [createdOrder] = await db.insert(packageOrders).values({
     companyId: null,
