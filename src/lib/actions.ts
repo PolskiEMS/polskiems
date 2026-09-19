@@ -817,7 +817,30 @@ export async function getCompanyReport(
       producenci.telefon
     );
 
-  return rows[0] ?? null;
+  const report = rows[0] ?? null;
+  if (!report) return null;
+
+  const inquiryRangeCondition = hasCustomRange && rangeStart && rangeEnd
+    ? sql`${inquiryRecipients.sentAt} BETWEEN ${rangeStart} AND ${rangeEnd}`
+    : since
+      ? sql`${inquiryRecipients.sentAt} >= ${since}`
+      : sql`${inquiryRecipients.sentAt} IS NOT NULL`;
+
+  const inquiryRows = await db
+    .select({
+      inquiriesCount: sql<number>`COUNT(*)`,
+    })
+    .from(inquiryRecipients)
+    .where(and(
+      eq(inquiryRecipients.companyId, companyId),
+      sql`${inquiryRecipients.status} = 'sent_to_company'`,
+      inquiryRangeCondition
+    ));
+
+  return {
+    ...report,
+    inquiriesCount: Number(inquiryRows[0]?.inquiriesCount ?? 0),
+  };
 }
 
 
