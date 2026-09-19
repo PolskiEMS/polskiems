@@ -11,8 +11,8 @@ type SearchParams = {
 
 const packageDescriptions: Record<string, string> = {
   free: 'Pakiet startowy dla firm rozpoczynających obecność w katalogu.',
-  standard: 'Najlepszy wybór dla firm, które chcą regularnie pozyskiwać zapytania ofertowe.',
-  premium: 'Maksymalna widoczność i priorytetowa ekspozycja w katalogu.'
+  standard: 'Pełny profil, większa widoczność i miesięczny raport skuteczności.',
+  premium: 'Maksymalna ekspozycja, nielimitowane RFQ i rozszerzona analityka.'
 };
 
 export default async function AktywacjaPakietuPage({
@@ -41,7 +41,7 @@ export default async function AktywacjaPakietuPage({
         <h2>Wybrany pakiet</h2>
         <p className={styles.selectedPackage}>{selectedPackage.toUpperCase()}</p>
         <p>{packageDescriptions[selectedPackage]}</p>
-        <p className={styles.muted}>Krótkie podsumowanie: formularz pozwala aktywować pakiet bez opłaty albo zgłosić Standard/Premium do przelewu tradycyjnego z fakturą.</p>
+        <p className={styles.muted}>FREE jest bezpłatny. Pakiety Standard i Premium wymagają płatnej aktywacji; publiczna aktywacja bez opłaty została wyłączona.</p>
       </section>
 
       <PackageCheckout initialPackage={selectedPackage} regions={regions} dzialania={dzialania} produkcja={produkcja} />
