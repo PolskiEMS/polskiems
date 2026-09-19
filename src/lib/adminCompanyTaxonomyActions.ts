@@ -27,6 +27,7 @@ import { getDb } from "@/lib/db";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { companyProfileSlug } from "@/lib/companySlug";
 import { COMPANY_TYPE_LABELS, type CompanyType } from "@/lib/supplierTaxonomy";
+import { getPackageConfig } from "@/lib/packagePlans";
 
 const companyTypeValues = new Set<string>(Object.keys(COMPANY_TYPE_LABELS));
 
@@ -44,18 +45,6 @@ function parseIdList(formData: FormData, fieldName: string) {
         .filter((value) => Number.isFinite(value) && value > 0)
     )
   );
-}
-
-function getPackageConfig(packageType: string) {
-  switch (packageType) {
-    case "standard":
-      return { packageType: "standard", monthlyInquiryLimit: 20 };
-    case "premium":
-      return { packageType: "premium", monthlyInquiryLimit: 999999 };
-    case "free":
-    default:
-      return { packageType: "free", monthlyInquiryLimit: 5 };
-  }
 }
 
 function revalidateCompanyPaths(companyId: number, companyName?: string) {
