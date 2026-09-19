@@ -30,6 +30,7 @@ type ReportPdfData = {
   views: number;
   websiteClicks: number;
   emailClicks: number;
+  inquiriesCount: number;
   websiteCtrPct: number;
   emailCtrPct: number;
   totalCtrPct: number;
@@ -178,12 +179,13 @@ function drawKpiCardsStandard(doc: PDFKit.PDFDocument, data: ReportPdfData, y: n
     { label: "Wyświetlenia", value: String(data.views) },
     { label: "Klik WWW", value: String(data.websiteClicks) },
     { label: "Klik Email", value: String(data.emailClicks) },
+    { label: "RFQ", value: String(data.inquiriesCount) },
     { label: "Łączny CTR", value: `${data.totalCtrPct.toFixed(2)}%` },
   ];
 
-  const cardWidth = 114;
+  const cardWidth = 92;
   const cardHeight = 62;
-  const gap = 13;
+  const gap = 9;
 
   cards.forEach((card, index) => {
     const x = 50 + index * (cardWidth + gap);
@@ -220,12 +222,13 @@ function drawKpiCardsPremium(doc: PDFKit.PDFDocument, data: ReportPdfData, y: nu
     { label: "Klik WWW", value: String(data.websiteClicks) },
     { label: "Klik Email", value: String(data.emailClicks) },
     { label: "CTR WWW", value: `${data.websiteCtrPct.toFixed(2)}%` },
+    { label: "RFQ", value: String(data.inquiriesCount) },
     { label: "Score", value: `${engagementScore}/100` },
   ];
 
-  const cardWidth = 90;
+  const cardWidth = 74;
   const cardHeight = 66;
-  const gap = 10;
+  const gap = 8;
 
   cards.forEach((card, index) => {
     const x = 50 + index * (cardWidth + gap);
@@ -556,7 +559,7 @@ function drawPremiumReport(doc: PDFKit.PDFDocument, data: ReportPdfData) {
 
   y += 66;
 
-  drawSectionTitle(doc, "AI rekomendacja", y, "#6d28d9");
+  drawSectionTitle(doc, "Rekomendacja", y, "#6d28d9");
   y += 24;
 
   const recommendation =
@@ -654,6 +657,7 @@ export async function GET(req: NextRequest) {
       const views = safeNumber(report.views);
       const websiteClicks = safeNumber(report.websiteClicks);
       const emailClicks = safeNumber(report.emailClicks);
+      const inquiriesCount = safeNumber(report.inquiriesCount);
       const websiteCtrPct = safeNumber(report.websiteCtrPct);
       const emailCtrPct = safeNumber(report.emailCtrPct);
       const totalCtrPct = safeNumber(
@@ -690,6 +694,7 @@ export async function GET(req: NextRequest) {
         views,
         websiteClicks,
         emailClicks,
+        inquiriesCount,
         websiteCtrPct,
         emailCtrPct,
         totalCtrPct,
