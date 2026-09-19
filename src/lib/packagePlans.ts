@@ -60,7 +60,7 @@ export function isPackageType(value: unknown): value is PackageType {
   return value === "free" || value === "standard" || value === "premium";
 }
 
-export function isPaidPackage(value: PackageType): value is PaidPackage {
+export function isPaidPackage(value: unknown): value is PaidPackage {
   return value === "standard" || value === "premium";
 }
 
