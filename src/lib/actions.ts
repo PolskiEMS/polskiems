@@ -86,13 +86,15 @@ export async function getDashboardStats(days = 30) {
 export async function deactivateExpiredPaidCompanies() {
   const db = getDb();
 
+  const freePlan = getPackageConfig("free");
+
   await db
     .update(producenci)
     .set({
       isActive: false,
-      packageType: "free",
-      featured: false,
-      monthlyInquiryLimit: 5,
+      packageType: freePlan.packageType,
+      featured: freePlan.featured,
+      monthlyInquiryLimit: freePlan.monthlyInquiryLimit,
       monthlyInquiryCount: 0,
       packageValidUntil: null,
     })
