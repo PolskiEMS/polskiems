@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PackageCheckout from "../cennik/PackageCheckout";
-import { getAllDzialaniaEms, getAllProdukcjaScales, getAllRegion } from "@/lib/actions";
+import { getAllProdukcjaScales, getAllRegion } from "@/lib/actions";
+import { getPublicSupplierSearchOptions } from "@/lib/publicSupplierTaxonomyActions";
 import styles from "./styles.module.css";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Dodaj producenta EMS do katalogu | PolskiEMS",
+  title: "Dodaj firmę do katalogu | PolskiEMS",
   description:
-    "Zgłoś firmę EMS lub producenta elektroniki do katalogu PolskiEMS. Wybierz pakiet, uzupełnij dane firmy, usługi i skalę produkcji.",
+    "Zgłoś firmę do katalogu PolskiEMS. Uzupełnij dane, typ firmy, usługi, możliwości technologiczne, branże, certyfikaty i skalę produkcji.",
   alternates: {
     canonical: "https://polskiems.pl/dodaj-producenta",
   },
 };
 
 export default async function DodajProducentaPage() {
-  const [dzialania, produkcja, regions] = await Promise.all([
-    getAllDzialaniaEms(),
+  const [taxonomy, produkcja, regions] = await Promise.all([
+    getPublicSupplierSearchOptions(),
     getAllProdukcjaScales(),
     getAllRegion(),
   ]);
@@ -25,34 +26,34 @@ export default async function DodajProducentaPage() {
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <p className={styles.kicker}>Formularz zgłoszeniowy online</p>
-        <h1>Dodaj firmę EMS do katalogu PolskiEMS</h1>
+        <p className={styles.kicker}>Onboarding firmy do PolskiEMS</p>
+        <h1>Dodaj firmę do katalogu PolskiEMS</h1>
         <p className={styles.lead}>
-          Uzupełnij dane producenta, wybierz pakiet i pokaż ofertę klientom szukającym montażu elektroniki,
-          produkcji PCB, SMD, THT, prototypowania i usług EMS w Polsce.
+          Zgłoś producenta EMS, PCB, elektroniki albo firmę świadczącą usługi dla branży elektronicznej.
+          Dane podane w formularzu zasilą profil firmy, wyszukiwarkę i przyszłe dopasowania zapytań RFQ.
         </p>
 
         <div className={styles.heroActions}>
-          <a href="#formularz" className={styles.primaryAction}>Wypełnij formularz</a>
+          <a href="#formularz" className={styles.primaryAction}>Rozpocznij zgłoszenie</a>
           <Link href="/cennik" className={styles.secondaryAction}>Porównaj pakiety</Link>
         </div>
       </section>
 
-      <section className={styles.steps} aria-label="Jak działa zgłoszenie producenta">
+      <section className={styles.steps} aria-label="Jak działa zgłoszenie firmy">
         <article>
           <span>1</span>
-          <h2>Wybierz pakiet</h2>
-          <p>Free, Standard lub Premium — pakiet decyduje o zakresie widoczności i możliwościach profilu.</p>
+          <h2>Dane i typ firmy</h2>
+          <p>Podaj podstawowe dane firmy i wybierz typ działalności najlepiej opisujący ofertę.</p>
         </article>
         <article>
           <span>2</span>
-          <h2>Uzupełnij dane firmy</h2>
-          <p>Podaj nazwę, kontakt, lokalizację, opis, usługi EMS oraz skalę produkcji.</p>
+          <h2>Oferta i kompetencje</h2>
+          <p>Uzupełnij usługi, technologie, branże, certyfikaty oraz skalę produkcji.</p>
         </article>
         <article>
           <span>3</span>
-          <h2>Wyślij zgłoszenie</h2>
-          <p>Zgłoszenie trafia do systemu, a profil może zostać opublikowany lub aktywowany po potwierdzeniu pakietu.</p>
+          <h2>Pakiet i weryfikacja</h2>
+          <p>Wybierz Free, Standard lub Premium. Każde nowe zgłoszenie trafia najpierw do weryfikacji administratora.</p>
         </article>
       </section>
 
@@ -60,8 +61,12 @@ export default async function DodajProducentaPage() {
         <PackageCheckout
           initialPackage="free"
           regions={regions}
-          dzialania={dzialania}
           produkcja={produkcja}
+          companyTypes={taxonomy.companyTypes}
+          services={taxonomy.services}
+          capabilities={taxonomy.capabilities}
+          industries={taxonomy.industries}
+          certifications={taxonomy.certifications}
           producerSignupMode
         />
       </div>
