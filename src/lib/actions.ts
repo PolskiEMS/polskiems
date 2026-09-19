@@ -18,6 +18,7 @@ import { getDb } from "@/lib/db";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { inquiries, inquiryRecipients } from "@/db/schema";
 import { companyIdFromSlug, companyProfileSlug } from "@/lib/companySlug";
+import { getPackageConfig } from "@/lib/packagePlans";
 
 export async function getDashboardStats(days = 30) {
   await requireAdminSession();
@@ -1228,34 +1229,6 @@ export async function getAllRegion() {
     })
     .from(wojewodztwa)
     .orderBy(asc(wojewodztwa.nazwa));
-}
-
-function getPackageConfig(packageType: string) {
-  switch (packageType) {
-    case "free":
-      return {
-        packageType: "free",
-        monthlyInquiryLimit: 5,
-      };
-
-    case "standard":
-      return {
-        packageType: "standard",
-        monthlyInquiryLimit: 20,
-      };
-
-    case "premium":
-      return {
-        packageType: "premium",
-        monthlyInquiryLimit: 999999,
-      };
-
-    default:
-      return {
-        packageType: "free",
-        monthlyInquiryLimit: 5,
-      };
-  }
 }
 
 function getInquiryRedirect(companyId: number, params: Record<string, string>) {
