@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 import { packageOrders, producenci } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import { getStripeClient } from "@/lib/stripe";
-import { getPackagePrice, isPaidPackage, type BillingCycleMonths, type PaidPackage } from "@/lib/packagePlans";
+import { getPackagePrice, isPaidPackage, type BillingCycleMonths } from "@/lib/packagePlans";
 
 export const runtime = "nodejs";
 
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   const buyerCity = String(body?.buyerCity ?? "").trim();
   const buyerCountry = String(body?.buyerCountry ?? "Polska").trim();
 
-  if (!companyName || !companyEmail || !isPaidPackage(packageType as PaidPackage) || !billingCycleMonths) {
+  if (!companyName || !companyEmail || !isPaidPackage(packageType) || !billingCycleMonths) {
     return NextResponse.json(
       {
         ok: false,
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const amountGross = getPackagePrice(packageType as PaidPackage, billingCycleMonths);
+  const amountGross = getPackagePrice(packageType, billingCycleMonths);
 
   const [createdOrder] = await db.insert(packageOrders).values({
     companyId: null,
