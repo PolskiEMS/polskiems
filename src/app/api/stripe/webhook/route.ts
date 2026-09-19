@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { getStripeClient } from "@/lib/stripe";
 import { packageOrders, producenci } from "@/db/schema";
+import { getPackageConfig, isPaidPackage, type PaidPackage } from "@/lib/packagePlans";
 
 export const runtime = "nodejs";
 
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
   const packageType = session.metadata?.packageType;
   const billingCycleMonths = Number(session.metadata?.billingCycleMonths || 1);
 
-  if (!orderId || !packageType || (packageType !== "standard" && packageType !== "premium")) {
+  if (!orderId || !packageType || !isPaidPackage(packageType as PaidPackage)) {
     console.error("Stripe webhook missing critical metadata", session.id);
     return NextResponse.json({ ok: true }, { status: 200 });
   }
@@ -110,15 +111,16 @@ export async function POST(req: NextRequest) {
     })
     .where(eq(packageOrders.id, orderId));
 
+  const packageConfig = getPackageConfig(packageType);
+
   await db
     .update(producenci)
     .set({
-      packageType,
-      isActive: true,
-      featured: true,
+      packageType: packageConfig.packageType,
+      featured: packageConfig.featured,
       packageValidUntil: validUntilSql,
       monthlyInquiryCount: 0,
-      monthlyInquiryLimit: packageType === "standard" ? 20 : 999999,
+      monthlyInquiryLimit: packageConfig.monthlyInquiryLimit,
     })
     .where(eq(producenci.id, order.companyId));
 
