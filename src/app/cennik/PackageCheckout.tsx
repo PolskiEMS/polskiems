@@ -103,8 +103,8 @@ export default function PackageCheckout({
     selectedPackage === "free" ||
     producerSignupMode ||
     paymentsEnabled;
-  const total = paidPackageSelected ? getPackagePrice(selectedPackage, billingCycleMonths) : 0;
-  const monthlyAverage = paidPackageSelected ? Math.round((total / billingCycleMonths) * 100) / 100 : 0;
+  const total = selectedPackage === "free" ? 0 : getPackagePrice(selectedPackage, billingCycleMonths);
+  const monthlyAverage = selectedPackage === "free" ? 0 : Math.round((total / billingCycleMonths) * 100) / 100;
 
   function toggleSelection(value: number, selectedValues: number[], setter: (values: number[]) => void) {
     setter(
