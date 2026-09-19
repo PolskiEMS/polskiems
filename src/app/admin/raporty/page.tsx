@@ -65,6 +65,7 @@ export default async function AdminReportsPage({
               <div className={styles.kpi}><span className={styles.kpiLabel}>Klik Email</span><strong className={styles.kpiValue}>{report.emailClicks}</strong></div>
               <div className={styles.kpi}><span className={styles.kpiLabel}>CTR WWW</span><strong className={styles.kpiValue}>{report.websiteCtrPct}%</strong></div>
               <div className={styles.kpi}><span className={styles.kpiLabel}>CTR Email</span><strong className={styles.kpiValue}>{report.emailCtrPct}%</strong></div>
+              <div className={styles.kpi}><span className={styles.kpiLabel}>RFQ przekazane</span><strong className={styles.kpiValue}>{report.inquiriesCount}</strong></div>
             </div>
 
             <div className={styles.actionsRow}>
