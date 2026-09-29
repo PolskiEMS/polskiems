@@ -307,7 +307,7 @@ Aktualny nacisk rozwojowy:
 
 ## Strona
 
-https://polskiems.pl
+https://polskiems.vercel.app
 
 ## Repozytorium
 
